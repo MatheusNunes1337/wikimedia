@@ -116,6 +116,16 @@
       }  
     }
 
+    function enviarSolicitacao($conexao, $array) {
+         try {
+            $query = $conexao->prepare("insert into solicitacoes (nome, descricao, nivel, nr_membros, usuario_id) values (?, ?, ?, ?, ?)");
+            $result = $query->execute($array);
+            return $result;
+        } catch(PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
+    }
+
 
 
 
