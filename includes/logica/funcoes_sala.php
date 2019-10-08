@@ -41,11 +41,24 @@
       }  
     }
 
-    function atualizarSala($conexao, $array) {
+    function editarInfomacoes($conexao, $array, $array2) {
        try {
-            $query = $conexao->prepare("update salas set nome= ?, descricao = ?, nivel= ?, nr_membros = ? where sala_id = ?");
-            $result = $query->execute($array);   
-            return $result;
+            $query = $conexao->prepare("update salas set nome= ?, descricao = ?, nivel= ?, max_membros = ? where sala_id = ?");
+            $result = $query->execute($array);
+            if($result) {
+                $query = $conexao->prepare("select * from assunto where assunto_id = ?");
+                $result = $query->execute(array($array[5]));
+                if($result->rowCount() == 1) {
+                    $resultado = excluirAssunto($conexao, $array[5]);
+                } 
+                $result2 = inserirAssunto($conexao, $array2);
+                if($result2) {
+                    $resultado = colocarAssunto($conexao, $array2);
+                    return $resultado;
+                } else {
+                    return false;
+                }
+            } 
         }catch(PDOException $e) {
             echo 'Error: ' . $e->getMessage();
         }
@@ -118,15 +131,13 @@
 
     function enviarSolicitacao($conexao, $array) {
          try {
-            $query = $conexao->prepare("insert into solicitacoes (nome, descricao, nivel, nr_membros, usuario_id) values (?, ?, ?, ?, ?)");
+            $query = $conexao->prepare("insert into solicitacoes (usuario_id, sala_id) values (?, ?)");
             $result = $query->execute($array);
             return $result;
         } catch(PDOException $e) {
             echo 'Error: ' . $e->getMessage();
         }
     }
-
-
 
 
 ?>
