@@ -11,7 +11,7 @@
         cadastrarUsuario($conexao, $array);
         header('location:../../index.php');
     }
-#ENTRAR
+#FAZER LOGIN
     if(isset($_POST['entrar'])){
         $username = addslashes($_POST['username']);//impede que o sql seja alterado
         $senha = $_POST['senha'];
@@ -42,26 +42,16 @@
             header('location:../../login.php');
     }
 
-/*
-#DELETAR USUÁRIO
-    if(isset($_POST['deletar'])){
-        $id = $_REQUEST['deletar'];
-        $array=array($id);
-        deletarUsuario($conexao, $array);
-
-        header('Location:../../index.php');
-    }
-*/
 
 #PESQUISAR USUÁRIO
-    if(isset($_REQUEST['pesquisar'])) {
+    if(isset($_REQUEST['pesquisar_usuario'])) {
         $nome = $_REQUEST['nome'];
         $usuario = pesquisarUsuario($conexao, $nome);
         include "../../pesquisarUsuario.php";
     }
 
 #EXCLUIR USUARIO LOGADO
-    if(isset($_REQUEST['excluir'])) {
+    if(isset($_REQUEST['excluir_usuario'])) {
         session_start();
         $idUser = $_SESSION['id'];
         $array = array($idUser);
@@ -75,7 +65,7 @@
     } 
 
 #ALTERAR PERFIL DO USUÁRIO LOGADO 
-    if(isset($_REQUEST['atualizar'])) {
+    if(isset($_REQUEST['atualizar_usuario'])) {
         $id = $_REQUEST['numero_id'];
         $senha = base64_encode($_POST['senha']);
         $email = $_POST['email'];

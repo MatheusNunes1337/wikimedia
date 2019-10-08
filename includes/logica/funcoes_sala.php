@@ -1,6 +1,6 @@
 <?php  
 	require_once('conecta.php');
-	 function inserirSala($conexao,$array){
+	 function criarSala($conexao,$array){
        try {
             $query = $conexao->prepare("insert into salas (nome, descricao, nivel, nr_membros, usuario_id) values (?, ?, ?, ?, ?)");
             $result = $query->execute($array);
@@ -13,7 +13,7 @@
 
      function buscarSala($conexao,$array){
         try {
-        $query = $conexao->prepare("select nome, descricao, nivel, nr_membros from salas where nivel = ?");
+        $query = $conexao->prepare("select * from salas where assunto_id IN (select assunto_id from assuntos where disciplina = ?)");
         if($query->execute($array)){
             $sala = $query->fetchAll(PDO::FETCH_ASSOC); //coloca os dados num array $usuario
             return $sala;
@@ -28,7 +28,7 @@
 
      function acharSala($conexao,$array){
         try {
-        $query = $conexao->prepare("select * from salas where assunto_id IN (select assunto_id from assuntos where disciplina = ?)");
+        $query = $conexao->prepare("select * from salas where nome= ?");
         if($query->execute($array)){
             $sala = $query->fetch(PDO::FETCH_ASSOC); 
             return $sala;
@@ -46,12 +46,12 @@
             $query = $conexao->prepare("update salas set nome= ?, descricao = ?, nivel= ?, max_membros = ? where sala_id = ?");
             $result = $query->execute($array);
             if($result) {
-                $query = $conexao->prepare("select * from assunto where assunto_id = ?");
-                $result = $query->execute(array($array[5]));
+                $query = $conexao->prepare("select * from assuntos where assunto_id = (select assunto_id from salas where sala_id = ?)");
+                $result = $query->execute(array($array[4]));
                 if($result->rowCount() == 1) {
-                    $resultado = excluirAssunto($conexao, $array[5]);
+                    $resultado = excluirAssunto($conexao);
                 } 
-                $result2 = inserirAssunto($conexao, $array2);
+                $result2 = inserirAssunto($conexao, array($array2[0], $array2[1]);
                 if($result2) {
                     $resultado = colocarAssunto($conexao, $array2);
                     return $resultado;
@@ -135,6 +135,16 @@
             $result = $query->execute($array);
             return $result;
         } catch(PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
+    }
+
+    function sairSala($conexao, $array) {
+        try {
+            $query = $conexao->prepare("delete from sala_membros where usuario_id = ?");
+            $result = $query->execute($array);   
+             return $result;
+        }catch(PDOException $e) {
             echo 'Error: ' . $e->getMessage();
         }
     }

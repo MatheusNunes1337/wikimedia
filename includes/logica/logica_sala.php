@@ -1,123 +1,144 @@
 <?php
     require_once('conecta.php');
     require_once('funcoes_sala.php');
-#CRIAR UMA NOVA SALA
-    if(isset($_POST['criar_sala'])){
-        $nome = $_POST['sala_nome'];
-        $descricao = $_POST['sala_descricao'];
-        $nivel = $_POST['sala_nivel'];
-        $max_membros = $_POST['sala_membros'];
-        $conteudo = $_POST['sala_conteudo'];
-        $disciplina = $_POST['sala_disciplina'];
-        $array = array($nome, $descricao, $nivel, $max_membros);
-        $array2 = array($conteudo, $disciplina);
-        $sala = criarSala($conexao, $array);
-        try {
-            if($sala) {
-                $result1 = verificaAssunto($conexao, $array2);
-                if($result1) {
-                    $result2 = inserirAssunto($conexao, $array2);
-                    if($result2) {
-                        $array2[2] = $nome;
-                        $result3 = colocarAssunto($conexao, $array2);
-                        if($result3) {
-                            header('location:../../index.php');  
-                        } 
-                    } 
-                } 
-            } else {
-                //pagina de cadastro da sala
-            }
-        } catch(PDOException $err) {
-            echo 'Error: ' . $err->getMessage();
-        }   
-    }
-#ENTRAR
-    if(isset($_POST['entrar_sala'])){
-        $username = addslashes($_POST['username']);//impede que o sql seja alterado
-        $senha = $_POST['senha'];
-        $senhaEncriptada = base64_encode($senha);
-        $array = array($username, $senhaEncriptada);
-        $usuario = realizarLogin($conexao,$array);
-        if($usuario){
-            session_start();
-            $_SESSION['logado'] = true;
-            $_SESSION['id'] = $usuario['usuario_id'];
-            $_SESSION['username'] = $usuario['username'];
-            header('location:../../index.php');
-        }
-        else{
-            header('location:../../login.php');
-            ?>
-            <script type="text/javascript">
-                alert("Usuário ou senha incorretos");
-            </script>
-            <?php 
-        }
-    }
 
-#LOGOUT
-    if(isset($_POST['sair'])){
-            session_start();
-            session_destroy();
-            header('location:../../login.php');
-    }
 
-/*
-#DELETAR USUÁRIO
-    if(isset($_POST['deletar'])){
-        $id = $_REQUEST['deletar'];
-        $array=array($id);
-        deletarUsuario($conexao, $array);
-
-        header('Location:../../index.php');
-    }
-*/
-
-#BUSCAR SALA
+ if($_SERVER['REQUEST_METHOD'] == 'GET') {
+    #BUSCAR SALA
     if(isset($_REQUEST['buscar_sala'])) {
         $disciplina = $_REQUEST['disciplina'];
-        $result = pesquisarUsuario($conexao, $disciplina);
-        include "../../pesquisarUsuario.php";
-    }
-
-#EXCLUIR USUARIO LOGADO
-    if(isset($_REQUEST['excluir'])) {
-        session_start();
-        $idUser = $_SESSION['id'];
-        $array = array($idUser);
-        $result = excluirPerfil($conexao, $array);
+        $result = buscarSala($conexao, $disciplina);
         if($result) {
-            session_destroy();
-            header('location:../../index.php');
+            $result = array_push_assoc($result, 'status', 'sucesso') //ou array_push($result, 'status'=>'aaaa')
+            echo json_encode($result);
         } else {
-            header('location:../../index.php');
-        }    
-    } 
-
-#ALTERAR PERFIL DO USUÁRIO LOGADO 
-    if(isset($_REQUEST['atualizar'])) {
-        $id = $_REQUEST['numero_id'];
-        $senha = base64_encode($_POST['senha']);
-        $email = $_POST['email'];
-        $array = array($senha, $email, $id);
-        $result = alterarPerfil($conexao, $array);
-        if($result) {
-             header('location:../../index.php');
-         } else {
-            echo "erro ao tentar atualizar o perfil";
-         }
+            $status = array("status"=>"Hmm, parece que não há sala com essa disciplina");
+        }
+    }
+    #ACHA A SALA PARA ENVIAR AS INFORMAÇÕES PARA O FORMULÁRIO DE ALTERAÇÃO
+    if(isset($_REQUEST['editar_sala'])) {
+        $sala_id = $_REQUEST['editar_sala'];
+        $array = array($sala_id);
+        $salaInfo = acharSala($conexao, $array);
+        if($salaInfo) {
+            $salaInfo = array_push_assoc($salaInfo, 'status', 'sucesso');
+            echo json_encode($salaInfo);
+        } else {
+            $status = array('status' => 'Não foi possivel selecionar essa sala para edição');
+            echo json_encode($status);
+        }
     }
 
-#ENVIAR SOLICITACAO PARA ENTRAR
+    
+ }   
+
+
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        #CRIAR UMA NOVA SALA
+        if(isset($_POST['criar_sala'])){
+            $nome = $_POST['sala_nome'];
+            $descricao = $_POST['sala_descricao'];
+            $nivel = $_POST['sala_nivel'];
+            $max_membros = $_POST['sala_membros'];
+            $conteudo = $_POST['sala_conteudo'];
+            $disciplina = $_POST['sala_disciplina'];
+            $array = array($nome, $descricao, $nivel, $max_membros);
+            $array2 = array($conteudo, $disciplina);
+            $sala = criarSala($conexao, $array);
+            try {
+                if($sala) {
+                    $result1 = verificaAssunto($conexao, $array2);
+                    if($result1) {
+                        $result2 = inserirAssunto($conexao, $array2);
+                        if($result2) {
+                            $array2[2] = $nome;
+                            $result3 = colocarAssunto($conexao, $array2);
+                            if($result3) {
+                                header('location:../../index.php');  
+                            } 
+                        } 
+                    } 
+                } else {
+                    //pagina de cadastro da sala
+                }
+            } catch(PDOException $err) {
+                echo 'Error: ' . $err->getMessage();
+            }   
+        }
+
+        #ENVIAR SOLICITACAO PARA ENTRAR
         if(isset($_REQUEST['enviar_request'])) {
             $user_id = $_SESSION['user_id'];
             $sala_id = $_REQUEST['sala_id'];
             $array = array($user_id, $sala_id);
-            $result = enviarSolicitacao($conexao, )
+            $result = enviarSolicitacao($conexao, $array);
+            if($result) {
+                $status = array('status'=>'Solicitação enviada com sucesso. Aguarde o administrador da sala aceita-lá para você ingressar na mesma');
+                echo json_encode($status);
+            } else {
+                $status = array('status'=>'Hmmm, parece que houve um erro ao tentar enviar uma solicitacao');
+                echo json_encode($status);
+            }
         }
-    }               
+        #SAIR DA SALA
+        if(isset($_POST['sair_sala'])){
+            $user_id = $_SESSION['user_id'];
+            $array = array($user_id);
+            $resultado = sairSala($conexao, $array);
+            if($resultado) {
+                header('location:../../index.php');
+            } else {
+                echo "Houve um erro ao tentar sair da sala";
+            }    
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] == 'put') {
+            #ATUALIZAR SALA
+            if(isset($_POST['atualizar_sala'])){
+                $sala_nome = $_REQUEST['sala_nome'];
+                $sala_descricao = $_REQUEST['sala_descricao'];
+                $sala_nivel = $_REQUEST['sala_nivel'];
+                $sala_membros = $_REQUEST['sala_membros'];
+                $sala_id = $_REQUEST['sala_id'];
+                $sala_disciplina = $_REQUEST['sala_disciplina'];
+                $sala_conteudo = $_REQUEST['sala_assunto'];
+                $array = array($sala_nome, $sala_descricao, $sala_nivel, $sala_membros);
+                $array2 = array($sala_conteudo, $sala_disciplina, $sala_nome);
+                $resultado = editarInformacoes($conexao, $array, $array2);
+                if($resultado) {
+                     header('location:../../index.php');
+                 } else {
+                    echo "Houve um erro ao tentar atualizar as informacoes da sala";
+                 }
+
+            }
+        }                 
+    }
+
+     if ($_SERVER['REQUEST_METHOD'] == 'delete') {
+        #DELETAR SALA
+        if(isset($_POST['deletar_sala'])){
+            $sala_id = $_REQUEST['sala_id'];
+            $array = array($sala_id);
+            $resultado = excluirSala($conexao, $array); 
+            if($resultado) { //enviar aviso aos outros usuários sobre a sala deletada
+                header('location:../../index.php');
+            } else {
+                echo "Houve um erro ao tentar sair da sala";
+            }
+        }
+        if(isset($_POST['sair_sala'])) {
+            $user_id = $_SESSION['user_id'];
+            $array = array($user_id);
+            $resultado = sairSala($conexao, $array);
+            if($resultado) {
+                header('location:../../index.php');
+            } else {
+                echo "Houve um erro ao tentar sair da sala. Tente novamente"
+            } 
+        }
+     }   
+               
 
 
 
