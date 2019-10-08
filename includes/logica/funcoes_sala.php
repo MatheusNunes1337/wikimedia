@@ -28,7 +28,7 @@
 
      function acharSala($conexao,$array){
         try {
-        $query = $conexao->prepare("select * from salas where nome= ?");
+        $query = $conexao->prepare("select * from salas where assunto_id IN (select assunto_id from assuntos where disciplina = ?)");
         if($query->execute($array)){
             $sala = $query->fetch(PDO::FETCH_ASSOC); 
             return $sala;

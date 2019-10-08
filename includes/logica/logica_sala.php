@@ -33,7 +33,7 @@
         }   
     }
 #ENTRAR
-    if(isset($_POST['entrar'])){
+    if(isset($_POST['entrar_sala'])){
         $username = addslashes($_POST['username']);//impede que o sql seja alterado
         $senha = $_POST['senha'];
         $senhaEncriptada = base64_encode($senha);
@@ -74,10 +74,10 @@
     }
 */
 
-#PESQUISAR USUÁRIO
-    if(isset($_REQUEST['pesquisar'])) {
-        $nome = $_REQUEST['nome'];
-        $usuario = pesquisarUsuario($conexao, $nome);
+#BUSCAR SALA
+    if(isset($_REQUEST['buscar_sala'])) {
+        $disciplina = $_REQUEST['disciplina'];
+        $result = pesquisarUsuario($conexao, $disciplina);
         include "../../pesquisarUsuario.php";
     }
 
@@ -107,7 +107,17 @@
          } else {
             echo "erro ao tentar atualizar o perfil";
          }
-    }           
+    }
+
+#ENVIAR SOLICITACAO PARA ENTRAR
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if(isset($_REQUEST['enviar_request'])) {
+            $user_id = $_SESSION['user_id'];
+            $sala_id = $_REQUEST['sala_id'];
+            $array = array($user_id, $sala_id);
+            $result = enviarSolicitacao($conexao, )
+        }
+    }               
 
 
 
