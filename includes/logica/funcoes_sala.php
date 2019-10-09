@@ -41,41 +41,7 @@
       }  
     }
 
-    function editarInfomacoes($conexao, $array, $array2) {
-       try {
-            $query = $conexao->prepare("update salas set nome= ?, descricao = ?, nivel= ?, max_membros = ? where sala_id = ?");
-            $result = $query->execute($array);
-            if($result) {
-                $query = $conexao->prepare("select * from assuntos where assunto_id = (select assunto_id from salas where sala_id = ?)");
-                $result = $query->execute(array($array[4]));
-                if($result->rowCount() == 1) {
-                    $resultado = excluirAssunto($conexao);
-                } 
-                $result2 = inserirAssunto($conexao, array($array2[0], $array2[1]);
-                if($result2) {
-                    $resultado = colocarAssunto($conexao, $array2);
-                    return $resultado;
-                } else {
-                    return false;
-                }
-            } 
-        }catch(PDOException $e) {
-            echo 'Error: ' . $e->getMessage();
-        }
 
-    }
-
-    function excluirSala($conexao, $array){
-        try {
-            $query = $conexao->prepare("delete from salas where nome = ?");
-            $result = $query->execute($array); 
-            $result = excluirAssunto($conexao);  
-            return $result;
-        }catch(PDOException $e) {
-            echo 'Error: ' . $e->getMessage();
-        }
-
-    }
 
      function inserirAssunto($conexao,$array){ //insere na tabela de assuntos o assunto digitado no formulario
        try {
@@ -148,6 +114,7 @@
             echo 'Error: ' . $e->getMessage();
         }
     }
+
 
 
 ?>

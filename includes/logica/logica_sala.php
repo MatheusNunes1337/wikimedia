@@ -1,19 +1,24 @@
 <?php
     require_once('conecta.php');
     require_once('funcoes_sala.php');
+    header('Content-Type: application/json; charset=UTF-8');
+    header('Access-Control-Allow-Origin: *');
+    $json = file_get_contents('php://input');
+    $obj = json_decode($json);
 
 
  if($_SERVER['REQUEST_METHOD'] == 'GET') {
-    #BUSCAR SALA
-    if(isset($_REQUEST['buscar_sala'])) {
-        $disciplina = $_REQUEST['disciplina'];
-        $result = buscarSala($conexao, $disciplina);
+    #BUSCAR SALA - funcao assincrona
+    if($obj->funcao == 'buscar sala') {
+        $array = [$obj->disciplina]
+        $result = buscarSala($conexao, $array);
         if($result) {
-            $result = array_push_assoc($result, 'status', 'sucesso') //ou array_push($result, 'status'=>'aaaa')
-            echo json_encode($result);
+            $status = array_push_assoc($result, 'status', 'sucesso') //ou array_push($result, 'status'=>'aaaa')
         } else {
-            $status = array("status"=>"Hmm, parece que não há sala com essa disciplina");
+            $status = array('status'=>'falha', "mensagem"=>"Hmm, parece que não há sala com essa disciplina"); //fazer o teste com o status = falha no response
         }
+         echo json_encode($status);
+         die();
     }
     #ACHA A SALA PARA ENVIAR AS INFORMAÇÕES PARA O FORMULÁRIO DE ALTERAÇÃO
     if(isset($_REQUEST['editar_sala'])) {
@@ -21,12 +26,12 @@
         $array = array($sala_id);
         $salaInfo = acharSala($conexao, $array);
         if($salaInfo) {
-            $salaInfo = array_push_assoc($salaInfo, 'status', 'sucesso');
-            echo json_encode($salaInfo);
+            $status = array_push_assoc($salaInfo, 'status', 'sucesso');
         } else {
-            $status = array('status' => 'Não foi possivel selecionar essa sala para edição');
-            echo json_encode($status);
+            $status = array('status'=>'falha', 'mensagem' => 'Não foi possivel selecionar essa sala para edição');
         }
+        echo json_encode($status);
+        die();
     }
 
     
@@ -63,37 +68,79 @@
                 }
             } catch(PDOException $err) {
                 echo 'Error: ' . $err->getMessage();
-            }   
+            }
+            die();   
         }
 
-        #ENVIAR SOLICITACAO PARA ENTRAR
-        if(isset($_REQUEST['enviar_request'])) {
-            $user_id = $_SESSION['user_id'];
-            $sala_id = $_REQUEST['sala_id'];
-            $array = array($user_id, $sala_id);
+        #ENVIAR SOLICITACAO PARA ENTRAR - assincrono
+        if($obj->funcao = 'enviar solicitacao') {
+            //$user_id = $_SESSION['user_id'];
+            //$sala_id = $_REQUEST['sala_id'];
+            $array = array($obj->user_id, $obj->sala_id);
             $result = enviarSolicitacao($conexao, $array);
             if($result) {
-                $status = array('status'=>'Solicitação enviada com sucesso. Aguarde o administrador da sala aceita-lá para você ingressar na mesma');
-                echo json_encode($status);
+                $status = array('status'=>'sucesso', 'mensagem'=>'Solicitação enviada com sucesso. Aguarde o administrador da sala aceita-lá para você ingressar na mesma');
             } else {
-                $status = array('status'=>'Hmmm, parece que houve um erro ao tentar enviar uma solicitacao');
-                echo json_encode($status);
+                $status = array('status'=>'falha', 'mensagem'=>'Hmmm, parece que houve um erro ao tentar enviar uma solicitacao');
             }
+            echo json_encode($status);
+            die();
         }
-        #SAIR DA SALA
-        if(isset($_POST['sair_sala'])){
+        #ACEITAR SOLICITACAO - ADMIN ACTION - ASSINCRONO
+        if($obj->funcao = 'aceitar solicitacao') {
+            $array = array($obj->id_user, $obj->id_sala);
+            $resultado = aceitarSolicitacao($conexao, $array);
+            if($resultado) {
+                $status = array('status'=>'sucesso');
+            } else {
+                $status = array('status'=>'falha', 'mensagem'=>'Hmmm, parece que houve um erro ao tentar aceitar essa solicitacao');
+            }
+            echo json_encode($status);
+            die();
+        }
+                    
+    }
+
+     if ($_SERVER['REQUEST_METHOD'] == 'delete') {
+        #DELETAR SALA - ADMIN ACTION
+        if(isset($_POST['deletar_sala'])){
+            $sala_id = $_REQUEST['sala_id'];
+            $array = array($sala_id);
+            $resultado = excluirSala($conexao, $array); 
+            if($resultado) { //enviar aviso aos outros usuários sobre a sala deletada
+                header('location:../../index.php');
+            } else {
+                echo "Houve um erro ao tentar sair da sala";
+            }
+            die();
+        }
+        if(isset($_POST['sair_sala'])) {
             $user_id = $_SESSION['user_id'];
             $array = array($user_id);
             $resultado = sairSala($conexao, $array);
             if($resultado) {
                 header('location:../../index.php');
             } else {
-                echo "Houve um erro ao tentar sair da sala";
+                echo "Houve um erro ao tentar sair da sala. Tente novamente"
+            }
+            die(); 
+        }
+        if($obj->funcao = 'banir usuario') {
+            $array = array($obj->id_user);
+            $resultado = banirUsuario($conexao, $array);
+            if($resultado) {
+                    $status = array('status'=>'sucesso', 'mensagem'=>'O usuário foi banido com sucesso.');
+                } else {
+                    $status = array('status'=>'falha', 'mensagem'=>'Houve um erro ao tentar realizar esta operação. Tente novamente');
+                }
+                echo json_encode($status);
+                die();
             }    
         }
+     }
 
-        if ($_SERVER['REQUEST_METHOD'] == 'put') {
-            #ATUALIZAR SALA
+     if ($_SERVER['REQUEST_METHOD'] == 'put') {
+            #ATUALIZAR SALA -  ADMIN ACTION
             if(isset($_POST['atualizar_sala'])){
                 $sala_nome = $_REQUEST['sala_nome'];
                 $sala_descricao = $_REQUEST['sala_descricao'];
@@ -110,34 +157,23 @@
                  } else {
                     echo "Houve um erro ao tentar atualizar as informacoes da sala";
                  }
+                 die();
 
             }
-        }                 
-    }
-
-     if ($_SERVER['REQUEST_METHOD'] == 'delete') {
-        #DELETAR SALA
-        if(isset($_POST['deletar_sala'])){
-            $sala_id = $_REQUEST['sala_id'];
-            $array = array($sala_id);
-            $resultado = excluirSala($conexao, $array); 
-            if($resultado) { //enviar aviso aos outros usuários sobre a sala deletada
-                header('location:../../index.php');
-            } else {
-                echo "Houve um erro ao tentar sair da sala";
+            if($obj->funcao = 'tornar admin') {  //funcao assincrona
+                //$id_sala = $_REQUEST['sala_id'];
+                //$id_admin= $_REQUEST['tornar_admin']; //ID DO NOVO ADMINISTRADOR
+                $array = array($obj->id_sala, $obj->id_admin);
+                $resultado = tornarAdministrador($conexao, $array);
+                if($resultado) {
+                    $status = array('status'=>'sucesso', 'mensagem'=>'Operação realizada com sucesso. Agora você não é mais o administrador da sala');
+                } else {
+                    $status = array('status'=>'falha', 'mensagem'=>'Houve um erro ao tentar realizar esta operação. Tente novamente');
+                }
+                echo json_encode($status);
+                die();
             }
-        }
-        if(isset($_POST['sair_sala'])) {
-            $user_id = $_SESSION['user_id'];
-            $array = array($user_id);
-            $resultado = sairSala($conexao, $array);
-            if($resultado) {
-                header('location:../../index.php');
-            } else {
-                echo "Houve um erro ao tentar sair da sala. Tente novamente"
-            } 
-        }
-     }   
+        }   
                
 
 
