@@ -2,11 +2,8 @@
 
 function buscarSala() {
 	let disciplina = buscar.disciplina.value;
-	let obj = new Object();
-	obj.funcao = 'buscar sala';
 	fetch(`../includes/logica/logica_sala.php?disciplina=${disciplina}`, {
 		method: 'GET',
-		body: JSON.stringify(obj)
 	})
 	.then(response => response.json())
 	.then(data => {
@@ -128,5 +125,42 @@ function negarSolicitacao(e) {
 	.catch(error => {
 		console.error(error);
 	});
+
+}
+
+//funcoes referentes a sala_user
+
+
+function buscarPostagem() {
+	let titulo = buscar.titulo.value;
+	fetch(`../includes/logica/logica_sala_user.php?titulo=${titulo}`, {
+		method: 'GET',
+	})
+	.then(response => response.json())
+	.then(data => {
+		if(data.status === 'sucesso') {
+			let table = '<table border=1>'
+	            data.forEach(obj => {
+	                table += '<tr>'
+	                Object.entries(obj).map(([key, value]) => {
+	                    table += `<td>${value}</td>`
+	                });
+	                table += '</tr>';
+	                resultado.innerHTML = table;
+	            });
+	             table += '</table>'
+	           	 resultado.innerHTML = table;
+	    } else {
+    	     showModal(data.mensagem);
+	    }    		
+ 	})
+  	.catch(error => {
+  		console.log(error);
+    });
+	event.preventDefault(); 
+	
+}
+
+function criarPostagem() {
 
 }
