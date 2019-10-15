@@ -2,7 +2,7 @@
     require_once('conecta.php');
     require_once('funcoes_sala.php');
 
-   function aceitarSolicitacoes($conexao,$array){
+   function aceitarSolicitacao($conexao,$array){
        try {
             $query = $conexao->prepare("insert into sala_membros (usuario_id, sala_id) values (?, ?)");
             $result1 = $query->execute($array);
@@ -22,7 +22,7 @@
 
     }
 
-    function negarSolicitacoes($conexao, $array) {
+    function negarSolicitacao($conexao, $array) {
          try {
             $query = $conexao->prepare("delete from solicitacoes where usuario_id = ? and sala_id = ?");
             $result = $query->execute($array);
@@ -34,7 +34,7 @@
 
     function banirUsuario($conexao, $array) {
          try {
-            $query = $conexao->prepare("delete from sala_membros where usuario_id = ?");
+            $query = $conexao->prepare("delete from sala_membros where usuario_id = ? AND sala_id = ?");
             $result = $query->execute($array);
             return $result;    
         }catch(PDOException $e) {
@@ -50,6 +50,18 @@
         }catch(PDOException $e) {
             echo 'Error: ' . $e->getMessage();
         }
+    }
+
+      function excluirSala($conexao, $array){
+        try {
+            $query = $conexao->prepare("delete from salas where nome = ?");
+            $result = $query->execute($array); 
+            $result = excluirAssunto($conexao);  
+            return $result;
+        }catch(PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
+
     }
 
      function editarInfomacoes($conexao, $array, $array2) {
@@ -76,16 +88,5 @@
 
     }
 
-    function excluirSala($conexao, $array){
-        try {
-            $query = $conexao->prepare("delete from salas where nome = ?");
-            $result = $query->execute($array); 
-            $result = excluirAssunto($conexao);  
-            return $result;
-        }catch(PDOException $e) {
-            echo 'Error: ' . $e->getMessage();
-        }
-
-    }
     
    ?>

@@ -7,8 +7,8 @@
     $obj = json_decode($json);
 
     if($_SERVER['REQUEST_METHOD'] == 'GET') {
-    	if($obj->funcao == 'buscar post') {
-    		$array = array($obj->post_id);
+    	if(isset($_REQUEST['titulo'])) {
+    		$array = array($_REQUEST['titulo']);
     		$posts = pesquisarPostagem($conexao, $array);
     		if($posts) {
     			echo json_encode($posts);
@@ -43,7 +43,8 @@
 	         echo json_encode($status);
 	    	
 	   	} else if($obj->funcao == 'comentar') {
-	   		$array = array($obj->conteudo, $obj->user_id, $obj->post_id);
+            $user_id = $_SESSION['user_id'];
+	   		$array = array($obj->conteudo, $user_id, $obj->post_id);
 	   		$okay = criarComentario($conexao, $array);
 	   		if($okay) {
 	   			$status = array('status'=>'sucesso');		
@@ -103,6 +104,8 @@
     		echo json_encode($status);
     	}
     }
+
+    if
 	
 	
 

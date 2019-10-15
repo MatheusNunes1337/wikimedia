@@ -9,11 +9,13 @@
 
  if($_SERVER['REQUEST_METHOD'] == 'GET') {
     #BUSCAR SALA - funcao assincrona
-    if($obj->funcao == 'buscar sala') {
-        $array = [$obj->disciplina]
+    if(isset($_REQUEST['disciplina'])) {
+        $array = [$_REQUEST['disciplina']];
         $result = buscarSala($conexao, $array);
         if($result) {
-            $status = array_push_assoc($result, 'status', 'sucesso') //ou array_push($result, 'status'=>'aaaa')
+            $status = $result; //array_push($result, array('status'=>'sucesso'));
+            $status['status'] = 'sucesso';
+
         } else {
             $status = array('status'=>'falha', "mensagem"=>"Hmm, parece que não há sala com essa disciplina"); //fazer o teste com o status = falha no response
         }
@@ -26,7 +28,8 @@
         $array = array($sala_id);
         $salaInfo = acharSala($conexao, $array);
         if($salaInfo) {
-            $status = array_push_assoc($salaInfo, 'status', 'sucesso');
+            $status = $salaInfo; //array_push($salaInfo, array('status'=>'sucesso'));
+            $status['status'] = 'sucesso';
         } else {
             $status = array('status'=>'falha', 'mensagem' => 'Não foi possivel selecionar essa sala para edição');
         }
@@ -74,9 +77,9 @@
 
         #ENVIAR SOLICITACAO PARA ENTRAR - assincrono
         if($obj->funcao = 'enviar solicitacao') {
-            //$user_id = $_SESSION['user_id'];
-            //$sala_id = $_REQUEST['sala_id'];
-            $array = array($obj->user_id, $obj->sala_id);
+            $user_id = $_SESSION['user_id'];
+            $sala_id = $_SESSION['sala_id'];
+            $array = array($user_id, $sala_id);
             $result = enviarSolicitacao($conexao, $array);
             if($result) {
                 $status = array('status'=>'sucesso', 'mensagem'=>'Solicitação enviada com sucesso. Aguarde o administrador da sala aceita-lá para você ingressar na mesma');
@@ -88,7 +91,9 @@
         }
         #ACEITAR SOLICITACAO - ADMIN ACTION - ASSINCRONO
         if($obj->funcao = 'aceitar solicitacao') {
-            $array = array($obj->id_user, $obj->id_sala);
+            $user_id = $obj->user_id;
+            $sala_id = $_SESSION['sala_id'];
+            $array = array($user_id, $sala_id);
             $resultado = aceitarSolicitacao($conexao, $array);
             if($resultado) {
                 $status = array('status'=>'sucesso');
@@ -126,7 +131,9 @@
             die(); 
         }
         if($obj->funcao = 'banir usuario') {
-            $array = array($obj->id_user);
+            $user_id = $obj->user_id;
+            $sala_id = $_SESSION['sala_id'];
+            $array = array($user_id, $sala_id);
             $resultado = banirUsuario($conexao, $array);
             if($resultado) {
                     $status = array('status'=>'sucesso', 'mensagem'=>'O usuário foi banido com sucesso.');
@@ -137,6 +144,20 @@
                 die();
             }    
         }
+        if($obj->funcao = 'negar solicitacao') {
+            $user_id = $obj->user_id;
+            $sala_id = $_SESSION['sala_id'];
+            $array = array($user_id, $sala_id);
+            $resultado = negarSolicitacao($conexao, $array);
+            if($resultado) {
+                $status = array('status'=>'sucesso');
+            } else {
+                $status = array('status'=>'falha', 'mensagem'=>'Hmmm, parece que houve um erro ao tentar negar essa solicitacao');
+            }
+            echo json_encode($status);
+            die();
+        }
+
      }
 
      if ($_SERVER['REQUEST_METHOD'] == 'put') {
@@ -161,9 +182,9 @@
 
             }
             if($obj->funcao = 'tornar admin') {  //funcao assincrona
-                //$id_sala = $_REQUEST['sala_id'];
-                //$id_admin= $_REQUEST['tornar_admin']; //ID DO NOVO ADMINISTRADOR
-                $array = array($obj->id_sala, $obj->id_admin);
+                $admin_id = $obj->user_id; //id do usuário que se tornará admin
+                $sala_id = $_SESSION['sala_id'];
+                $array = array($obj->admin_id, $sala_id);
                 $resultado = tornarAdministrador($conexao, $array);
                 if($resultado) {
                     $status = array('status'=>'sucesso', 'mensagem'=>'Operação realizada com sucesso. Agora você não é mais o administrador da sala');

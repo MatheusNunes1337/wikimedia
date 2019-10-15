@@ -162,5 +162,45 @@ function buscarPostagem() {
 }
 
 function criarPostagem() {
+	let titulo = criarPost.titulo.value;
+	let conteudo = criarPost.conteudo.value;
+	let nomeMidia = criarPost.midia.value;
+	let obj = new Object();
+	obj.titulo = titulo;
+	obj.conteudo = conteudo;
+	obj.nomeMidia = nomeMidia;
+	obj.funcao = 'criar post';
+	fetch('../includes/logica/logica_sala_user.php?', {
+		method: 'POST',
+		body: JSON.stringify(obj)
+	})
+	.then(response => response.json())
+	.then(data => {
+		showModal(data.mensagem);
+	})
+	.catch(error => {
+		console.error(error);
+	});
+}
 
+function comentarPostagem() {
+	let conteudo = comentar.conteudo.value;
+	let post_id = comentar.post.value; //provavelmente terei que mudar
+	let obj = new Object();
+	obj.funcao = 'comentar';
+	obj.conteudo = conteudo;
+	obj.post_id = post_id;
+	fetch('../includes/logica/logica_sala_user.php?', {
+		method: 'POST',
+		body: JSON.stringify(obj)
+	})
+	.then(response => response.json())
+	.then(data => {
+		if(data.status == 'falha') {
+			showModal(data.mensagem);
+		}
+	})
+	.catch(error) {
+		console.error(error);
+	}
 }

@@ -88,7 +88,7 @@
             echo 'Error: ' . $e->getMessage();
       }  
     }
-
+/*
     function pesquisarUsuario($conexao, $nome) {
          try {
         $query = $conexao->prepare("select * from usuarios where nome like '%$nome%'");
@@ -111,6 +111,8 @@
       }  
 
     }
+
+ */   
 
 
     function excluirPerfil($conexao, $array) {

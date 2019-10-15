@@ -1,7 +1,13 @@
 <?php
     require_once('conecta.php');
     require_once('funcoes_usuario.php');
-#CADASTRO USUÁRIO
+    header('Content-Type: application/json; charset=UTF-8');
+    header('Access-Control-Allow-Origin: *');
+    $json = file_get_contents('php://input');
+    $obj = json_decode($json);
+
+if($_SERVER['REQUEST_METHOD'] == 'POST') {
+    #CADASTRO USUÁRIO
     if(isset($_POST['cadastrar'])){
         $username = $_POST['username'];
         $email = $_POST['email'];
@@ -11,7 +17,7 @@
         cadastrarUsuario($conexao, $array);
         header('location:../../index.php');
     }
-#FAZER LOGIN
+    #FAZER LOGIN
     if(isset($_POST['entrar'])){
         $username = addslashes($_POST['username']);//impede que o sql seja alterado
         $senha = $_POST['senha'];
@@ -34,23 +40,24 @@
             <?php 
         }
     }
+    die();
+}    
 
-#LOGOUT
-    if(isset($_POST['sair'])){
-            session_start();
-            session_destroy();
-            header('location:../../login.php');
-    }
-
-
-#PESQUISAR USUÁRIO
-    if(isset($_REQUEST['pesquisar_usuario'])) {
+/*
+if($_SERVER['REQUEST_METHOD'] == 'GET') {
+    #PESQUISAR USUÁRIO
+    //funcao assincrona
+    if($obj->funcao == 'buscar usuario') {
         $nome = $_REQUEST['nome'];
         $usuario = pesquisarUsuario($conexao, $nome);
         include "../../pesquisarUsuario.php";
     }
+}
 
-#EXCLUIR USUARIO LOGADO
+*/
+
+if($_SERVER['REQUEST_METHOD'] == 'delete') {
+    #EXCLUIR USUARIO LOGADO
     if(isset($_REQUEST['excluir_usuario'])) {
         session_start();
         $idUser = $_SESSION['id'];
@@ -62,9 +69,12 @@
         } else {
             header('location:../../index.php');
         }    
-    } 
+    }
+     die();    
+}
 
-#ALTERAR PERFIL DO USUÁRIO LOGADO 
+if($_SERVER['REQUEST_METHOD'] == 'PUT') {
+    #ALTERAR PERFIL DO USUÁRIO LOGADO 
     if(isset($_REQUEST['atualizar_usuario'])) {
         $id = $_REQUEST['numero_id'];
         $senha = base64_encode($_POST['senha']);
@@ -77,6 +87,14 @@
             echo "erro ao tentar atualizar o perfil";
          }
     }           
+}
+
+#LOGOUT
+    if(isset($_POST['sair'])){
+            session_start();
+            session_destroy();
+            header('location:../../login.php');
+    }
 
 
 
