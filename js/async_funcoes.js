@@ -1,4 +1,6 @@
 //funcoes referentes a logica da sala
+const url_sala_user = '../includes/logica/logica_sala_user.php';
+const url_sala = '../includes/logica/logica_sala.php';
 
 function buscarSala() {
 	let disciplina = buscar.disciplina.value;
@@ -34,18 +36,7 @@ function enviarSolicitacao() {
  
 	let obj = new Object();
 	obj.funcao = 'enviar solicitacao';
-	fetch('../includes/logica/logica_sala.php', {
-		method: 'POST'
-		body: JSON.stringify(obj);
-	})
-	.then(response => response.json())
-	.then(data => {
-		//chama a modal e escreve nela
-		showModal(data.mensagem);
-	})
-	.catch(error => {
-		console.log(error);
-	});
+	doRequestPost(url_sala, obj);
 
 }
 
@@ -54,18 +45,7 @@ function banirUsuario(e) {
 	let obj = new Object();
 	obj.funcao = 'banir usuario';
 	obj.userId = usuario_id;
-	fetch('../includes/logica/logica_sala.php', {
-		method: 'DELETE',
-		body: JSON.stringify(obj)
-	})
-	.then(response => response.json())
-	.then(data => {
-		showModal(data.mensagem);
-	})
-	.catch(error => {
-		console.error(error);
-	});
-
+	doRequestDelete(url_sala, obj);
 }
 
 function tornarAdmin(e) {
@@ -73,17 +53,7 @@ function tornarAdmin(e) {
 	let obj = new Object();
 	obj.funcao = 'tornar admin';
 	obj.user_id = usuario_id;
-	fetch('../includes/logica/logica_sala.php', {
-		method: 'PUT',
-		body: JSON.stringify(obj)
-	})
-	.then(response => response.json())
-	.then(data => {
-		showModal(data.mensagem);
-	})
-	.catch(error => {
-		console.error(error);
-	});
+	doRequestPut(url_sala, obj);
 }
 
 function aceitarSolicitacao(e) {
@@ -91,20 +61,7 @@ function aceitarSolicitacao(e) {
 	let obj = new Object();
 	obj.funcao = 'aceitar solicitacao';
 	obj.user_id = usuario_id;
-	fetch('../includes/logica/logica_sala.php', {
-		method: 'POST',
-		body: JSON.stringify(obj)
-	})
-	.then(response => response.json())
-	.then(data => {
-		if(data.status === 'falha') {
-			showModal(data.mensagem);
-		}
-	})
-	.catch(error => {
-		console.error(error);
-	});
-
+	doRequestPost(url_sala, obj);
 }
 
 function negarSolicitacao(e) {
@@ -112,23 +69,13 @@ function negarSolicitacao(e) {
 	let obj = new Object();
 	obj.funcao = 'negar solicitacao';
 	obj.user_id = usuario_id;
-	fetch('../includes/logica/logica_sala.php', {
-		method: 'DELETE',
-		body: JSON.stringify(obj)
-	})
-	.then(response => response.json())
-	.then(data => {
-		if(data.status === 'falha') {
-			showModal(data.mensagem);
-		}
-	})
-	.catch(error => {
-		console.error(error);
-	});
-
+	doRequestDelete(url_sala, obj);
 }
 
+
+
 //funcoes referentes a sala_user
+
 
 
 function buscarPostagem() {
@@ -170,17 +117,7 @@ function criarPostagem() {
 	obj.conteudo = conteudo;
 	obj.nomeMidia = nomeMidia;
 	obj.funcao = 'criar post';
-	fetch('../includes/logica/logica_sala_user.php?', {
-		method: 'POST',
-		body: JSON.stringify(obj)
-	})
-	.then(response => response.json())
-	.then(data => {
-		showModal(data.mensagem);
-	})
-	.catch(error => {
-		console.error(error);
-	});
+	doRequestPost(url_sala_user, obj);
 }
 
 function comentarPostagem() {
@@ -190,7 +127,29 @@ function comentarPostagem() {
 	obj.funcao = 'comentar';
 	obj.conteudo = conteudo;
 	obj.post_id = post_id;
-	fetch('../includes/logica/logica_sala_user.php?', {
+	doRequestPost(url_sala_user, obj);
+}
+
+function editarPostagem(e) {
+	let post_id = e.target.value;
+	let titulo = editar.titulo.value;
+	let conteudo = editar.conteudo.value;
+	let obj = new Object();
+	obj.funcao = 'editar post';
+	obj.titulo = titulo;
+	obj.conteudo = conteudo;
+	obj.post_id = post_id;
+	doRequestPut(obj);
+}
+
+
+
+
+
+
+
+function doRequestPost(url, obj) {
+	fetch(url, {
 		method: 'POST',
 		body: JSON.stringify(obj)
 	})
@@ -204,3 +163,36 @@ function comentarPostagem() {
 		console.error(error);
 	}
 }
+
+function doRequestPut(url, obj) {
+	fetch(url, {
+		method: 'PUT',
+		body: JSON.stringify(obj)
+	})
+	.then(response => response.json())
+	.then(data => {
+		if(data.status == 'falha') {
+			showModal(data.mensagem);
+		}
+	})
+	.catch(error) {
+		console.error(error);
+	}
+}
+
+function doRequestDelete(url, obj) {
+	fetch(url, {
+		method: 'DELETE',
+		body: JSON.stringify(obj)
+	})
+	.then(response => response.json())
+	.then(data => {
+		if(data.status == 'falha') {
+			showModal(data.mensagem);
+		}
+	})
+	.catch(error) {
+		console.error(error);
+	}
+}
+
