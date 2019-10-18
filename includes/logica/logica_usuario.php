@@ -13,13 +13,18 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
         $email = $_POST['email'];
         $senha = $_POST['senha'];
         $senhaEncriptada = base64_encode($senha);
-        $array = array($nome, $email, $senhaEncriptada);
-        cadastrarUsuario($conexao, $array);
-        header('location:../../index.php');
+        $array = array($username, $email, $senhaEncriptada);
+        $okay = cadastrarUsuario($conexao, $array);
+        if($okay) {
+            header('location:../../forms/user/login.php');
+        } else {
+            header('location:../../forms/user/cadastro.php');
+        }
+        
     }
     #FAZER LOGIN
-    if(isset($_POST['entrar'])){
-        $username = addslashes($_POST['username']);//impede que o sql seja alterado
+    if(isset($_POST['logar'])){
+        $username = addslashes($_POST['username']); //impede que o sql seja alterado
         $senha = $_POST['senha'];
         $senhaEncriptada = base64_encode($senha);
         $array = array($username, $senhaEncriptada);
@@ -32,12 +37,15 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
             header('location:../../index.php');
         }
         else{
+            /*
             header('location:../../login.php');
             ?>
             <script type="text/javascript">
                 alert("Usuário ou senha incorretos");
             </script>
-            <?php 
+            <?php
+            */
+           header('location:../../forms/user/login.php');
         }
     }
     die();
