@@ -44,30 +44,27 @@
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         #CRIAR UMA NOVA SALA
         if(isset($_POST['criar_sala'])){
+            $user_id = 5;
             $nome = $_POST['sala_nome'];
             $descricao = $_POST['sala_descricao'];
             $nivel = $_POST['sala_nivel'];
             $max_membros = $_POST['sala_membros'];
             $conteudo = $_POST['sala_conteudo'];
             $disciplina = $_POST['sala_disciplina'];
-            $array = array($nome, $descricao, $nivel, $max_membros);
+            $array = array($nome, $descricao, $nivel, $max_membros, $user_id);
             $array2 = array($conteudo, $disciplina);
             $sala = criarSala($conexao, $array);
             try {
                 if($sala) {
                     $result1 = verificaAssunto($conexao, $array2);
-                    if($result1) {
-                        $result2 = inserirAssunto($conexao, $array2);
-                        if($result2) {
-                            $array2[2] = $nome;
-                            $result3 = colocarAssunto($conexao, $array2);
-                            if($result3) {
-                                header('location:../../index.php');  
-                            } 
-                        } 
-                    } 
+                    $result2 = inserirAssunto($conexao, $array2);
+                    $array2[2] = $nome;
+                    $result3 = colocarAssunto($conexao, $array2);
+                    if($result3) {
+                        header('location:../../index.php');  
+                    }   
                 } else {
-                    //pagina de cadastro da sala
+                    echo var_dump($array);
                 }
             } catch(PDOException $err) {
                 echo 'Error: ' . $err->getMessage();
@@ -106,7 +103,7 @@
                     
     }
 
-     if ($_SERVER['REQUEST_METHOD'] == 'delete') {
+    if ($_SERVER['REQUEST_METHOD'] == 'delete') {
         #DELETAR SALA - ADMIN ACTION
         if(isset($_POST['deletar_sala'])){
             $sala_id = $_REQUEST['sala_id'];
@@ -126,7 +123,7 @@
             if($resultado) {
                 header('location:../../index.php');
             } else {
-                echo "Houve um erro ao tentar sair da sala. Tente novamente"
+                echo "Houve um erro ao tentar sair da sala. Tente novamente";
             }
             die(); 
         }
@@ -157,8 +154,6 @@
             echo json_encode($status);
             die();
         }
-
-     }
 
      if ($_SERVER['REQUEST_METHOD'] == 'put') {
             #ATUALIZAR SALA -  ADMIN ACTION

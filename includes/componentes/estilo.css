@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Lato|Roboto+Condensed&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Lato|Luckiest+Guy|Roboto&display=swap');
 
 		* {
 			margin: 0;
@@ -7,12 +7,19 @@
 		}
 
 		body {
-			background-color: #c0c0c0;
-			font-family: sans-serif;
+			background-color: #f6f6f6;
+			font-family: 'Roboto', sans-serif;
+			display: grid;
+			grid-column-gap: 2rem;
+			grid-template-rows: 8vh 92vh;
+			grid-template-columns: 1fr 4fr 1.5fr; 
+			grid-template-areas: 
+			"header header header"
+			"nav section aside"
 		}
 
 /*REFERENTE AOS FORMULÁRIOS DE CADASTRO E LOGIN*/
-		form {
+		#cadastro, #login {
 			background: #FFFFFF;
 			width: 22vw;
 			height: 48vh;
@@ -110,3 +117,158 @@
 			margin: 3.5rem auto 0 auto;
 			
 		}
+
+/*REFERENTE A PÁGINA HOME DO USUÁRIO */
+header {
+	grid-area: header;
+	display: flex;
+	align-items: center;
+	background: #0b1a21;
+}
+
+aside {
+	grid-area: aside;
+	background: white;
+	margin-right: 4rem;
+	margin-top: 5rem;
+}
+
+section {
+	grid-area: section;
+	background: white;
+	margin-top: 5rem;
+}
+
+#sala-menu {
+	grid-area: nav;
+	background:	white;
+}
+#sala-menu ul {
+	width: 100%;
+	height: 25%;
+	margin-top: 5rem;
+	background: cyan;
+}
+
+#sala-menu ul li {
+	background: red;
+	padding: 6px 0px;
+}
+
+#sala-menu ul li a {
+	margin-left: 25px;
+	font-size: 1.4rem;
+	text-decoration: none;
+	color: black;
+}
+
+#sala-menu ul li a::before {
+	content: '\01F3E0';
+	padding-left: 5px;
+}
+
+#sala-menu ul li:hover {
+	background: green;
+}
+
+#sala-menu button {
+	border: none;
+	width: 100%;
+	height: 100%;
+	background: yellow;
+	padding: 6px 0px;
+	font-size: 1.4rem;
+	padding-right: 80px;
+}
+
+header #logo {
+	/*background: rgb(255,84,78);*/
+	width: 10%;
+	height: 70%;
+	margin-left: 3rem;
+}
+
+header #logo p {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	font-family: 'Luckiest Guy', cursive;
+	color: white;
+	font-size: 2rem;
+}
+
+header .buscar-sala {
+	height: 60%;
+	width: 25%;
+	margin-left: 20rem;
+}
+
+header .buscar-sala button {
+	position: absolute;
+	height: 4vh;
+	width: 40px;
+	left: 51.5vw;
+	top: 2vh;
+	border: none;
+	background: transparent;
+	font-size: 26px;
+}
+
+header input {
+	width: 100%;
+	height: 100%;
+	border: none;
+	font-size: 16px;
+	border-radius: 5px;
+	text-indent: 15px;
+}
+
+header input:focus {
+	box-shadow: 0px 0px 5.3px rgb(6,197,214);
+	outline: none;
+}
+
+header input::placeholder {
+	font-size: 18px;
+	padding-left: 2rem;
+}
+
+header .user-section {
+	width: auto;
+	height: 6vh;
+	display: flex;
+	position: absolute;
+	right: 3.5vw;
+}
+
+.user-section #user-foto {
+	width: 55px;
+	height: 100%;
+	background: black;
+	border-radius: 50%;
+}
+
+.user-section #username {
+	height: 100%;
+	width: auto;
+	margin-left: 10px;
+	font-size: 18px;
+	padding: 20px 6px;
+	color: white;
+}
+
+.user-section button {
+	font-size: 30px;
+	height: 100%;
+	width: 50px;
+	margin-left: 10px;
+	padding: 0px 10px;
+	color: white;
+	border: none;
+	background: transparent;
+}
+
+.user-section button:hover {
+	background: red;
+}		

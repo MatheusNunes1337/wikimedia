@@ -2,7 +2,7 @@
 	require_once('conecta.php');
 	 function criarSala($conexao,$array){
        try {
-            $query = $conexao->prepare("insert into salas (nome, descricao, nivel, nr_membros, usuario_id) values (?, ?, ?, ?, ?)");
+            $query = $conexao->prepare("insert into salas (nome, descricao, nivel, max_membros, usuario_id) values (?, ?, ?, ?, ?)");
             $result = $query->execute($array);
             return $result;
         } catch(PDOException $e) {

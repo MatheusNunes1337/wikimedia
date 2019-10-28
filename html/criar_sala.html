@@ -1,0 +1,20 @@
+<form method="POST" action="includes/logica/logica_sala.php">
+	<label for="nome">Nome:</label><br>
+	<input type="text" name="sala_nome" placeholder="nome" id="nome" required="true"><br><br>
+	<label for="descricao">Descrição:</label><br>
+	<textarea name="sala_descricao" id="descricao" cols="40" rows="8" required="true"></textarea><br><br>
+	<label for="nivel">Nível:</label><br>
+	<select name="sala_nivel" id="nivel" required="true">
+		<option value="iniciante">Iniciante</option>
+  		<option value="intermediario">Intermediário</option>
+  		<option value="avancado">Avançado</option>
+  		<option value="mestre">Mestre</option>
+	</select><br><br>
+	<label for="max_membros">Número máximo de membros:</label><br>
+	<input type="number" name="sala_membros" id="max_membros" min="1" required="true"><br><br>
+	<label for="disciplina">Disciplina:</label>
+	<input type="text" name="sala_disciplina" id="disciplina" required="true">
+	<label for="conteudo">Conteudo:</label>
+	<input type="text" name="sala_conteudo" id="conteudo" required="true"><br><br>
+	<input type="submit" name="criar_sala" value="criar">
+</form>
