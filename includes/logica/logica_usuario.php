@@ -34,7 +34,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['logado'] = true;
             $_SESSION['id'] = $usuario['usuario_id'];
             $_SESSION['username'] = $usuario['username'];
-            header('location:../../index.php');
+            header('location:../../home.php');
         }
         else{
             /*

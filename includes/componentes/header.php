@@ -17,31 +17,3 @@
 		<button id="user-options" onclick="abrirOpcoes()">&#9776;</button>
 	</div>
 </header>
-<nav id="sala-menu">
-	<ul>
-		<li><a href="#">Página inicial</a></li>
-		<li><button onclick="criarSala()">Criar sala</button></li>
-	</ul>
-</nav>
-<section>
-	content
-</section>
-<aside>
-	direita
-</aside>
-<script type="text/javascript">
-
-	let container = document.getElementsByTagName('section')[0];
-
-	function criarSala() {
-	fetch('html/criar_sala.html')	
-	.then(response => response.text())
-	.then(html => {
-		container.innerHTML = html; 		
- 	})
-  	.catch(error => {
-  		console.log(error);
-    }); 
-}
-
-</script>

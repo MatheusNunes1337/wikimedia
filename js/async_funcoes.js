@@ -144,10 +144,6 @@ function editarPostagem(e) {
 
 
 
-
-
-
-
 function doRequestPost(url, obj) {
 	fetch(url, {
 		method: 'POST',
@@ -161,7 +157,7 @@ function doRequestPost(url, obj) {
 	})
 	.catch(error) {
 		console.error(error);
-	}
+	};
 }
 
 function doRequestPut(url, obj) {
@@ -196,3 +192,16 @@ function doRequestDelete(url, obj) {
 	}
 }
 
+let container = document.getElementsByTagName('section')[0];
+
+//carregar HTML
+function criarSala() {
+	fetch('html/criar_sala.html')	
+	.then(response => response.text())
+	.then(html => {
+		container.innerHTML = html; 		
+ 	})
+  	.catch(error => {
+  		console.log(error);
+    }); 
+}
