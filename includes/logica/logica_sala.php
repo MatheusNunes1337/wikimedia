@@ -1,23 +1,20 @@
 <?php
     require_once('conecta.php');
     require_once('funcoes_sala.php');
-    header('Content-Type: application/json; charset=UTF-8');
+    header('Content-Type: application/json');
     header('Access-Control-Allow-Origin: *');
-    $json = file_get_contents('php://input');
-    $obj = json_decode($json);
 
 
  if($_SERVER['REQUEST_METHOD'] == 'GET') {
     #BUSCAR SALA - funcao assincrona
     if(isset($_REQUEST['disciplina'])) {
-        $array = [$_REQUEST['disciplina']];
+        $array = array($_REQUEST['disciplina']);
         $result = buscarSala($conexao, $array);
         if($result) {
-            $status = $result; //array_push($result, array('status'=>'sucesso'));
-            $status['status'] = 'sucesso';
+            $status = $result; 
 
         } else {
-            $status = array('status'=>'falha', "mensagem"=>"Hmm, parece que não há sala com essa disciplina"); //fazer o teste com o status = falha no response
+            $status = array('status'=>'falha', "mensagem"=>"Hmm, parece que não há sala com essa disciplina"); 
         }
          echo json_encode($status);
          die();
@@ -42,6 +39,9 @@
 
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $json = file_get_contents('php://input');
+        $obj = json_decode($json);
+
         #CRIAR UMA NOVA SALA
         if(isset($_POST['criar_sala'])){
             $user_id = 5;
@@ -104,6 +104,9 @@
     }
 
     if ($_SERVER['REQUEST_METHOD'] == 'delete') {
+        $json = file_get_contents('php://input');
+        $obj = json_decode($json);
+
         #DELETAR SALA - ADMIN ACTION
         if(isset($_POST['deletar_sala'])){
             $sala_id = $_REQUEST['sala_id'];
@@ -156,6 +159,9 @@
         }
 
      if ($_SERVER['REQUEST_METHOD'] == 'put') {
+            $json = file_get_contents('php://input');
+            $obj = json_decode($json);
+
             #ATUALIZAR SALA -  ADMIN ACTION
             if(isset($_POST['atualizar_sala'])){
                 $sala_nome = $_REQUEST['sala_nome'];

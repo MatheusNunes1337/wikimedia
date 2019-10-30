@@ -13,7 +13,9 @@
 
      function buscarSala($conexao,$array){
         try {
-        $query = $conexao->prepare("select * from salas where assunto_id IN (select assunto_id from assuntos where disciplina = ?)");
+        $query = $conexao->prepare("select nome, descricao, nivel, max_membros,sala_id, usuarios.username 
+            from salas, usuarios where salas.usuario_id = usuarios.usuario_id and 
+            assunto_id IN (select assunto_id from assuntos where disciplina = ?)");
         if($query->execute($array)){
             $sala = $query->fetchAll(PDO::FETCH_ASSOC); //coloca os dados num array $usuario
             return $sala;

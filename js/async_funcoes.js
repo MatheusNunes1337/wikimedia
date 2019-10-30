@@ -2,31 +2,25 @@
 const url_sala_user = '../includes/logica/logica_sala_user.php';
 const url_sala = '../includes/logica/logica_sala.php';
 
+let container = document.getElementsByTagName('section')[0];
 function buscarSala() {
 	let disciplina = buscar.disciplina.value;
-	fetch(`../includes/logica/logica_sala.php?disciplina=${disciplina}`, {
-		method: 'GET',
+	fetch(`includes/logica/logica_sala.php?disciplina=${disciplina}`, {
+		method: 'GET'
 	})
 	.then(response => response.json())
-	.then(data => {
-		if(data.status === 'sucesso') {
-			let table = '<table border=1>'
-	            data.forEach(obj => {
-	                table += '<tr>'
-	                Object.entries(obj).map(([key, value]) => {
-	                    table += `<td>${value}</td>`
-	                });
-	                table += '</tr>';
-	                resultado.innerHTML = table;
-	            });
-	             table += '</table>'
-	           	 resultado.innerHTML = table;
-	    } else {
-    	     showModal(data.mensagem);
-	    }    		
+	.then(sala => {
+		let lista = '<ul>'
+		sala.forEach(obj => {
+			lista += `<li>${obj.nome}</li>`
+			lista += `<ul>`
+			lista += `<hr>`
+		})
+		container.innerHTML = lista;
+		
  	})
-  	.catch(error => {
-  		console.log(error);
+  	.catch(err => {
+  		console.error('Erro ao tentar buscar uma sala', err);
     });
 	event.preventDefault(); 
 	
@@ -155,9 +149,9 @@ function doRequestPost(url, obj) {
 			showModal(data.mensagem);
 		}
 	})
-	.catch(error) {
-		console.error(error);
-	};
+	.catch(err => {
+		console.error(err);
+	});
 }
 
 function doRequestPut(url, obj) {
@@ -171,9 +165,9 @@ function doRequestPut(url, obj) {
 			showModal(data.mensagem);
 		}
 	})
-	.catch(error) {
-		console.error(error);
-	}
+	.catch(err => {
+		console.error(err);
+	})
 }
 
 function doRequestDelete(url, obj) {
@@ -187,21 +181,10 @@ function doRequestDelete(url, obj) {
 			showModal(data.mensagem);
 		}
 	})
-	.catch(error) {
-		console.error(error);
-	}
+	.catch(err => {
+		console.error(err);
+	})
 }
+     
 
-let container = document.getElementsByTagName('section')[0];
-
-//carregar HTML
-function criarSala() {
-	fetch('html/criar_sala.html')	
-	.then(response => response.text())
-	.then(html => {
-		container.innerHTML = html; 		
- 	})
-  	.catch(error => {
-  		console.log(error);
-    }); 
-}
+	       
