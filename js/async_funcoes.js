@@ -3,21 +3,27 @@ const url_sala_user = '../includes/logica/logica_sala_user.php';
 const url_sala = '../includes/logica/logica_sala.php';
 
 let container = document.getElementsByTagName('section')[0];
+
+//verificada
 function buscarSala() {
 	let disciplina = buscar.disciplina.value;
+	container.innerHTML = '';
 	fetch(`includes/logica/logica_sala.php?disciplina=${disciplina}`, {
 		method: 'GET'
 	})
 	.then(response => response.json())
-	.then(sala => {
-		let lista = '<ul>'
-		sala.forEach(obj => {
-			lista += `<li>${obj.nome}</li>`
-			lista += `<ul>`
-			lista += `<hr>`
+	.then(salas => {
+		let room = '<article>'
+		salas.forEach(sala => {
+			room += `<div>
+						<h2>${sala.nome}</h2>
+						<p>${sala.descricao}</p>
+						<button id=${sala.sala_id} onclick='enviarSolicitacao(event)'>Ingressar</button>
+					</div>`
+			container.innerHTML = room;
 		})
-		container.innerHTML = lista;
-		
+		room += '</article>';	
+		container.innerHTML = room;
  	})
   	.catch(err => {
   		console.error('Erro ao tentar buscar uma sala', err);
@@ -26,11 +32,25 @@ function buscarSala() {
 	
 }
 
-function enviarSolicitacao() {
- 
+//verificada
+function enviarSolicitacao(e) {
 	let obj = new Object();
 	obj.funcao = 'enviar solicitacao';
-	doRequestPost(url_sala, obj);
+	obj.sala_id = e.target.id;
+	//doRequestPost(url_sala, obj);
+	fetch('includes/logica/logica_sala.php', {
+		method: 'POST',
+		body: JSON.stringify(obj)
+	})
+	.then(response => response.json())
+	.then(data => {
+		if(data.status == 'sucesso') {
+			let botao = document.getElementById(obj.sala_id).permDisabled = true;
+		}
+	})
+	.catch(err => {
+		console.error(err);
+	});
 
 }
 
@@ -51,19 +71,42 @@ function tornarAdmin(e) {
 }
 
 function aceitarSolicitacao(e) {
-	let usuario_id = e.target.value;
+	console.log('batata');
 	let obj = new Object();
 	obj.funcao = 'aceitar solicitacao';
-	obj.user_id = usuario_id;
-	doRequestPost(url_sala, obj);
+	obj.user_id = e.target.id;
+	console.log(obj);
+	fetch('includes/logica/logica_sala.php', {
+		method: 'POST',
+		body: JSON.stringify(obj)
+	})
+	.then(response => response.text())
+	.then(data => {
+		console.log(data);
+	})
+	.catch(err => {
+		console.error(err);
+	});
 }
 
 function negarSolicitacao(e) {
-	let usuario_id = e.target.value;
+	console.log('arroz');
 	let obj = new Object();
 	obj.funcao = 'negar solicitacao';
-	obj.user_id = usuario_id;
-	doRequestDelete(url_sala, obj);
+	obj.user_id = e.target.id;
+	console.log(obj);
+	fetch('includes/logica/logica_sala.php', {
+		method: 'DELETE',
+		body: JSON.stringify(obj)
+	})
+	.then(response => response.text())
+	.then(data => {
+		console.log(data)
+	})
+	.catch(err => {
+		console.error(err);
+	})
+	
 }
 
 
@@ -136,23 +179,6 @@ function editarPostagem(e) {
 	doRequestPut(obj);
 }
 
-
-
-function doRequestPost(url, obj) {
-	fetch(url, {
-		method: 'POST',
-		body: JSON.stringify(obj)
-	})
-	.then(response => response.json())
-	.then(data => {
-		if(data.status == 'falha') {
-			showModal(data.mensagem);
-		}
-	})
-	.catch(err => {
-		console.error(err);
-	});
-}
 
 function doRequestPut(url, obj) {
 	fetch(url, {

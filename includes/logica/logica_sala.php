@@ -1,18 +1,20 @@
 <?php
+    session_start();
     require_once('conecta.php');
     require_once('funcoes_sala.php');
+    require_once('funcoes_admin.php');
     header('Content-Type: application/json');
     header('Access-Control-Allow-Origin: *');
+    header('Content-Type: charset=UTF-8');
 
 
- if($_SERVER['REQUEST_METHOD'] == 'GET') {
+ if($_SERVER['REQUEST_METHOD'] == 'GET') { //verificada
     #BUSCAR SALA - funcao assincrona
     if(isset($_REQUEST['disciplina'])) {
         $array = array($_REQUEST['disciplina']);
         $result = buscarSala($conexao, $array);
         if($result) {
             $status = $result; 
-
         } else {
             $status = array('status'=>'falha', "mensagem"=>"Hmm, parece que não há sala com essa disciplina"); 
         }
@@ -33,12 +35,17 @@
         echo json_encode($status);
         die();
     }
+    if(isset($_REQUEST['entrar_sala'])) { //verficada
+        $sala_id = $_REQUEST['sala_id'];
+        $_SESSION['sala_id'] = $sala_id;
+        header('location:../../sala.php');
+    }
 
     
  }   
 
 
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    else if ($_SERVER['REQUEST_METHOD'] == 'POST') { //verificada
         $json = file_get_contents('php://input');
         $obj = json_decode($json);
 
@@ -73,9 +80,10 @@
         }
 
         #ENVIAR SOLICITACAO PARA ENTRAR - assincrono
-        if($obj->funcao = 'enviar solicitacao') {
-            $user_id = $_SESSION['user_id'];
-            $sala_id = $_SESSION['sala_id'];
+        
+        if($obj->funcao == "enviar solicitacao") { //verificada
+            $user_id = $_SESSION['id'];
+            $sala_id = $obj->sala_id;
             $array = array($user_id, $sala_id);
             $result = enviarSolicitacao($conexao, $array);
             if($result) {
@@ -86,8 +94,9 @@
             echo json_encode($status);
             die();
         }
+        
         #ACEITAR SOLICITACAO - ADMIN ACTION - ASSINCRONO
-        if($obj->funcao = 'aceitar solicitacao') {
+        if($obj->funcao == 'aceitar solicitacao') { //verificada
             $user_id = $obj->user_id;
             $sala_id = $_SESSION['sala_id'];
             $array = array($user_id, $sala_id);
@@ -98,67 +107,14 @@
                 $status = array('status'=>'falha', 'mensagem'=>'Hmmm, parece que houve um erro ao tentar aceitar essa solicitacao');
             }
             echo json_encode($status);
+            */
             die();
+            
         }
                     
     }
 
-    if ($_SERVER['REQUEST_METHOD'] == 'delete') {
-        $json = file_get_contents('php://input');
-        $obj = json_decode($json);
-
-        #DELETAR SALA - ADMIN ACTION
-        if(isset($_POST['deletar_sala'])){
-            $sala_id = $_REQUEST['sala_id'];
-            $array = array($sala_id);
-            $resultado = excluirSala($conexao, $array); 
-            if($resultado) { //enviar aviso aos outros usuários sobre a sala deletada
-                header('location:../../index.php');
-            } else {
-                echo "Houve um erro ao tentar sair da sala";
-            }
-            die();
-        }
-        if(isset($_POST['sair_sala'])) {
-            $user_id = $_SESSION['user_id'];
-            $array = array($user_id);
-            $resultado = sairSala($conexao, $array);
-            if($resultado) {
-                header('location:../../index.php');
-            } else {
-                echo "Houve um erro ao tentar sair da sala. Tente novamente";
-            }
-            die(); 
-        }
-        if($obj->funcao = 'banir usuario') {
-            $user_id = $obj->user_id;
-            $sala_id = $_SESSION['sala_id'];
-            $array = array($user_id, $sala_id);
-            $resultado = banirUsuario($conexao, $array);
-            if($resultado) {
-                    $status = array('status'=>'sucesso', 'mensagem'=>'O usuário foi banido com sucesso.');
-                } else {
-                    $status = array('status'=>'falha', 'mensagem'=>'Houve um erro ao tentar realizar esta operação. Tente novamente');
-                }
-                echo json_encode($status);
-                die();
-            }    
-        }
-        if($obj->funcao = 'negar solicitacao') {
-            $user_id = $obj->user_id;
-            $sala_id = $_SESSION['sala_id'];
-            $array = array($user_id, $sala_id);
-            $resultado = negarSolicitacao($conexao, $array);
-            if($resultado) {
-                $status = array('status'=>'sucesso');
-            } else {
-                $status = array('status'=>'falha', 'mensagem'=>'Hmmm, parece que houve um erro ao tentar negar essa solicitacao');
-            }
-            echo json_encode($status);
-            die();
-        }
-
-     if ($_SERVER['REQUEST_METHOD'] == 'put') {
+    else if ($_SERVER['REQUEST_METHOD'] == 'put') {
             $json = file_get_contents('php://input');
             $obj = json_decode($json);
 
@@ -182,7 +138,7 @@
                  die();
 
             }
-            if($obj->funcao = 'tornar admin') {  //funcao assincrona
+            if($obj->funcao == 'tornar admin') {  //funcao assincrona
                 $admin_id = $obj->user_id; //id do usuário que se tornará admin
                 $sala_id = $_SESSION['sala_id'];
                 $array = array($obj->admin_id, $sala_id);
@@ -195,6 +151,61 @@
                 echo json_encode($status);
                 die();
             }
+        } else { //DELETE METHOD
+
+        $json = file_get_contents('php://input');
+        $obj = json_decode($json);
+
+        #DELETAR SALA - ADMIN ACTION
+        if(isset($_POST['deletar_sala'])){
+            $sala_id = $_REQUEST['sala_id'];
+            $array = array($sala_id);
+            $resultado = excluirSala($conexao, $array); 
+            if($resultado) { //enviar aviso aos outros usuários sobre a sala deletada
+                header('location:../../index.php');
+            } else {
+                echo "Houve um erro ao tentar sair da sala";
+            }
+            die();
+        }
+        if(isset($_POST['sair_sala'])) {
+            $user_id = $_SESSION['id'];
+            $array = array($user_id);
+            $resultado = sairSala($conexao, $array);
+            if($resultado) {
+                header('location:../../home.php');
+            } else {
+                echo "Houve um erro ao tentar sair da sala. Tente novamente";
+            }
+            die(); 
+        }
+        if($obj->funcao == 'banir usuario') {
+            $user_id = $obj->user_id;
+            $sala_id = $_SESSION['sala_id'];
+            $array = array($user_id, $sala_id);
+            $resultado = banirUsuario($conexao, $array);
+            if($resultado) {
+                    $status = array('status'=>'sucesso', 'mensagem'=>'O usuário foi banido com sucesso.');
+                } else {
+                    $status = array('status'=>'falha', 'mensagem'=>'Houve um erro ao tentar realizar esta operação. Tente novamente');
+                }
+                echo json_encode($status);
+                die();
+            }    
+        }
+        if($obj->funcao == 'negar solicitacao') { //verificada
+            $user_id = $obj->user_id;
+            $sala_id = $_SESSION['sala_id'];
+            $array = array($user_id, $sala_id);
+            $resultado = negarSolicitacao($conexao, $array);
+            echo var_dump($resultado);
+            if($resultado) {
+                $status = array('status'=>'sucesso');
+            } else {
+                $status = array('status'=>'falha', 'mensagem'=>'Hmmm, parece que houve um erro ao tentar negar essa solicitacao');
+            }
+            echo json_encode($status);
+            die();
         }   
                
 

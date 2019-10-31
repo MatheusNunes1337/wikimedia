@@ -7,9 +7,9 @@
             $query = $conexao->prepare("insert into sala_membros (usuario_id, sala_id) values (?, ?)");
             $result1 = $query->execute($array);
             if($result1) {
-                $result2 = negarSolicitacoes($conexao, $array);
+                $result2 = negarSolicitacao($conexao, $array);
                 if($result2) {
-                    return $usuario;
+                    return $result2;
                 } else {
                     return false;
                 }
@@ -74,7 +74,7 @@
                 if($result->rowCount() == 1) {
                     $resultado = excluirAssunto($conexao);
                 } 
-                $result2 = inserirAssunto($conexao, array($array2[0], $array2[1]);
+                $result2 = inserirAssunto($conexao, array($array2[0], $array2[1]));
                 if($result2) {
                     $resultado = colocarAssunto($conexao, $array2);
                     return $resultado;

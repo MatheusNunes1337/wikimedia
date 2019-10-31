@@ -4,6 +4,9 @@
        try {
             $query = $conexao->prepare("insert into salas (nome, descricao, nivel, max_membros, usuario_id) values (?, ?, ?, ?, ?)");
             $result = $query->execute($array);
+            if($result) {
+
+            }
             return $result;
         } catch(PDOException $e) {
             echo 'Error: ' . $e->getMessage();
@@ -118,5 +121,37 @@
     }
 
 
+    //lista todas as salas que o usuário logado já entrou
+    function listarSalas($conexao, $array) {
+         try {
+        $query = $conexao->prepare("select nome, descricao, sala_id from salas where sala_id IN (select sala_id from sala_membros where usuario_id = ?)"); 
+        if($query->execute($array)){
+            $salas = $query->fetchAll(PDO::FETCH_ASSOC); 
+            return $salas;
+        }
+        else{
+            return false;
+        }
+         }catch(PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
+      }
+    }
+
+    //lista as solicitações de uma sala
+    function listarSolicitacoes($conexao, $array) {
+         try {
+        $query = $conexao->prepare("select username, usuario_id from usuarios where usuario_id IN
+            (select usuario_id from solicitacoes where sala_id = ?)"); 
+        if($query->execute($array)){
+            $solicitacoes = $query->fetchAll(PDO::FETCH_ASSOC); 
+            return $solicitacoes;
+        }
+        else{
+            return false;
+        }
+         }catch(PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
+      }
+    }
 
 ?>

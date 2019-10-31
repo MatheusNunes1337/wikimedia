@@ -139,6 +139,11 @@ section {
 	margin-top: 5rem;
 }
 
+section div {
+	margin-top: 15px;
+	background: red;
+}
+
 #sala-menu {
 	grid-area: nav;
 	background:	white;
