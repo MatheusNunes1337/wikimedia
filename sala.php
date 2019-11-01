@@ -7,4 +7,5 @@
 <h1>Bem vindo, essa é a sala de ID: <?php echo $_SESSION['sala_id'];?></h1>
 <ul>
 	<li><a href="solicitacoes.php">solicitacoes</a></li>
+	<li><a href="gerenciar_usuarios.php">Gerenciar usuários</a></li>
 </ul>

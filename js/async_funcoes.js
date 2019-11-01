@@ -272,6 +272,7 @@ function verificaEmail(e) {
 	}
 }
 
+//nao é assincrona
 function verificaSenha(e) {
 	let campo = cadastro.senha;
 	let resultado = document.getElementsByTagName('small')[2];

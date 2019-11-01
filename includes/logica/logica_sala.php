@@ -107,7 +107,6 @@
                 $status = array('status'=>'falha', 'mensagem'=>'Hmmm, parece que houve um erro ao tentar aceitar essa solicitacao');
             }
             echo json_encode($status);
-            */
             die();
             
         }
