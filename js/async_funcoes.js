@@ -211,6 +211,54 @@ function doRequestDelete(url, obj) {
 		console.error(err);
 	})
 }
+
+//funções para verificar os campos de cadastro do formulário
+
+function verificaUsuario(e) {
+	let resultado = document.getElementsByTagName('small')[0];
+	let username = e.target.value;
+	if(username.length > 0) {
+		fetch(`../../includes/logica/logica_usuario.php?username=${username}`, {
+		method: 'GET'
+		})
+		.then(response => response.json())
+		.then(data => {
+			if(data.status == 'okay') {
+				resultado.style.color = 'green';
+			} else {
+				resultado.style.color = 'red';
+			}
+			resultado.innerHTML = data.mensagem;
+			resultado.style.opacity = '1';
+		})
+		.catch(err => {
+			console.error('Houve um erro ao tentar se conectar', err);
+		});
+	}
+}
+
+function verificaEmail(e) {
+	let resultado = document.getElementsByTagName('small')[1];
+	let email = e.target.value;
+	if(email.length > 0) {
+		fetch(`../../includes/logica/logica_usuario.php?email=${email}`, {
+		method: 'GET'
+		})
+		.then(response => response.json())
+		.then(data => {
+			if(data.status == 'okay') {
+			resultado.style.color = 'green';
+			} else {
+				resultado.style.color = 'red';
+			}
+			resultado.innerHTML = data.mensagem;
+			resultado.style.opacity = '1';
+		})
+		.catch(err => {
+		console.error('Houve um erro ao tentar se conectar', err);
+		});
+	}
+}
      
 
 	       
