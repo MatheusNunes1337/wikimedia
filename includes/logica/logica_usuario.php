@@ -1,10 +1,10 @@
 <?php
     require_once('conecta.php');
     require_once('funcoes_usuario.php');
-    header('Content-Type: application/json; charset=UTF-8');
+    header('Content-Type: application/json');
     header('Access-Control-Allow-Origin: *');
-    $json = file_get_contents('php://input');
-    $obj = json_decode($json);
+    header('Content-Type: charset=UTF-8');
+    
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
     #CADASTRO USUÁRIO
@@ -51,18 +51,44 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     die();
 }    
 
-/*
+
 if($_SERVER['REQUEST_METHOD'] == 'GET') {
+    $json = file_get_contents('php://input');
+    $obj = json_decode($json);
+
+    if(isset($_REQUEST['username'])) {
+        $array = array($_REQUEST['username']);
+        $resultado = verificaUsername($conexao, $array);
+        if($resultado) {
+            $status = array('status'=>'okay', 'mensagem'=>'Esse nome de usuário é válido');
+        } else {
+            $status = array('status'=>'falha', 'mensagem'=>'Esse nome de usuário já existe');
+        }
+        echo json_encode($status);
+    } 
+    if(isset($_REQUEST['email'])) {
+        $array = array($_REQUEST['email']);
+        $resultado = verificaEmail($conexao, $array);
+        if($resultado) {
+            $status = array('status'=>'okay', 'mensagem'=>'Esse email é válido');
+        } else {
+            $status = array('status'=>'falha', 'mensagem'=>'Esse email já foi cadastrado');
+        }
+        echo json_encode($status);
+    }
+    
+    /*
     #PESQUISAR USUÁRIO
-    //funcao assincrona
+    funcao assincrona
     if($obj->funcao == 'buscar usuario') {
         $nome = $_REQUEST['nome'];
         $usuario = pesquisarUsuario($conexao, $nome);
         include "../../pesquisarUsuario.php";
     }
+    */
 }
 
-*/
+
 
 if($_SERVER['REQUEST_METHOD'] == 'delete') {
     #EXCLUIR USUARIO LOGADO
@@ -103,7 +129,5 @@ if($_SERVER['REQUEST_METHOD'] == 'PUT') {
             session_destroy();
             header('location:../../login.php');
     }
-
-
 
 ?>

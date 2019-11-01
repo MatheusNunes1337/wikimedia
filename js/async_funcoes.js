@@ -215,9 +215,10 @@ function doRequestDelete(url, obj) {
 //funções para verificar os campos de cadastro do formulário
 
 function verificaUsuario(e) {
+	let campo = cadastro.username;
 	let resultado = document.getElementsByTagName('small')[0];
 	let username = e.target.value;
-	if(username.length > 0) {
+	if(campo.checkValidity()) {
 		fetch(`../../includes/logica/logica_usuario.php?username=${username}`, {
 		method: 'GET'
 		})
@@ -234,13 +235,19 @@ function verificaUsuario(e) {
 		.catch(err => {
 			console.error('Houve um erro ao tentar se conectar', err);
 		});
+	} else {
+		campo.setCustomValidity('O nome de usuario deve conter de 6 a 12 caracteres');
+		resultado.innerHTML = campo.validationMessage;
+		resultado.style.opacity = '1';
+		resultado.style.color = 'red';
 	}
 }
 
 function verificaEmail(e) {
+	let campo = cadastro.email;
 	let resultado = document.getElementsByTagName('small')[1];
 	let email = e.target.value;
-	if(email.length > 0) {
+	if(campo.checkValidity()) {
 		fetch(`../../includes/logica/logica_usuario.php?email=${email}`, {
 		method: 'GET'
 		})
@@ -257,7 +264,27 @@ function verificaEmail(e) {
 		.catch(err => {
 		console.error('Houve um erro ao tentar se conectar', err);
 		});
+	} else {
+		campo.setCustomValidity('Digite um email válido');
+		resultado.innerHTML = campo.validationMessage;
+		resultado.style.opacity = '1';
+		resultado.style.color = 'red';
 	}
+}
+
+function verificaSenha(e) {
+	let campo = cadastro.senha;
+	let resultado = document.getElementsByTagName('small')[2];
+	if(campo.checkValidity()) {
+		resultado.innerHTML = 'Essa senha é valida';
+		resultado.style.color = 'green';
+	} else {
+		campo.setCustomValidity('A senha deve conter de 6 a 12 caracteres');
+		resultado.innerHTML = campo.validationMessage;
+		resultado.style.color = 'red';
+		console.log('batata');
+	}
+	resultado.style.opacity = '1';
 }
      
 

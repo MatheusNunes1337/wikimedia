@@ -135,5 +135,39 @@
         }
     }
 
+     function verificaUsername($conexao, $array) {
+         try {
+            $query = $conexao->prepare("select * from usuarios where username = ?");
+            if($query->execute($array)){
+                $query->fetch();
+                if($query->rowCount() < 1) {
+                    $resultado = true;
+                } else {
+                    $resultado = false;
+                }
+                return $resultado;
+            }
+         }catch(PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
+         }  
+    }
+
+     function verificaEmail($conexao, $array) {
+         try {
+            $query = $conexao->prepare("select * from usuarios where email = ?");
+            if($query->execute($array)){
+                $query->fetch();
+                if($query->rowCount() < 1) {
+                    $resultado = true;
+                } else {
+                    $resultado = false;
+                }
+                return $resultado;
+            }
+         }catch(PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
+         }  
+    }
+
     
    ?>
