@@ -9,6 +9,8 @@
 
 
  if($_SERVER['REQUEST_METHOD'] == 'GET') { //verificada
+    $json = file_get_contents('php://input');
+    $obj = json_decode($json);
     #BUSCAR SALA - funcao assincrona
     if(isset($_REQUEST['disciplina'])) {
         $array = array($_REQUEST['disciplina']);
@@ -22,12 +24,12 @@
          die();
     }
     #ACHA A SALA PARA ENVIAR AS INFORMAÇÕES PARA O FORMULÁRIO DE ALTERAÇÃO
-    if(isset($_REQUEST['editar_sala'])) {
-        $sala_id = $_REQUEST['editar_sala'];
+    if(isset($_REQUEST['infoSala'])) { //funcao assincrona
+        $sala_id = $_SESSION['sala_id'];
         $array = array($sala_id);
         $salaInfo = acharSala($conexao, $array);
         if($salaInfo) {
-            $status = $salaInfo; //array_push($salaInfo, array('status'=>'sucesso'));
+            $status = $salaInfo; 
             $status['status'] = 'sucesso';
         } else {
             $status = array('status'=>'falha', 'mensagem' => 'Não foi possivel selecionar essa sala para edição');
@@ -79,6 +81,19 @@
             die();   
         }
 
+         #DELETAR SALA - ADMIN ACTION - É UMA AÇÃO DE DELETAR MAS NÃO PODE SER ASSINCRONA, ENTÃO ESTA NO METHOD POST
+        if(isset($_POST['deletar_sala'])){
+            $sala_id = $_REQUEST['sala_id'];
+            $array = array($sala_id);
+            $resultado = excluirSala($conexao, $array); 
+            if($resultado) { //enviar aviso aos outros usuários sobre a sala deletada
+                header('location:../../index.php');
+            } else {
+                echo "Houve um erro ao tentar sair da sala";
+            }
+            die();
+        }
+
         #ENVIAR SOLICITACAO PARA ENTRAR - assincrono
         
         if($obj->funcao == "enviar solicitacao") { //verificada
@@ -117,22 +132,24 @@
             $obj = json_decode($json);
 
             #ATUALIZAR SALA -  ADMIN ACTION
-            if(isset($_POST['atualizar_sala'])){
-                $sala_nome = $_REQUEST['sala_nome'];
-                $sala_descricao = $_REQUEST['sala_descricao'];
-                $sala_nivel = $_REQUEST['sala_nivel'];
-                $sala_membros = $_REQUEST['sala_membros'];
-                $sala_id = $_REQUEST['sala_id'];
-                $sala_disciplina = $_REQUEST['sala_disciplina'];
-                $sala_conteudo = $_REQUEST['sala_assunto'];
+            if($obj->funcao == 'editar sala'){
+                $sala_nome = $obj->nome;
+                $sala_descricao = $obj->descricao;
+                $sala_nivel = $obj->nivel;
+                $sala_membros = $obj->max_membros;
+                $sala_id = $_SESSION['sala_id'];
+                $sala_disciplina = $obj->disciplina;
+                $sala_conteudo = $obj->conteudo;
+                var_dump($obj);
+                /*
                 $array = array($sala_nome, $sala_descricao, $sala_nivel, $sala_membros);
                 $array2 = array($sala_conteudo, $sala_disciplina, $sala_nome);
                 $resultado = editarInformacoes($conexao, $array, $array2);
                 if($resultado) {
-                     header('location:../../index.php');
+                     header('location:../../home.php');
                  } else {
                     echo "Houve um erro ao tentar atualizar as informacoes da sala";
-                 }
+                 }*/
                  die();
 
             }
@@ -157,18 +174,6 @@
         $json = file_get_contents('php://input');
         $obj = json_decode($json);
 
-        #DELETAR SALA - ADMIN ACTION
-        if(isset($_POST['deletar_sala'])){
-            $sala_id = $_REQUEST['sala_id'];
-            $array = array($sala_id);
-            $resultado = excluirSala($conexao, $array); 
-            if($resultado) { //enviar aviso aos outros usuários sobre a sala deletada
-                header('location:../../index.php');
-            } else {
-                echo "Houve um erro ao tentar sair da sala";
-            }
-            die();
-        }
         if(isset($_POST['sair_sala'])) {
             $user_id = $_SESSION['id'];
             $array = array($user_id);
@@ -180,7 +185,7 @@
             }
             die(); 
         }
-        if($obj->funcao == 'banir usuario') {
+        if($obj->funcao == 'banir usuario') { //verificada
             $user_id = $obj->user_id;
             $sala_id = $_SESSION['sala_id'];
             $array = array($user_id, $sala_id);

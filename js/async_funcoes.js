@@ -54,6 +54,7 @@ function enviarSolicitacao(e) {
 
 }
 
+//verificada
 function banirUsuario(e) {
 	let usuario_id = e.target.id;
 	let obj = new Object();
@@ -62,7 +63,7 @@ function banirUsuario(e) {
 	console.log(obj);
 	doRequestDelete(url_sala, obj);
 }
-
+//incompleta
 function tornarAdmin(e) {
 	let usuario_id = e.target.id;
 	let obj = new Object();
@@ -71,7 +72,7 @@ function tornarAdmin(e) {
 	console.log(obj);
 	doRequestPut(url_sala, obj);
 }
-
+//verificada
 function aceitarSolicitacao(e) {
 	console.log('batata');
 	let obj = new Object();
@@ -90,12 +91,11 @@ function aceitarSolicitacao(e) {
 		console.error(err);
 	});
 }
-
+//verificada
 function negarSolicitacao(e) {
 	let obj = new Object();
 	obj.funcao = 'negar solicitacao';
 	obj.user_id = e.target.id;
-	console.log(obj);
 	fetch(url_sala, {
 		method: 'DELETE',
 		body: JSON.stringify(obj)
@@ -110,6 +110,19 @@ function negarSolicitacao(e) {
 		console.error(err);
 	})
 	
+}
+
+function editaSala() {
+	console.log('oi');
+	let obj = new Object();
+	obj.funcao = 'editar sala'
+	obj.nome = editarSala.nome.value;
+	obj.descricao = editarSala.descricao.value;
+	obj.nivel = editarSala.nivel.value;
+	obj.max_membros = editarSala.membros.value;
+	obj.disciplina = editarSala.disciplina.value;
+	obj.conteudo = editarSala.conteudo.value;
+	doRequestPut(url_sala, obj);
 }
 
 
@@ -191,15 +204,19 @@ function doRequestPut(url, obj) {
 	.then(response => response.text())
 	.then(data => {
 		console.log(data);
+		/*
 		if(data.status == 'falha') {
 			console.log(data.mensagem)
 		} else {
 			console.log(data.mensagem)
 		}
+		*/
 	})
 	.catch(err => {
 		console.error(err);
 	})
+
+	event.preventDefault(); 
 }
 
 function doRequestDelete(url, obj) {
@@ -295,6 +312,7 @@ function verificaSenha(e) {
 	}
 	resultado.style.opacity = '1';
 }
+
      
 
 	       

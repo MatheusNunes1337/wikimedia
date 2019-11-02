@@ -33,7 +33,8 @@
 
      function acharSala($conexao,$array){
         try {
-        $query = $conexao->prepare("select * from salas where nome= ?");
+        $query = $conexao->prepare("select nome, descricao, nivel, max_membros, disciplina, conteudo from salas, assuntos 
+            where salas.assunto_id = assuntos.assunto_id AND sala_id = ?");
         if($query->execute($array)){
             $sala = $query->fetch(PDO::FETCH_ASSOC); 
             return $sala;
