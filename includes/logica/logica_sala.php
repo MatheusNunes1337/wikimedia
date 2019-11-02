@@ -107,13 +107,12 @@
                 $status = array('status'=>'falha', 'mensagem'=>'Hmmm, parece que houve um erro ao tentar aceitar essa solicitacao');
             }
             echo json_encode($status);
-            die();
-            
+            die(); 
         }
                     
     }
 
-    else if ($_SERVER['REQUEST_METHOD'] == 'put') {
+    else if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
             $json = file_get_contents('php://input');
             $obj = json_decode($json);
 
@@ -140,14 +139,17 @@
             if($obj->funcao == 'tornar admin') {  //funcao assincrona
                 $admin_id = $obj->user_id; //id do usuário que se tornará admin
                 $sala_id = $_SESSION['sala_id'];
-                $array = array($obj->admin_id, $sala_id);
+                $array = array($admin_id, $sala_id);
                 $resultado = tornarAdministrador($conexao, $array);
+                echo var_dump($resultado);
+                /*
                 if($resultado) {
                     $status = array('status'=>'sucesso', 'mensagem'=>'Operação realizada com sucesso. Agora você não é mais o administrador da sala');
                 } else {
                     $status = array('status'=>'falha', 'mensagem'=>'Houve um erro ao tentar realizar esta operação. Tente novamente');
                 }
                 echo json_encode($status);
+                */
                 die();
             }
         } else { //DELETE METHOD
@@ -197,7 +199,6 @@
             $sala_id = $_SESSION['sala_id'];
             $array = array($user_id, $sala_id);
             $resultado = negarSolicitacao($conexao, $array);
-            echo var_dump($resultado);
             if($resultado) {
                 $status = array('status'=>'sucesso');
             } else {

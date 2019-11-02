@@ -21,8 +21,8 @@
 		foreach ($usuarios as $usuario) {
 			?>
 			<p><?php echo $usuario['username']?></p>
-			<button onclick="aceitarSolicitacao(event)" id="<?php echo($usuario['usuario_id'])?>">Banir</button>
-			<button onclick="negarSolicitacao(event)" id="<?php echo($usuario['usuario_id'])?>">Tornar administrador</button>
+			<button onclick="banirUsuario(event)" id="<?php echo($usuario['usuario_id'])?>">Banir</button>
+			<button onclick="tornarAdmin(event)" id="<?php echo($usuario['usuario_id'])?>">Tornar administrador</button>
 			<hr>
 			<?php  
 		}

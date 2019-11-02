@@ -1,6 +1,6 @@
 //funcoes referentes a logica da sala
-const url_sala_user = '../includes/logica/logica_sala_user.php';
-const url_sala = '../includes/logica/logica_sala.php';
+const url_sala_user = 'includes/logica/logica_sala_user.php';
+const url_sala = 'includes/logica/logica_sala.php';
 
 let container = document.getElementsByTagName('section')[0];
 
@@ -38,7 +38,7 @@ function enviarSolicitacao(e) {
 	obj.funcao = 'enviar solicitacao';
 	obj.sala_id = e.target.id;
 	//doRequestPost(url_sala, obj);
-	fetch('includes/logica/logica_sala.php', {
+	fetch(url_sala, {
 		method: 'POST',
 		body: JSON.stringify(obj)
 	})
@@ -55,18 +55,20 @@ function enviarSolicitacao(e) {
 }
 
 function banirUsuario(e) {
-	let usuario_id = e.target.value;
+	let usuario_id = e.target.id;
 	let obj = new Object();
 	obj.funcao = 'banir usuario';
-	obj.userId = usuario_id;
+	obj.user_id = usuario_id;
+	console.log(obj);
 	doRequestDelete(url_sala, obj);
 }
 
 function tornarAdmin(e) {
-	let usuario_id = e.target.value;
+	let usuario_id = e.target.id;
 	let obj = new Object();
 	obj.funcao = 'tornar admin';
 	obj.user_id = usuario_id;
+	console.log(obj);
 	doRequestPut(url_sala, obj);
 }
 
@@ -90,18 +92,19 @@ function aceitarSolicitacao(e) {
 }
 
 function negarSolicitacao(e) {
-	console.log('arroz');
 	let obj = new Object();
 	obj.funcao = 'negar solicitacao';
 	obj.user_id = e.target.id;
 	console.log(obj);
-	fetch('includes/logica/logica_sala.php', {
+	fetch(url_sala, {
 		method: 'DELETE',
 		body: JSON.stringify(obj)
 	})
-	.then(response => response.text())
+	.then(response => response.json())
 	.then(data => {
-		console.log(data)
+		if(data.status == 'falha') {
+			console.log(data.mensagem)
+		}
 	})
 	.catch(err => {
 		console.error(err);
@@ -185,10 +188,13 @@ function doRequestPut(url, obj) {
 		method: 'PUT',
 		body: JSON.stringify(obj)
 	})
-	.then(response => response.json())
+	.then(response => response.text())
 	.then(data => {
+		console.log(data);
 		if(data.status == 'falha') {
-			showModal(data.mensagem);
+			console.log(data.mensagem)
+		} else {
+			console.log(data.mensagem)
 		}
 	})
 	.catch(err => {
@@ -204,7 +210,9 @@ function doRequestDelete(url, obj) {
 	.then(response => response.json())
 	.then(data => {
 		if(data.status == 'falha') {
-			showModal(data.mensagem);
+			console.log(data.mensagem);
+		} else {
+			console.log(data.mensagem);
 		}
 	})
 	.catch(err => {
