@@ -64,23 +64,24 @@
 
     }
 
-     function editarInfomacoes($conexao, $array, $array2) {
+     function editarInformacoes($conexao, $array, $array2) {
        try {
             $query = $conexao->prepare("update salas set nome= ?, descricao = ?, nivel= ?, max_membros = ? where sala_id = ?");
             $result = $query->execute($array);
             if($result) {
-                $query = $conexao->prepare("select * from assuntos where assunto_id = (select assunto_id from salas where sala_id = ?)");
-                $result = $query->execute(array($array[4]));
-                if($result->rowCount() == 1) {
-                    $resultado = excluirAssunto($conexao);
-                } 
-                $result2 = inserirAssunto($conexao, array($array2[0], $array2[1]));
-                if($result2) {
+                $result = verificaAssunto($conexao, array($array2[0], $array2[1])); //verifica se o assunto ja existe.
+                if(!$result) {// Se sim, faz com que a sala receba o id desse assunto.
+                     $query = $conexao->prepare("update salas set assunto_id = (select assunto_id from assuntos where conteudo = ?
+                        and disciplina = ?) where nome = ?");
+                     $resultado = $query->execute($array2);
+                     $resultado = excluirAssunto($conexao); //exclui os assuntos que nao possuem sala.
+                     return $resultado;
+                } else {// Caso contrario, cria um novo assunto e atribui esse assunto novo para a sala atualizada.
+                    $result2 = inserirAssunto($conexao, array($array2[0], $array2[1]));
                     $resultado = colocarAssunto($conexao, $array2);
+                    $resultado = excluirAssunto($conexao); //exclui os assuntos que nao possuem sala.
                     return $resultado;
-                } else {
-                    return false;
-                }
+                }    
             } 
         }catch(PDOException $e) {
             echo 'Error: ' . $e->getMessage();

@@ -140,11 +140,11 @@
                 $sala_id = $_SESSION['sala_id'];
                 $sala_disciplina = $obj->disciplina;
                 $sala_conteudo = $obj->conteudo;
-                var_dump($obj);
-                /*
-                $array = array($sala_nome, $sala_descricao, $sala_nivel, $sala_membros);
+                $array = array($sala_nome, $sala_descricao, $sala_nivel, $sala_membros, $sala_id);
                 $array2 = array($sala_conteudo, $sala_disciplina, $sala_nome);
                 $resultado = editarInformacoes($conexao, $array, $array2);
+                var_dump($resultado);
+                /*
                 if($resultado) {
                      header('location:../../home.php');
                  } else {
