@@ -42,6 +42,28 @@
         $_SESSION['sala_id'] = $sala_id;
         header('location:../../sala.php');
     }
+    if(isset($_REQUEST['listarUsuarios'])) {
+        $array = array($_SESSION['sala_id'], $_SESSION['sala_id']);
+        $usuarios = listarUsuarios($conexao, $array);
+        if(empty($usuarios)) {
+            $retorno = array('status'=>'vazio', 'mensagem'=>'Parece que não há nenhum usuário dentro desta sala.');
+        } else {
+            $retorno = $usuarios;
+        }
+        echo json_encode($retorno);
+        die();
+    }
+    if(isset($_REQUEST['listarSolicitacoes'])) {
+        $array = array($_SESSION['sala_id']);
+        $solicitacoes = listarSolicitacoes($conexao, $array);
+        if(empty($solicitacoes)) {
+            $retorno = array('status'=>'vazio', 'mensagem'=>'Parece que não há nenhuma solicitacão para esta sala.');
+        } else {
+            $retorno = $solicitacoes;
+        }
+        echo json_encode($retorno);
+        die();
+    }
 
     
  }   
@@ -127,7 +149,7 @@
                     
     }
 
-    else if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
+    else if ($_SERVER['REQUEST_METHOD'] == 'PUT') { //verificada
             $json = file_get_contents('php://input');
             $obj = json_decode($json);
 
@@ -143,13 +165,12 @@
                 $array = array($sala_nome, $sala_descricao, $sala_nivel, $sala_membros, $sala_id);
                 $array2 = array($sala_conteudo, $sala_disciplina, $sala_nome);
                 $resultado = editarInformacoes($conexao, $array, $array2);
-                var_dump($resultado);
-                /*
                 if($resultado) {
-                     header('location:../../home.php');
+                     $status = array('status'=>'sucesso', 'mensagem'=>'As informações foram atualizadas com sucesso.');
                  } else {
-                    echo "Houve um erro ao tentar atualizar as informacoes da sala";
-                 }*/
+                    $status = array('status'=>'falha', 'mensagem'=>'Houve um erro ao tentar atualizar as informações desta sala. Tente novamente.');
+                 }
+                 echo json_encode($status);
                  die();
 
             }

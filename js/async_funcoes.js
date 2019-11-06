@@ -86,10 +86,12 @@ function aceitarSolicitacao(e) {
 	.then(response => response.text())
 	.then(data => {
 		console.log(data);
+		listarSolicitacoes();
 	})
 	.catch(err => {
 		console.error(err);
 	});
+
 }
 //verificada
 function negarSolicitacao(e) {
@@ -105,6 +107,7 @@ function negarSolicitacao(e) {
 		if(data.status == 'falha') {
 			console.log(data.mensagem)
 		}
+		listarSolicitacoes();
 	})
 	.catch(err => {
 		console.error(err);
@@ -113,7 +116,6 @@ function negarSolicitacao(e) {
 }
 
 function editaSala() {
-	console.log('oi');
 	let obj = new Object();
 	obj.funcao = 'editar sala'
 	obj.nome = editarSala.nome.value;
@@ -122,8 +124,21 @@ function editaSala() {
 	obj.max_membros = editarSala.membros.value;
 	obj.disciplina = editarSala.disciplina.value;
 	obj.conteudo = editarSala.conteudo.value;
-	doRequestPut(url_sala, obj);
+	fetch(url_sala, {
+		method: 'PUT',
+		body: JSON.stringify(obj)
+	})
+	.then(response => response.json())
+	.then(data => {
+		console.log(data.mensagem);
+	})
+	.catch(err => {
+		console.error(err);
+	})
+
+	event.preventDefault(); 
 }
+
 
 
 
@@ -231,6 +246,7 @@ function doRequestDelete(url, obj) {
 		} else {
 			console.log(data.mensagem);
 		}
+		listarUsuarios();
 	})
 	.catch(err => {
 		console.error(err);
@@ -314,5 +330,89 @@ function verificaSenha(e) {
 }
 
      
+//funções de apresentação de conteudo nas páginas. Onload
 
-	       
+function acharSala() {
+	fetch('includes/logica/logica_sala.php?infoSala=true', {
+		method: 'GET'
+	})
+	.then(response => response.json())
+	.then(data => {
+		if(data.status == 'sucesso') {
+			let editarSala = document.getElementsByTagName('form')[0];
+			editarSala.nome.value = data.nome;
+			editarSala.descricao.value = data.descricao;
+			editarSala.nivel.value = data.nivel;
+			editarSala.membros.value = data.max_membros;
+			editarSala.disciplina.value = data.disciplina;
+			editarSala.conteudo.value = data.conteudo;
+		
+		} else {
+			console.log(data.mensagem);
+		}
+		
+	})
+	.catch(err => {
+		console.error(err);
+	})
+}
+
+function listarUsuarios() {
+	fetch('includes/logica/logica_sala.php?listarUsuarios=true', {
+		method: 'GET'
+	})
+	.then(response => response.json())
+	.then(users => {
+		if(users.status !== 'vazio') {
+			let usuarios = '<h1>Gerencia de usuários</h1>'
+			usuarios += '<article>'
+			users.forEach(user => {
+				usuarios += `<div class='user'>
+							<p>${user.username}</p>
+							<button onclick='banirUsuario(event)' id='${user.usuario_id}'>Banir</button>
+							<button onclick='tornarAdmin(event)' id='${user.usuario_id}'>Tornar administrador</button>
+						  </div>`
+				document.getElementsByClassName('usuarios')[0].innerHTML = usuarios;		  
+			})
+			usuarios += '</article>'
+			document.getElementsByClassName('usuarios')[0].innerHTML = usuarios;
+								
+		} else {
+			document.getElementsByClassName('usuarios')[0].innerHTML = `<p>${users.mensagem}</p>`;
+		}
+		
+	})
+	.catch(err => {
+		console.error(err);
+	})
+}
+
+function listarSolicitacoes() {
+	fetch('includes/logica/logica_sala.php?listarSolicitacoes=true', {
+		method: 'GET'
+	})
+	.then(response => response.json())
+	.then(data => {
+		if(data.status !== 'vazio') {
+			let solicitacoes = '<h1>Solicitacoes desta sala</h1>'
+			solicitacoes += '<article>'
+			data.forEach(solicitacao => {
+				solicitacoes += `<div class='user'>
+							<p>${solicitacao.username}</p>
+							<button onclick='aceitarSolicitacao(event)' id='${solicitacao.usuario_id}'>Aceitar</button>
+							<button onclick='negarSolicitacao(event)' id='${solicitacao.usuario_id}'>Negar</button>
+						  </div>`
+				document.getElementsByClassName('solicitacoes')[0].innerHTML = solicitacoes;		  
+			})
+			solicitacoes += '</article>'
+			document.getElementsByClassName('solicitacoes')[0].innerHTML = solicitacoes;
+								
+		} else {
+			document.getElementsByClassName('solicitacoes')[0].innerHTML = `<p>${data.mensagem}</p>`;
+		}
+		
+	})
+	.catch(err => {
+		console.error(err);
+	})
+}	       
