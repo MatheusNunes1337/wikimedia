@@ -4,15 +4,24 @@
        try {
             $query = $conexao->prepare("insert into salas (nome, descricao, nivel, max_membros, usuario_id) values (?, ?, ?, ?, ?)");
             $result = $query->execute($array);
-            if($result) {
-
-            }
             return $result;
         } catch(PDOException $e) {
             echo 'Error: ' . $e->getMessage();
         }
 
     }
+
+     function inserirAdministrador($conexao,$array){ //essa função serve para inserir o user(admin) dentro da sala após ele ter executado a função de criação.
+       try {
+            $query = $conexao->prepare("insert into sala_membros values (?, (select sala_id from salas where nome = ?))");
+            $result = $query->execute($array);
+            return $result;
+        } catch(PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
+
+    }
+
 
      function buscarSala($conexao,$array){
         try {

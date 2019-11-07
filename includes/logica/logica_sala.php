@@ -24,7 +24,7 @@
          die();
     }
     #ACHA A SALA PARA ENVIAR AS INFORMAÇÕES PARA O FORMULÁRIO DE ALTERAÇÃO
-    if(isset($_REQUEST['infoSala'])) { //funcao assincrona
+    if(isset($_REQUEST['infoSala'])) { //verificada
         $sala_id = $_SESSION['sala_id'];
         $array = array($sala_id);
         $salaInfo = acharSala($conexao, $array);
@@ -42,7 +42,7 @@
         $_SESSION['sala_id'] = $sala_id;
         header('location:../../sala.php');
     }
-    if(isset($_REQUEST['listarUsuarios'])) {
+    if(isset($_REQUEST['listarUsuarios'])) { //verificada
         $array = array($_SESSION['sala_id'], $_SESSION['sala_id']);
         $usuarios = listarUsuarios($conexao, $array);
         if(empty($usuarios)) {
@@ -69,13 +69,13 @@
  }   
 
 
-    else if ($_SERVER['REQUEST_METHOD'] == 'POST') { //verificada
+    else if ($_SERVER['REQUEST_METHOD'] == 'POST') { 
         $json = file_get_contents('php://input');
         $obj = json_decode($json);
 
         #CRIAR UMA NOVA SALA
-        if(isset($_POST['criar_sala'])){
-            $user_id = 5;
+        if(isset($_POST['criar_sala'])){ ////verificada
+            $user_id = $_SESSION['id'];
             $nome = $_POST['sala_nome'];
             $descricao = $_POST['sala_descricao'];
             $nivel = $_POST['sala_nivel'];
@@ -88,12 +88,14 @@
             try {
                 if($sala) {
                     $result1 = verificaAssunto($conexao, $array2);
-                    $result2 = inserirAssunto($conexao, $array2);
+                    if($result1) {
+                        $result2 = inserirAssunto($conexao, $array2);
+                    }
                     $array2[2] = $nome;
                     $result3 = colocarAssunto($conexao, $array2);
-                    if($result3) {
-                        header('location:../../index.php');  
-                    }   
+                    $array = array($user_id, $nome);
+                    $resultado = inserirAdministrador($conexao, $array);
+                    header('location:../../home.php');   
                 } else {
                     echo var_dump($array);
                 }
@@ -104,14 +106,14 @@
         }
 
          #DELETAR SALA - ADMIN ACTION - É UMA AÇÃO DE DELETAR MAS NÃO PODE SER ASSINCRONA, ENTÃO ESTA NO METHOD POST
-        if(isset($_POST['deletar_sala'])){
-            $sala_id = $_REQUEST['sala_id'];
+        if(isset($_POST['deletar_sala'])){ //verificada - UTILIZAÇÃO DO ON DELETE CASCADE NAS TABELAS FILHAS DA TABELA SALAS
+            $sala_id = $_SESSION['sala_id'];
             $array = array($sala_id);
-            $resultado = excluirSala($conexao, $array); 
-            if($resultado) { //enviar aviso aos outros usuários sobre a sala deletada
-                header('location:../../index.php');
-            } else {
-                echo "Houve um erro ao tentar sair da sala";
+            try {
+                $resultado = excluirSala($conexao, $array); 
+                header('location:../../home.php');    
+            } catch(PDOException $err) {
+                echo 'Error: ' . $err->getMessage();
             }
             die();
         }
@@ -174,20 +176,17 @@
                  die();
 
             }
-            if($obj->funcao == 'tornar admin') {  //funcao assincrona
+            if($obj->funcao == 'tornar admin') {  //verificada
                 $admin_id = $obj->user_id; //id do usuário que se tornará admin
                 $sala_id = $_SESSION['sala_id'];
                 $array = array($admin_id, $sala_id);
                 $resultado = tornarAdministrador($conexao, $array);
-                echo var_dump($resultado);
-                /*
                 if($resultado) {
                     $status = array('status'=>'sucesso', 'mensagem'=>'Operação realizada com sucesso. Agora você não é mais o administrador da sala');
                 } else {
                     $status = array('status'=>'falha', 'mensagem'=>'Houve um erro ao tentar realizar esta operação. Tente novamente');
                 }
                 echo json_encode($status);
-                */
                 die();
             }
         } else { //DELETE METHOD
@@ -217,9 +216,10 @@
                     $status = array('status'=>'falha', 'mensagem'=>'Houve um erro ao tentar realizar esta operação. Tente novamente');
                 }
                 echo json_encode($status);
-                die();
-            }    
+            }
+            die();    
         }
+
         if($obj->funcao == 'negar solicitacao') { //verificada
             $user_id = $obj->user_id;
             $sala_id = $_SESSION['sala_id'];

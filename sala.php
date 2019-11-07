@@ -9,4 +9,7 @@
 	<li><a href="solicitacoes.php">solicitacoes</a></li>
 	<li><a href="gerenciar_usuarios.php">Gerenciar usuários</a></li>
 	<li><a href="configurar_sala.php">Configurar sala</a></li>
+	<form method="POST" action="includes/logica/logica_sala.php">
+		<button name="deletar_sala">Deletar sala</button>
+	</form>
 </ul>

@@ -63,15 +63,35 @@ function banirUsuario(e) {
 	console.log(obj);
 	doRequestDelete(url_sala, obj);
 }
-//incompleta
+//verificada
 function tornarAdmin(e) {
 	let usuario_id = e.target.id;
 	let obj = new Object();
 	obj.funcao = 'tornar admin';
 	obj.user_id = usuario_id;
 	console.log(obj);
-	doRequestPut(url_sala, obj);
+	fetch(url_sala, {
+		method: 'PUT',
+		body: JSON.stringify(obj)
+	})
+	.then(response => response.json())
+	.then(data => {
+		console.log(data);
+		/*
+		if(data.status == 'falha') {
+			console.log(data.mensagem)
+		} else {
+			console.log(data.mensagem)
+		}
+		*/
+	})
+	.catch(err => {
+		console.error(err);
+	})
+
+	event.preventDefault(); 
 }
+
 //verificada
 function aceitarSolicitacao(e) {
 	console.log('batata');
@@ -115,6 +135,7 @@ function negarSolicitacao(e) {
 	
 }
 
+//verificada
 function editaSala() {
 	let obj = new Object();
 	obj.funcao = 'editar sala'

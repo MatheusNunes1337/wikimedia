@@ -54,7 +54,7 @@
 
       function excluirSala($conexao, $array){
         try {
-            $query = $conexao->prepare("delete from salas where nome = ?");
+            $query = $conexao->prepare("delete from salas where sala_id = ?");
             $result = $query->execute($array); 
             $result = excluirAssunto($conexao);  
             return $result;
