@@ -9,7 +9,7 @@
 </head>
 <body class="container-fluid bg-light d-flex align-items-center justify-content-center">
 <div class="col-12 col-sm-9 col-lg-3 col-md-7">  	
-    <form class="col-12 py-3 bg-white shadow-sm rounded">
+    <form class="col-12 py-3 bg-white shadow-sm rounded" action="includes/logica/logica_usuario.php" method="POST">
         <h1 class="mb-5 mt-4 text-center">Registro</h1>
         <div class="form-group col-11 mx-auto">
          
@@ -29,7 +29,7 @@
           <input type="submit" class="form-control bg-danger text-light mt-4 mb-4" value="Cadastrar" name="cadastrar" style="height: 45px;">
         </div>
     </form>
-    <p class="text-center mt-3">Já possui uma conta?<a href="#" class="ml-2 text-danger">Entrar</a></p>
+    <p class="text-center mt-3">Já possui uma conta?<a href="login.php" class="ml-2 text-danger">Entrar</a></p>
 </div>
 
 <?php require_once('includes/componentes/rodape.php') ?>
