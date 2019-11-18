@@ -1,10 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Lato|Luckiest+Guy|Roboto&display=swap');
 
-		* {
-			margin: 0;
-			padding: 0;
-			box-sizing: border-box;
-		}
+		/*
 
 		body {
 			background-color: #f6f6f6;
@@ -19,6 +15,7 @@
 		}
 
 /*REFERENTE AOS FORMULÁRIOS DE CADASTRO E LOGIN*/
+/*
 		#cadastro, #login {
 			background: #FFFFFF;
 			width: 22vw;
@@ -119,6 +116,7 @@
 		}
 
 /*REFERENTE A PÁGINA HOME DO USUÁRIO */
+/*
 header {
 	grid-area: header;
 	display: flex;
@@ -187,6 +185,8 @@ section div {
 
 header #logo {
 	/*background: rgb(255,84,78);*/
+
+/*	
 	width: 10%;
 	height: 70%;
 	margin-left: 3rem;
@@ -281,3 +281,44 @@ section input {
 	height: 45px;
 	margin-left: 45px;
 }		
+
+*/
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+  		width: 100vw;
+  		height: 100vh;
+  	}
+
+
+    @media screen and (max-width: 960px) {
+        #oi {
+          min-height: 8vh;
+        }
+
+        #tchau {
+          min-height: 92vh;
+        }
+    }
+    @media screen and (min-width: 960px) {
+      #tchau {
+        height: 100vh;
+      }
+    }
+
+    .navbar-brand {
+      font-size: 1.7rem;
+    }
+
+    .nav-header {
+      font-size: 1.3rem;
+    }
+
+    .nav-link {
+      font-size: 1.1rem;
+    }
