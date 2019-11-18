@@ -1,45 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-  <script src="https://kit.fontawesome.com/bceaec3ee9.js" crossorigin="anonymous"></script>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title></title>
-  <style type="text/css">
-  	body {
-  		width: 100vw;
-  		height: 100vh;
-  	}
-
-
-    @media screen and (max-width: 960px) {
-        #oi {
-          min-height: 8vh;
-        }
-
-        #tchau {
-          min-height: 92vh;
-        }
-    }
-    @media screen and (min-width: 960px) {
-      #tchau {
-        height: 100vh;
-      }
-    }
-
-    .navbar-brand {
-      font-size: 1.7rem;
-    }
-
-    .nav-header {
-      font-size: 1.3rem;
-    }
-
-    .nav-link {
-      font-size: 1.1rem;
-    }
-  </style>
+  <?php require_once('includes/componentes/cabecalho.php') ?>
+  <title>Configurações do perfil</title>
 </head>
 <body class="container-fluid bg-light">
   	<?php require_once('includes/componentes/nav.php') ?>

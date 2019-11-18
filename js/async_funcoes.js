@@ -2,28 +2,59 @@
 const url_sala_user = 'includes/logica/logica_sala_user.php';
 const url_sala = 'includes/logica/logica_sala.php';
 
-let container = document.getElementsByTagName('section')[0];
+let container = document.getElementById('container');
 
 //verificada
 function buscarSala() {
-	let disciplina = buscar.disciplina.value;
-	container.innerHTML = '';
+	let disciplina = document.getElementById('search_room').value;
 	fetch(`includes/logica/logica_sala.php?disciplina=${disciplina}`, {
 		method: 'GET'
 	})
 	.then(response => response.json())
 	.then(salas => {
-		let room = '<article>'
-		salas.forEach(sala => {
-			room += `<div>
-						<h2>${sala.nome}</h2>
-						<p>${sala.descricao}</p>
-						<button id=${sala.sala_id} onclick='enviarSolicitacao(event)'>Ingressar</button>
-					</div>`
-			container.innerHTML = room;
-		})
-		room += '</article>';	
-		container.innerHTML = room;
+		console.log(salas);
+		container.innerHTML = `
+					   <h1 class="row col-12 mb-4">Busca de salas</h1>
+					   <div class="input-group bg-white mt-3 col-12 col-xl-7 mb-5 py-2  shadow-sm rounded">
+	                      <input type="text" class="form-control" name="disciplina" id="search_room" placeholder="Digite a disciplina" style="height: 55px;">
+	                      <span class="my-auto ml-3 input-group-btn">
+	                          <button class="btn btn-success" onclick="buscarSala();" type="button">
+	                              buscar
+	                          </button>
+	                      </span>
+	                  </div>`
+
+		if(salas.status !== 'falha') {
+			var room;
+			salas.forEach(sala => {
+				room =	`<div class="col-12 mb-5 bg-white shadow-sm rounded>
+	                  	 <header class="mt-2">
+	                      <h3 class="text-dark mt-3">${sala.nome}</h3>
+	                    </header>
+	                    <hr>
+	                    <div class="room-container">
+	                        <p class="text-dark text-justify">
+	                          ${sala.descricao}
+	                        </p>
+	                    </div>
+	                    <hr>
+	                    <footer class="mb-2 sala d-flex flex-xl-row flex-column">
+	                        <div class="mb-col-2">Disciplina: Matemática</div>
+	                        <div class="ml-xl-4">Assunto: Trigonometria</div>
+	                        <div class="ml-xl-4">Membros: 19/${sala.max_membros}</div>
+	                        <div class="ml-xl-4">Nível: ${sala.nivel}</div>
+	                        <div class="ml-xl-4">Dono: ${sala.username}</div>
+	                    </footer>
+	                    <button type="button" class="btn btn-danger my-3" onclick="enviarSolicitacao(event)">enviar solicitação</button>
+	                </div>`
+						
+				container.innerHTML += room;
+			})
+			//container.innerHTML += room;
+		} else {
+			console.log(salas.mensagem)
+			container.innerHTML += `<h3 class='mt-5'>${salas.mensagem} &#128546;</h3>`;
+		}	
  	})
   	.catch(err => {
   		console.error('Erro ao tentar buscar uma sala', err);

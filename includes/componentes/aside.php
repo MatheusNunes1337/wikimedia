@@ -42,7 +42,7 @@
             <a class="nav-link text-white" href="criar_sala.php">Criar uma sala</a>
           </li>
           <li class="nav-item">
-              <a class="nav-link text-white" href="#">
+              <a class="nav-link text-white" href="buscar_salas.php">
                   <span><i class="fas fa-search mr-2 text-white"></i></span>
                   <span>Buscar uma sala</span>
               </a>
