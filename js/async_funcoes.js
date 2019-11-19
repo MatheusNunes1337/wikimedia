@@ -3,6 +3,7 @@ const url_sala_user = 'includes/logica/logica_sala_user.php';
 const url_sala = 'includes/logica/logica_sala.php';
 
 let container = document.getElementById('container');
+let t_solicitacoes = document.getElementById('table_requests');
 
 //verificada
 function buscarSala() {
@@ -446,22 +447,31 @@ function listarSolicitacoes() {
 	.then(response => response.json())
 	.then(data => {
 		if(data.status !== 'vazio') {
-			let solicitacoes = '<h1>Solicitacoes desta sala</h1>'
-			solicitacoes += '<article>'
+			t_solicitacoes = `<table class="table mt-4 col-xl-auto col-sm-12 table-responsive" id="table_requests">
+           			<thead class="thead-dark">
+					    <tr align="center">
+					      <th scope="col" class="align-middle">Imagem</th>
+					      <th scope="col" class="align-middle">Nome de usuário</th>
+					      <th scope="col" class="align-middle">Ações</th>
+					    </tr>
+  					</thead>`;
+			let linhas;
 			data.forEach(solicitacao => {
-				solicitacoes += `<div class='user'>
-							<p>${solicitacao.username}</p>
-							<button onclick='aceitarSolicitacao(event)' id='${solicitacao.usuario_id}'>Aceitar</button>
-							<button onclick='negarSolicitacao(event)' id='${solicitacao.usuario_id}'>Negar</button>
-						  </div>`
+				linhas += `<tr>
+				      <td align="center" class="align-middle"> <img src="includes/componentes/imagens/usuarios/matheus.jpg" alt="profile_image" class="img-fluid img-thumbnail rounded-circle mb-2 ml-lg-0 mt-4" style="width: 70px; height: 70px;"></td>
+				      <td align="center" class="align-middle">Matheus Nunes</td>
+				      <td align="center" class="align-middle">
+				      		<button class="btn btn-success mb-2 mb-sm-0" onclick="aceitarSolicitacao(event);">aceitar</button>
+				       	<button class="btn btn-danger" onclick="negarSolicitacao(event);>negar</button>
+				      </td>
+				    </tr>`
 				document.getElementsByClassName('solicitacoes')[0].innerHTML = solicitacoes;		  
 			})
-			solicitacoes += '</article>'
-			document.getElementsByClassName('solicitacoes')[0].innerHTML = solicitacoes;
-								
+			t_solicitacoes += linhas;
+			t_solicitacoes += '</table>';					
 		} else {
-			document.getElementsByClassName('solicitacoes')[0].innerHTML = `<p>${data.mensagem}</p>`;
-		}
+			t_solicitacoes += `<h2 class="text-dark">${data.mensagem}</h2>`;
+		} 
 		
 	})
 	.catch(err => {
