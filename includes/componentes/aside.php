@@ -42,7 +42,7 @@
             <a class="nav-link text-white" href="criar_sala.php">Criar uma sala</a>
           </li>
           <li class="nav-item">
-              <a class="nav-link text-white" href="buscar_salas.php">
+              <a class="nav-link text-white" href="minhas_salas.php">
                   <span><i class="fas fa-search mr-2 text-white"></i></span>
                   <span>Minhas salas</span>
               </a>
@@ -56,7 +56,7 @@
           <hr>
           <li class="nav-header text-white">Ações</li>
           <li class="nav-item">
-              <a class="nav-link text-white" href="#">
+              <a class="nav-link text-white" href="gerenciar_membros.php">
                   <span><i class="fas fa-users-cog mr-2 text-white"></i></i></span>
                   <span>Gerenciar membros</span>
               </a>

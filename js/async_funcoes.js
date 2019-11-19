@@ -4,6 +4,7 @@ const url_sala = 'includes/logica/logica_sala.php';
 
 let container = document.getElementById('container');
 let t_solicitacoes = document.getElementById('table_requests');
+let t_membros = document.getElementById('table_members');
 
 //verificada
 function buscarSala() {
@@ -53,7 +54,6 @@ function buscarSala() {
 			})
 			//container.innerHTML += room;
 		} else {
-			console.log(salas.mensagem)
 			container.innerHTML += `<h3 class='mt-5'>${salas.mensagem} &#128546;</h3>`;
 		}	
  	})
@@ -417,22 +417,31 @@ function listarUsuarios() {
 	.then(response => response.json())
 	.then(users => {
 		if(users.status !== 'vazio') {
-			let usuarios = '<h1>Gerencia de usuários</h1>'
-			usuarios += '<article>'
-			users.forEach(user => {
-				usuarios += `<div class='user'>
-							<p>${user.username}</p>
-							<button onclick='banirUsuario(event)' id='${user.usuario_id}'>Banir</button>
-							<button onclick='tornarAdmin(event)' id='${user.usuario_id}'>Tornar administrador</button>
-						  </div>`
-				document.getElementsByClassName('usuarios')[0].innerHTML = usuarios;		  
+			t_membros = `<table class="table mt-4 col-xl-auto col-sm-12 table-responsive" id="table_requests">
+           			<thead class="thead-dark">
+					    <tr align="center">
+					      <th scope="col" class="align-middle">Imagem</th>
+					      <th scope="col" class="align-middle">Nome de usuário</th>
+					      <th scope="col" class="align-middle">Ações</th>
+					    </tr>
+  					</thead>`;
+			let linhas;
+			data.forEach(user => {
+				linhas += `<tr>
+				      <td align="center" class="align-middle"> <img src="includes/componentes/imagens/usuarios/matheus.jpg" alt="profile_image" class="img-fluid img-thumbnail rounded-circle mb-2 ml-lg-0 mt-4" style="width: 70px; height: 70px;"></td>
+				      <td align="center" class="align-middle">Matheus Nunes</td>
+				      <td align="center" class="align-middle">
+				      		<button class="btn btn-success mb-2 mb-sm-0" onclick='banirUsuario(event)' id='${user.usuario_id}'>Banir</button>
+				       		<button class="btn btn-danger" onclick='tornarAdmin(event)' id='${user.usuario_id}'>Tornar admin</button>
+				      </td>
+				    </tr>`	  
 			})
-			usuarios += '</article>'
-			document.getElementsByClassName('usuarios')[0].innerHTML = usuarios;
-								
+			t_membros += linhas;
+			t_membros += '</table>';					
 		} else {
-			document.getElementsByClassName('usuarios')[0].innerHTML = `<p>${users.mensagem}</p>`;
-		}
+			document.getElementById('gerenciar_membros').innerHTML += `<h2 class="text-dark">${data.mensagem}</h2>`;
+		} 
+		
 		
 	})
 	.catch(err => {
@@ -470,11 +479,62 @@ function listarSolicitacoes() {
 			t_solicitacoes += linhas;
 			t_solicitacoes += '</table>';					
 		} else {
-			t_solicitacoes += `<h2 class="text-dark">${data.mensagem}</h2>`;
+			document.getElementById('sala_solicitacoes').innerHTML += `<h2 class="text-dark">${data.mensagem}</h2>`;
 		} 
 		
 	})
 	.catch(err => {
 		console.error(err);
 	})
+}
+
+function listarSalas() {
+	fetch('includes/logica/logica_sala.php?listarSalas=true', {
+		method: 'GET'
+	})
+	.then(response => response.json())
+	.then(data => {
+		if(data.status !== 'vazio') {
+			let room;
+			data.forEach(sala => {
+				room = `<div class="col-12 col-xl-10 mb-5 bg-white shadow-sm rounded>
+	                  	 <header class="mt-2">
+	                      <h3 class="text-dark mt-3">${sala.nome}</h3>
+	                    </header>
+	                    <hr>
+	                    <div class="room_container mb-2 sala d-flex flex-xl-row flex-column">
+	                        <div class="mb-col-2">Disciplina: Matemática</div>
+	                        <div class="ml-xl-4">Assunto: Trigonometria</div>
+	                        <div class="ml-xl-4">Membros: 19/${sala.max_membros}</div>
+	                        <div class="ml-xl-4">Nível: ${sala.nivel}</div>
+	                        <div class="ml-xl-4">Dono: ${sala.username}</div>
+	                    </div>
+	                    <form  method="POST" action="includes/logica/logica_sala.php">
+	                    	<button type="submit" class="btn btn-danger my-3" name="sala_id" value="sala.sala_id">Entrar</button>
+	                    	<button type="submit" class="btn btn-danger my-3" onclick="deixarSala(event) id="sala.sala_id">Deixar sala</button>
+	                    	<input type="hidden" name="entrar_sala">
+	                    </form>	
+	                </div>`
+
+				container.innerHTML += room;		  
+			})
+			container.innerHTML += room;					
+		} else {
+			container.innerHTML += `<h2 class="text-dark">${data.mensagem}</h2>`;
+		} 
+		
+	})
+	.catch(err => {
+		console.error(err);
+	})
+}
+
+/*
+function entrarSala(e) {
+	let sala_id = e.target.id;
+	fetch('includes/logica/logica_sala.php?listarSalas=true&sala_id=', {
+		method: 'GET'
+	})
 }	       
+
+*/

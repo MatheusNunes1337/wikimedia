@@ -64,6 +64,18 @@
         echo json_encode($retorno);
         die();
     }
+    if(isset($_REQUEST['listarSalas'])) {
+        $boo = 6;
+        $array = array($boo);
+        $salas = listarSalas($conexao, $array);
+        if(empty($salas)) {
+            $retorno = array('status'=>'vazio', 'mensagem'=>'Parece que você ainda não entrou em nenhuma sala.');
+        } else {
+            $retorno = $salas;
+        }
+        echo json_encode($retorno);
+        die();
+    }
 
     
  }   

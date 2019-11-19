@@ -1,3 +1,6 @@
+<?php
+	session_start();
+?>
 <body onload="acharSala()">
 <form name="editarSala" onsubmit="editaSala()">
 	<p>Nome:</p>
