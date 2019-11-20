@@ -134,14 +134,14 @@
     //lista todas as salas que o usuário logado já entrou
     function listarSalas($conexao, $array) {
          try {
-        $query = $conexao->prepare("select nome, descricao, sala_id from salas where sala_id IN (select sala_id from sala_membros where usuario_id = ?)"); 
-        if($query->execute($array)){
-            $salas = $query->fetchAll(PDO::FETCH_ASSOC); 
-            return $salas;
-        }
-        else{
-            return false;
-        }
+            $query = $conexao->prepare("select count(sala_membros.usuario_id) as membros, nome, descricao, salas.sala_id, max_membros, nivel, conteudo, disciplina, username from salas, assuntos, usuarios, sala_membros where salas.sala_id IN (select sala_id from sala_membros where usuario_id = ?) and salas.assunto_id = assuntos.assunto_id and salas.usuario_id = usuarios.usuario_id and sala_membros.sala_id = salas.sala_id"); 
+            if($query->execute($array)){
+                $salas = $query->fetchAll(PDO::FETCH_ASSOC); 
+                return $salas;
+            }
+            else{
+                return false;
+            }
          }catch(PDOException $e) {
             echo 'Error: ' . $e->getMessage();
       }

@@ -497,28 +497,28 @@ function listarSalas() {
 		if(data.status !== 'vazio') {
 			let room;
 			data.forEach(sala => {
+				console.log(sala);
 				room = `<div class="col-12 col-xl-10 mb-5 bg-white shadow-sm rounded>
 	                  	 <header class="mt-2">
 	                      <h3 class="text-dark mt-3">${sala.nome}</h3>
 	                    </header>
 	                    <hr>
 	                    <div class="room_container mb-2 sala d-flex flex-xl-row flex-column">
-	                        <div class="mb-col-2">Disciplina: Matemática</div>
-	                        <div class="ml-xl-4">Assunto: Trigonometria</div>
-	                        <div class="ml-xl-4">Membros: 19/${sala.max_membros}</div>
+	                        <div class="mb-col-2">Disciplina: ${sala.disciplina}</div>
+	                        <div class="ml-xl-4">Conteudo: ${sala.conteudo}</div>
+	                        <div class="ml-xl-4">Membros: ${sala.membros}/${sala.max_membros}</div>
 	                        <div class="ml-xl-4">Nível: ${sala.nivel}</div>
 	                        <div class="ml-xl-4">Dono: ${sala.username}</div>
 	                    </div>
 	                    <form  method="POST" action="includes/logica/logica_sala.php">
-	                    	<button type="submit" class="btn btn-danger my-3" name="sala_id" value="sala.sala_id">Entrar</button>
-	                    	<button type="submit" class="btn btn-danger my-3" onclick="deixarSala(event) id="sala.sala_id">Deixar sala</button>
+	                    	<button type="submit" class="btn btn-danger my-3" name="sala_id" value="${sala.sala_id}">Entrar</button>
+	                    	<button type="submit" class="btn btn-danger my-3" id="${sala.sala_id}" onclick="deixarSala(event)">Deixar sala</button>
 	                    	<input type="hidden" name="entrar_sala">
 	                    </form>	
 	                </div>`
 
 				container.innerHTML += room;		  
-			})
-			container.innerHTML += room;					
+			})					
 		} else {
 			container.innerHTML += `<h2 class="text-dark">${data.mensagem}</h2>`;
 		} 
