@@ -13,7 +13,7 @@
     $obj = json_decode($json);
     #BUSCAR SALA - funcao assincrona
     if(isset($_REQUEST['disciplina'])) {
-        $array = array($_REQUEST['disciplina']);
+        $array = array($_REQUEST['disciplina'], $_SESSION['id']);
         $result = buscarSala($conexao, $array);
         if($result) {
             $status = $result; 
@@ -38,9 +38,9 @@
         die();
     }
     if(isset($_REQUEST['entrar_sala'])) { //verficada
-        $sala_id = $_REQUEST['sala_id'];
-        $_SESSION['sala_id'] = $sala_id;
+        $_SESSION['sala_id'] = $_REQUEST['entrar_sala'];
         header('location:../../sala.php');
+        die();
     }
     if(isset($_REQUEST['listarUsuarios'])) { //verificada
         $array = array($_SESSION['sala_id'], $_SESSION['sala_id']);

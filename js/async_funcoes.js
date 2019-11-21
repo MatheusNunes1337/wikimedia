@@ -64,6 +64,19 @@ function buscarSala() {
 	
 }
 
+function deixarSala(e) {
+	let sala_id = e.target.id;
+	console.log(sala_id);
+	let result = window.confirm("deseja mesmo sair dessa sala");
+	if(result === true) {
+		fetch('includes/logica/logica_sala.php?listarSalas=true&sala_id=', {
+			method: 'GET'
+		})
+	} else {
+		console.log('você decidiu não sair da sala');
+	}
+}
+
 //verificada
 function enviarSolicitacao(e) {
 	let obj = new Object();
@@ -497,7 +510,6 @@ function listarSalas() {
 		if(data.status !== 'vazio') {
 			let room;
 			data.forEach(sala => {
-				console.log(sala);
 				room = `<div class="col-12 col-xl-10 mb-5 bg-white shadow-sm rounded>
 	                  	 <header class="mt-2">
 	                      <h3 class="text-dark mt-3">${sala.nome}</h3>
@@ -510,10 +522,10 @@ function listarSalas() {
 	                        <div class="ml-xl-4">Nível: ${sala.nivel}</div>
 	                        <div class="ml-xl-4">Dono: ${sala.username}</div>
 	                    </div>
-	                    <form  method="POST" action="includes/logica/logica_sala.php">
-	                    	<button type="submit" class="btn btn-danger my-3" name="sala_id" value="${sala.sala_id}">Entrar</button>
-	                    	<button type="submit" class="btn btn-danger my-3" id="${sala.sala_id}" onclick="deixarSala(event)">Deixar sala</button>
-	                    	<input type="hidden" name="entrar_sala">
+	                    <form  method="GET" action="includes/logica/logica_sala.php">
+	                    	<button type="submit" class="btn btn-danger my-3" name="entrar_sala" value="${sala.sala_id}">Entrar</button>
+	                    	<button type="button" class="btn btn-danger my-3" id="${sala.sala_id}" onclick="deixarSala(event)">Deixar sala</button>
+	              
 	                    </form>	
 	                </div>`
 
@@ -529,12 +541,3 @@ function listarSalas() {
 	})
 }
 
-/*
-function entrarSala(e) {
-	let sala_id = e.target.id;
-	fetch('includes/logica/logica_sala.php?listarSalas=true&sala_id=', {
-		method: 'GET'
-	})
-}	       
-
-*/

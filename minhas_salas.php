@@ -5,7 +5,7 @@
 <html>
 <head>
   <?php require_once('includes/componentes/cabecalho.php') ?>
-  <title>Solcitações</title>
+  <title>Minhas salas</title>
 </head>
 <body class="container-fluid bg-light" onload="listarSalas()">
     <?php require_once('includes/componentes/nav.php') ?>
