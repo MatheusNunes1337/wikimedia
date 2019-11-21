@@ -25,9 +25,10 @@
 
      function buscarSala($conexao,$array){
         try {
-        $query = $conexao->prepare("select nome, descricao, nivel, max_membros,sala_id, usuarios.username 
+        $query = $conexao->prepare("select nome, descricao, nivel, max_membros, sala_id, usuarios.username 
             from salas, usuarios where salas.usuario_id = usuarios.usuario_id and 
-            assunto_id IN (select assunto_id from assuntos where disciplina = ?)");
+            assunto_id IN (select assunto_id from assuntos where disciplina = ?) and sala_id NOT IN (select sala_id from
+            sala_membros where usuario_id = ?)");
         if($query->execute($array)){
             $sala = $query->fetchAll(PDO::FETCH_ASSOC); //coloca os dados num array $usuario
             return $sala;
@@ -122,7 +123,7 @@
 
     function sairSala($conexao, $array) {
         try {
-            $query = $conexao->prepare("delete from sala_membros where usuario_id = ?");
+            $query = $conexao->prepare("delete from sala_membros where usuario_id = ? and sala_id = ?");
             $result = $query->execute($array);   
              return $result;
         }catch(PDOException $e) {

@@ -42,6 +42,7 @@
         header('location:../../sala.php');
         die();
     }
+
     if(isset($_REQUEST['listarUsuarios'])) { //verificada
         $array = array($_SESSION['sala_id'], $_SESSION['sala_id']);
         $usuarios = listarUsuarios($conexao, $array);
@@ -206,17 +207,20 @@
         $json = file_get_contents('php://input');
         $obj = json_decode($json);
 
-        if(isset($_POST['sair_sala'])) {
+        if($obj->funcao == 'sair sala') { //É UM DELETE PORÉM SERÁ USADO COMO GET, pois será mais simples.
             $user_id = $_SESSION['id'];
-            $array = array($user_id);
+            $id_sala = $obj->sala_id;
+            $array = array($user_id, $id_sala);
             $resultado = sairSala($conexao, $array);
             if($resultado) {
-                header('location:../../home.php');
+                $status = array('status'=>'sucesso');
             } else {
-                echo "Houve um erro ao tentar sair da sala. Tente novamente";
+                $status = array('status'=>'falha', 'mensagem'=>'Houve um erro ao tentar realizar esta operação. Tente novamente');
             }
-            die(); 
+            echo json_encode($status);
+            die();   
         }
+
         if($obj->funcao == 'banir usuario') { //verificada
             $user_id = $obj->user_id;
             $sala_id = $_SESSION['sala_id'];
