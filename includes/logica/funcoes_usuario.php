@@ -117,7 +117,7 @@
 
     function excluirPerfil($conexao, $array) {
         try {
-            $query = $conexao->prepare("delete from usuarios where id = ?");
+            $query = $conexao->prepare("delete from usuarios where usuario_id = ?");
             $usuario = $query->execute($array);
             return $usuario;    
         }catch(PDOException $e) {
@@ -184,6 +184,22 @@
          }catch(PDOException $e) {
             echo 'Error: ' . $e->getMessage();
          }  
+    }
+
+    function acharUser($conexao,$array){
+        try {
+        $query = $conexao->prepare("select username, email, senha from usuarios
+            where usuario_id = ?");
+        if($query->execute($array)){
+            $user = $query->fetch(PDO::FETCH_ASSOC); 
+            return $user;
+        }
+        else{
+            return false;
+        }
+         }catch(PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
+      }  
     }
 
     

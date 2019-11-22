@@ -1,9 +1,9 @@
 <?php
     require_once('conecta.php');
     require_once('funcoes_usuario.php');
-    header('Content-Type: application/json');
+     header('Content-Type: text/html; application/json; charset=UTF-8 ');
     header('Access-Control-Allow-Origin: *');
-    header('Content-Type: charset=UTF-8');
+    session_start();
     
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -30,7 +30,6 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
         $array = array($username, $senhaEncriptada);
         $usuario = realizarLogin($conexao,$array);
         if($usuario){
-            session_start();
             $_SESSION['logado'] = true;
             $_SESSION['id'] = $usuario['usuario_id'];
             $_SESSION['username'] = $usuario['username'];
@@ -78,7 +77,6 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 
     if(isset($_REQUEST['adminPass'])) {
-        session_start();
         $senhaCriptografada = base64_encode($_REQUEST['adminPass']);
         $user_id = $_SESSION['id'];
         $array = array($senhaCriptografada, $user_id);
@@ -90,6 +88,35 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
         echo json_encode($status);
     }
+
+     if(isset($_REQUEST['infoUser'])) { //verificada
+        $user_id = $_SESSION['id'];
+        $array = array($user_id);
+        $userInfo = acharUser($conexao, $array);
+        if($userInfo) {
+            $userInfo['senha'] = base64_decode($userInfo['senha']);
+            $status = $userInfo; 
+            $status['status'] = 'sucesso';
+        } else {
+            $status = array('status'=>'falha', 'mensagem' => 'Não foi possivel selecionar esse usuário para edição');
+        }
+        echo json_encode($status);
+        die();
+    }
+
+    if(isset($_REQUEST['excluir_usuario'])) {
+        $idUser = $_SESSION['id'];
+        $array = array($idUser);
+        $result = excluirPerfil($conexao, $array);
+        echo var_dump($result); die();
+        if($result) {
+            session_destroy();
+            $status = array('status'=>'sucesso');
+        } else {
+             $status = array('status'=>'falha', 'mensagem'=>'Houve um erro ao tentar excluir a sua conta. Tente novamente mais tarde');
+        }    
+    }
+     die(); 
     
     /*
     #PESQUISAR USUÁRIO
@@ -104,22 +131,25 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 
 
-if($_SERVER['REQUEST_METHOD'] == 'delete') {
+if($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     #EXCLUIR USUARIO LOGADO
-    if(isset($_REQUEST['excluir_usuario'])) {
-        session_start();
+    $json = file_get_contents('php://input');
+    $obj = json_decode($json);
+    if($obj->funcao === 'excluir conta') {
         $idUser = $_SESSION['id'];
         $array = array($idUser);
         $result = excluirPerfil($conexao, $array);
         if($result) {
             session_destroy();
-            header('location:../../index.php');
+            $status = array('status'=>'sucesso');
         } else {
-            header('location:../../index.php');
-        }    
-    }
-     die();    
+             $status = array('status'=>'falha', 'mensagem'=>'Houve um erro ao tentar excluir a sua conta. Tente novamente mais tarde');
+        }
+         echo json_encode($status);
+         die();    
+    }   
 }
+
 
 if($_SERVER['REQUEST_METHOD'] == 'PUT') {
     #ALTERAR PERFIL DO USUÁRIO LOGADO 

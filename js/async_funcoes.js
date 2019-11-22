@@ -464,6 +464,27 @@ function acharSala() {
 	})
 }
 
+function acharUser() {
+	fetch('includes/logica/logica_usuario.php?infoUser=true', {
+		method: 'GET'
+	})
+	.then(response => response.json())
+	.then(data => {
+		if(data.status == 'sucesso') {
+			let editarPerfil = document.getElementById('profile_config');
+			editarPerfil.user_username.value = data.username;
+			editarPerfil.user_email.value = data.email;
+			editarPerfil.user_senha.value = data.senha;
+		} else {
+			console.log(data.mensagem);
+		}
+		
+	})
+	.catch(err => {
+		console.error(err);
+	})
+}
+
 function listarUsuarios() {
 	fetch('includes/logica/logica_sala.php?listarUsuarios=true', {
 		method: 'GET'
@@ -563,5 +584,29 @@ function listarSalas() {
 	.catch(err => {
 		console.error(err);
 	})
+}
+
+function excluirConta() {
+	let result = window.confirm('Deseja mesmo excluir a sua conta?');
+	if(result) {
+		let obj = new Object();
+		obj.funcao = 'excluir conta'
+		fetch('includes/logica/logica_usuario.php', {
+			method: 'DELETE',
+			body: JSON.stringify(obj)
+		})
+		.then(response => response.json())
+		.then(data => {
+			if(data.status == 'sucesso') {
+				window.location.href = 'login.php'
+			} else {
+				alert(data.mensagem);
+			}
+			console.log(data);	
+		})
+		.catch(err => {
+			console.error(err);
+		})
+	} 
 }
 
