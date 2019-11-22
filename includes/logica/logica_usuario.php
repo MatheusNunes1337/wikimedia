@@ -76,6 +76,20 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
         echo json_encode($status);
     }
+
+    if(isset($_REQUEST['adminPass'])) {
+        session_start();
+        $senhaCriptografada = base64_encode($_REQUEST['adminPass']);
+        $user_id = $_SESSION['id'];
+        $array = array($senhaCriptografada, $user_id);
+        $resultado = verificaSenhaAdm($conexao, $array);
+        if($resultado) {
+            $status = array('status'=>'okay', 'mensagem'=>'A senha está correta');
+        } else {
+            $status = array('status'=>'falha', 'mensagem'=>'Parece que está não é a sua senha');
+        }
+        echo json_encode($status);
+    }
     
     /*
     #PESQUISAR USUÁRIO

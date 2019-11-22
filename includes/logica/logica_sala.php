@@ -106,7 +106,7 @@
                     $result3 = colocarAssunto($conexao, $array2);
                     $array = array($user_id, $nome);
                     $resultado = inserirAdministrador($conexao, $array);
-                    header('location:../../home.php');   
+                    header('location:../../minhas_salas.php');   
                 } else {
                     echo var_dump($array);
                 }

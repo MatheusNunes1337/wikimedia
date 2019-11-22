@@ -5,7 +5,7 @@
           
             <img src="includes/componentes/imagens/usuarios/matheus.jpg" alt="profile_image" class="img-fluid img-thumbnail rounded-circle mb-2 ml-lg-0 mt-4" style="width: 90px; height: 90px;">
          
-          <p class="row text-white col-xl-10 col-10 mt-2">Matheus Nunes</p>
+          <p class="row text-white col-xl-10 col-10 mt-2"><?php echo $_SESSION['username']; ?></p>
         </div>
     <form class="form-inline mt-4" action="#">
         <input class="form-control col-lg-10 col-xl-11" type="search" placeholder="Buscar usuários" aria-label="Pesquisar">

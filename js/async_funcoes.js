@@ -154,7 +154,6 @@ function aceitarSolicitacao(e) {
 	let obj = new Object();
 	obj.funcao = 'aceitar solicitacao';
 	obj.user_id = e.target.id;
-	console.log(obj);
 	fetch('includes/logica/logica_sala.php', {
 		method: 'POST',
 		body: JSON.stringify(obj)
@@ -203,19 +202,19 @@ function negarSolicitacao(e) {
 function editaSala() {
 	let obj = new Object();
 	obj.funcao = 'editar sala'
-	obj.nome = editarSala.nome.value;
-	obj.descricao = editarSala.descricao.value;
-	obj.nivel = editarSala.nivel.value;
-	obj.max_membros = editarSala.membros.value;
-	obj.disciplina = editarSala.disciplina.value;
-	obj.conteudo = editarSala.conteudo.value;
+	obj.nome = formEditSala.nome.value;
+	obj.descricao = formEditSala.descricao.value;
+	obj.nivel = formEditSala.nivel.value;
+	obj.max_membros = formEditSala.membros.value;
+	obj.disciplina = formEditSala.disciplina.value;
+	obj.conteudo = formEditSala.conteudo.value;
 	fetch(url_sala, {
 		method: 'PUT',
 		body: JSON.stringify(obj)
 	})
 	.then(response => response.json())
 	.then(data => {
-		console.log(data.mensagem);
+		alert(data.mensagem);
 	})
 	.catch(err => {
 		console.error(err);
@@ -414,6 +413,29 @@ function verificaSenha(e) {
 	resultado.style.opacity = '1';
 }
 
+function verificaAdmPass(e) {
+
+	let resultado = document.getElementById('pass_status');
+	let senha = e.target.value;
+	fetch(`includes/logica/logica_usuario.php?adminPass=${senha}`, {
+	method: 'GET'
+	})
+	.then(response => response.json())
+	.then(data => {
+		if(data.status == 'okay') {
+			resultado.innerHTML = data.mensagem;
+			document.getElementById('deleteRoom').className = 'btn btn-success'; //botão de deletar fica habilitado.
+		} else {
+			resultado.innerHTML = data.mensagem;
+			document.getElementById('deleteRoom').className = 'btn btn-success disabled';
+		}
+		resultado.className = "form-text visible";
+	})
+	.catch(err => {
+		console.error('Houve um erro ao tentar se conectar', err);
+	});
+}
+
      
 //funções de apresentação de conteudo nas páginas. Onload
 
@@ -424,7 +446,7 @@ function acharSala() {
 	.then(response => response.json())
 	.then(data => {
 		if(data.status == 'sucesso') {
-			let editarSala = document.getElementsByTagName('form')[0];
+			let editarSala = document.getElementById('editRoom');
 			editarSala.nome.value = data.nome;
 			editarSala.descricao.value = data.descricao;
 			editarSala.nivel.value = data.nivel;
@@ -449,32 +471,23 @@ function listarUsuarios() {
 	.then(response => response.json())
 	.then(users => {
 		if(users.status !== 'vazio') {
-			t_membros = `<table class="table mt-4 col-xl-auto col-sm-12 table-responsive" id="table_users">
-           			<thead class="thead-dark">
-					    <tr align="center">
-					      <th scope="col" class="align-middle">Imagem</th>
-					      <th scope="col" class="align-middle">Nome de usuário</th>
-					      <th scope="col" class="align-middle">Ações</th>
-					    </tr>
-  					</thead>`;
-			let linhas;
-			data.forEach(user => {
-				linhas += `<tr>
+			document.getElementById('table_members').innerHTML += '<tbody id="t_corpoo"></tbody>';
+			let linha;
+			users.forEach(user => {
+				linha = `<tr>
 				      <td align="center" class="align-middle"> <img src="includes/componentes/imagens/usuarios/matheus.jpg" alt="profile_image" class="img-fluid img-thumbnail rounded-circle mb-2 ml-lg-0 mt-4" style="width: 70px; height: 70px;"></td>
 				      <td align="center" class="align-middle">Matheus Nunes</td>
 				      <td align="center" class="align-middle">
 				      		<button class="btn btn-success mb-2 mb-sm-0" onclick='banirUsuario(event)' id='${user.usuario_id}'>Banir</button>
 				       		<button class="btn btn-danger" onclick='tornarAdmin(event)' id='${user.usuario_id}'>Tornar admin</button>
 				      </td>
-				    </tr>`	  
+				    </tr>`
+				document.getElementById('t_corpoo').innerHTML += linha;	    	  
 			})
-			t_membros += linhas;
-			t_membros += '</table>';					
+			document.getElementById('table_members').style.display = 'table';					
 		} else {
-			document.getElementById('gerenciar_membros').innerHTML += `<h2 class="text-dark">${data.mensagem}</h2>`;
+			document.getElementById('sala_membros').innerHTML += `<h2 class="text-dark">${users.mensagem}</h2>`;
 		} 
-		
-		
 	})
 	.catch(err => {
 		console.error(err);
@@ -505,7 +518,7 @@ function listarSolicitacoes() {
 			})
 			document.getElementById('table_requests').style.display = 'table';			
 		} else {
-			document.getElementById('sala_solicitacoes').innerHTML = `<h2 class="col-12 text-dark mt-4">${data.mensagem}</h2>`;
+			document.getElementById('sala_solicitacoes').innerHTML += `<h2 class="col-12 text-dark mt-4">${data.mensagem}</h2>`;
 		} 
 		
 	})
@@ -541,13 +554,11 @@ function listarSalas() {
 	              
 	                    </form>	
 	                </div>`
-
 				container.innerHTML += room;		  
 			})					
 		} else {
 			container.innerHTML += `<h2 class="text-dark">${data.mensagem}</h2>`;
 		} 
-		
 	})
 	.catch(err => {
 		console.error(err);
