@@ -1,11 +1,10 @@
 <?php
+    header('Content-Type: text/html; application/json; charset=UTF-8 ');
+    header('Access-Control-Allow-Origin: *');
     session_start();
     require_once('conecta.php');
     require_once('funcoes_sala.php');
     require_once('funcoes_admin.php');
-    header('Content-Type: application/json');
-    header('Access-Control-Allow-Origin: *');
-    header('Content-Type: charset=UTF-8');
 
 
  if($_SERVER['REQUEST_METHOD'] == 'GET') { //verificada
@@ -13,7 +12,7 @@
     $obj = json_decode($json);
     #BUSCAR SALA - funcao assincrona
     if(isset($_REQUEST['disciplina'])) {
-        $array = array($_REQUEST['disciplina'], $_SESSION['id']);
+        $array = array($_REQUEST['disciplina'], $_SESSION['id'], $_SESSION['id'], $_SESSION['id']);
         $result = buscarSala($conexao, $array);
         if($result) {
             $status = $result; 
@@ -66,8 +65,7 @@
         die();
     }
     if(isset($_REQUEST['listarSalas'])) {
-        $boo = 6;
-        $array = array($boo);
+        $array = array($_SESSION['id']);
         $salas = listarSalas($conexao, $array);
         if(empty($salas)) {
             $retorno = array('status'=>'vazio', 'mensagem'=>'Parece que você ainda não entrou em nenhuma sala.');
@@ -207,7 +205,7 @@
         $json = file_get_contents('php://input');
         $obj = json_decode($json);
 
-        if($obj->funcao == 'sair sala') { //É UM DELETE PORÉM SERÁ USADO COMO GET, pois será mais simples.
+        if($obj->funcao === 'sair sala') { //É UM DELETE PORÉM SERÁ USADO COMO GET, pois será mais simples.
             $user_id = $_SESSION['id'];
             $id_sala = $obj->sala_id;
             $array = array($user_id, $id_sala);
@@ -221,7 +219,7 @@
             die();   
         }
 
-        if($obj->funcao == 'banir usuario') { //verificada
+        if($obj->funcao === 'banir usuario') { //verificada
             $user_id = $obj->user_id;
             $sala_id = $_SESSION['sala_id'];
             $array = array($user_id, $sala_id);
@@ -232,15 +230,15 @@
                     $status = array('status'=>'falha', 'mensagem'=>'Houve um erro ao tentar realizar esta operação. Tente novamente');
                 }
                 echo json_encode($status);
-            }
             die();    
         }
 
-        if($obj->funcao == 'negar solicitacao') { //verificada
+        if($obj->funcao === 'negar solicitacao') { //verificada
             $user_id = $obj->user_id;
             $sala_id = $_SESSION['sala_id'];
             $array = array($user_id, $sala_id);
             $resultado = negarSolicitacao($conexao, $array);
+            
             if($resultado) {
                 $status = array('status'=>'sucesso');
             } else {
@@ -248,9 +246,8 @@
             }
             echo json_encode($status);
             die();
-        }   
-               
+        }
 
-
+    }    
 
 ?>

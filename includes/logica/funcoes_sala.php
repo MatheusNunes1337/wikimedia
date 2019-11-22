@@ -28,7 +28,10 @@
         $query = $conexao->prepare("select nome, descricao, nivel, max_membros, sala_id, usuarios.username 
             from salas, usuarios where salas.usuario_id = usuarios.usuario_id and 
             assunto_id IN (select assunto_id from assuntos where disciplina = ?) and sala_id NOT IN (select sala_id from
-            sala_membros where usuario_id = ?)");
+            sala_membros where usuario_id = 8) and salas.sala_id NOT IN (select sala_id from solicitacoes where usuario_id = ?) 
+            and salas.sala_id NOT IN (select sala_id from salas where usuario_id = ?) AND salas.sala_id NOT IN 
+            (select sala_id from sala_membros where usuario_id = ?) 
+            group by salas.nome");
         if($query->execute($array)){
             $sala = $query->fetchAll(PDO::FETCH_ASSOC); //coloca os dados num array $usuario
             return $sala;

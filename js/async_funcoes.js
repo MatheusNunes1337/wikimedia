@@ -15,7 +15,6 @@ function buscarSala() {
 	})
 	.then(response => response.json())
 	.then(salas => {
-		console.log(salas);
 		container.innerHTML = `
 					   <h1 class="row col-12 mb-4">Busca de salas</h1>
 					   <div class="input-group bg-white mt-3 col-12 col-xl-7 mb-5 py-2  shadow-sm rounded">
@@ -48,7 +47,7 @@ function buscarSala() {
 	                        <div class="ml-xl-4">Nível: ${sala.nivel}</div>
 	                        <div class="ml-xl-4">Dono: ${sala.username}</div>
 	                    </footer>
-	                    <button type="button" class="btn btn-danger my-3" onclick="enviarSolicitacao(event)">enviar solicitação</button>
+	                    <button type="button" class="btn btn-danger my-3" id="${sala.sala_id}" onclick="enviarSolicitacao(event)">enviar solicitação</button>
 	                </div>`
 						
 				container.innerHTML += room;
@@ -96,16 +95,14 @@ function enviarSolicitacao(e) {
 	let obj = new Object();
 	obj.funcao = 'enviar solicitacao';
 	obj.sala_id = e.target.id;
-	//doRequestPost(url_sala, obj);
 	fetch(url_sala, {
 		method: 'POST',
 		body: JSON.stringify(obj)
 	})
 	.then(response => response.json())
 	.then(data => {
-		if(data.status == 'sucesso') {
-			let botao = document.getElementById(obj.sala_id).permDisabled = true;
-		}
+		alert(data.mensagem);
+		window.location.href = 'buscar_salas.php';
 	})
 	.catch(err => {
 		console.error(err);
@@ -162,9 +159,13 @@ function aceitarSolicitacao(e) {
 		method: 'POST',
 		body: JSON.stringify(obj)
 	})
-	.then(response => response.text())
+	.then(response => response.json())
 	.then(data => {
-		console.log(data);
+		if(data.status === 'sucesso') {
+			alert('solicitacao aceita com sucesso');
+		} else {
+			alert(data.mensagem);
+		}
 		listarSolicitacoes();
 	})
 	.catch(err => {
@@ -177,16 +178,20 @@ function negarSolicitacao(e) {
 	let obj = new Object();
 	obj.funcao = 'negar solicitacao';
 	obj.user_id = e.target.id;
+	console.log(obj);
 	fetch(url_sala, {
 		method: 'DELETE',
 		body: JSON.stringify(obj)
 	})
-	.then(response => response.json())
+	.then(response => response.text())
 	.then(data => {
 		if(data.status == 'falha') {
-			console.log(data.mensagem)
+			alert(data.mensagem)
+		} else {
+			alert('solicitacao negada com sucesso');
 		}
 		listarSolicitacoes();
+		
 	})
 	.catch(err => {
 		console.error(err);
@@ -500,7 +505,7 @@ function listarSolicitacoes() {
 			})
 			document.getElementById('table_requests').style.display = 'table';			
 		} else {
-			document.getElementById('sala_solicitacoes').innerHTML += `<h2 class="col-12 text-dark mt-4">${data.mensagem}</h2>`;
+			document.getElementById('sala_solicitacoes').innerHTML = `<h2 class="col-12 text-dark mt-4">${data.mensagem}</h2>`;
 		} 
 		
 	})
