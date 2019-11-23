@@ -3,7 +3,7 @@
     <a class="navbar-brand" href="#">Wikimedia</a>
         <div class="row h-auto mt-3 container">
           
-            <img src="includes/componentes/imagens/usuarios/matheus.jpg" alt="profile_image" class="img-fluid img-thumbnail rounded-circle mb-2 ml-lg-0 mt-4" style="width: 90px; height: 90px;">
+            <img src="includes/componentes/imagens/usuarios/<?php echo $_SESSION['img_profile'];?>" alt="profile_image" class="img-fluid img-thumbnail rounded-circle mb-2 ml-lg-0 mt-4" style="width: 90px; height: 90px;">
          
           <p class="row text-white col-xl-10 col-10 mt-2"><?php echo $_SESSION['username']; ?></p>
         </div>

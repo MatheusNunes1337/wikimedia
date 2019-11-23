@@ -33,6 +33,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['logado'] = true;
             $_SESSION['id'] = $usuario['usuario_id'];
             $_SESSION['username'] = $usuario['username'];
+            $_SESSION['img_profile'] = $usuario['foto'];
             header('location:../../home.php');
         }
         else{
@@ -152,18 +153,23 @@ if($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 
 
 if($_SERVER['REQUEST_METHOD'] == 'PUT') {
+    $json = file_get_contents('php://input');
+    $obj = json_decode($json);
     #ALTERAR PERFIL DO USUÁRIO LOGADO 
-    if(isset($_REQUEST['atualizar_usuario'])) {
-        $id = $_REQUEST['numero_id'];
-        $senha = base64_encode($_POST['senha']);
-        $email = $_POST['email'];
-        $array = array($senha, $email, $id);
+    if($obj->funcao === 'atualizar perfil') {
+        $id_user = $_SESSION['id'];
+        $nomeUsuario = $obj->username;
+        $senha = base64_encode($obj->senha);
+        $email = $obj->email;
+        $array = array($nomeUsuario, $email, $senha, $id_user);
         $result = alterarPerfil($conexao, $array);
         if($result) {
-             header('location:../../index.php');
+            $status = array('status'=>'sucesso', 'mensagem'=>'Informações da conta atualizadas com sucesso'); 
          } else {
-            echo "erro ao tentar atualizar o perfil";
+            $status = array('status'=>'falha', 'mensagem'=>'Ocorreu um erro ao tentar atualizar o perfil. Tente novamente mais tarde');
          }
+         echo json_encode($status);
+         die(); 
     }           
 }
 

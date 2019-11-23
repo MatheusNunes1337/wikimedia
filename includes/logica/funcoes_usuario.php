@@ -127,7 +127,7 @@
 
     function alterarPerfil($conexao, $array) {
          try {
-            $query = $conexao->prepare("update usuarios set email = ?, senha= ?, foto=? where id = ?");
+            $query = $conexao->prepare("update usuarios set username = ?, email = ?, senha= ? where usuario_id = ?");
             $usuario = $query->execute($array);   
             return $usuario;
         }catch(PDOException $e) {

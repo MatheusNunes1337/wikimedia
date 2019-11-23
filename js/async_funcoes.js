@@ -610,3 +610,23 @@ function excluirConta() {
 	} 
 }
 
+function editarConta() {
+	let obj = new Object();
+	obj.username = perfilEditForm.user_username.value;
+	obj.senha = perfilEditForm.user_senha.value;
+	obj.email = perfilEditForm.user_email.value;
+	obj.funcao = 'atualizar perfil'
+	fetch('includes/logica/logica_usuario.php', {
+		method: 'PUT',
+		body: JSON.stringify(obj)
+	})
+	.then(response => response.json())
+	.then(data => {
+		alert(data.mensagem);
+	})
+	.catch(err => {
+		console.error(err);
+	})
+	event.preventDefault(); 
+}
+
