@@ -30,7 +30,7 @@
                             <label for="nivel_sala">Selecione o nível</label>
                             <option value="iniciante">Iniciante</option>
                             <option value="Intermediario">Intermediário</option>
-                            <option value="avancado">Avançado</option>
+                            <option value="avançado">Avançado</option>
                             <option value="mestre">Mestre</option>
                         </select>
                     </div>

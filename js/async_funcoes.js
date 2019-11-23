@@ -40,7 +40,7 @@ function buscarSala() {
 		if(salas.status !== 'falha') {
 			var room;
 			salas.forEach(sala => {
-				room =	`<div class="col-12 mb-5 bg-white shadow-sm rounded>
+				room =	`<div class="col-12 col-xl-10 mb-5 bg-white shadow-sm rounded>
 	                  	 <header class="mt-2">
 	                      <h3 class="text-dark mt-3">${sala.nome}</h3>
 	                    </header>
@@ -52,9 +52,9 @@ function buscarSala() {
 	                    </div>
 	                    <hr>
 	                    <footer class="mb-2 sala d-flex flex-xl-row flex-column">
-	                        <div class="mb-col-2">Disciplina: Matemática</div>
-	                        <div class="ml-xl-4">Assunto: Trigonometria</div>
-	                        <div class="ml-xl-4">Membros: 19/${sala.max_membros}</div>
+	                        <div class="mb-col-2">Disciplina: ${sala.disciplina}</div>
+	                        <div class="ml-xl-4">Conteúdo: ${sala.conteudo}</div>
+	                        <div class="ml-xl-4">Membros: ${sala.membros}/${sala.max_membros}</div>
 	                        <div class="ml-xl-4">Nível: ${sala.nivel}</div>
 	                        <div class="ml-xl-4">Dono: ${sala.username}</div>
 	                    </footer>

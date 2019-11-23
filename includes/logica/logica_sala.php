@@ -17,7 +17,7 @@
         if($result) {
             $status = $result; 
         } else {
-            $status = array('status'=>'falha', "mensagem"=>"Hmm, parece que não há sala com essa disciplina"); 
+            $status = array('status'=>'falha', "mensagem"=>"Hmm, parece que não há salas referentes a esta disciplina"); 
         }
          echo json_encode($status);
          die();
