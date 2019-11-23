@@ -155,7 +155,7 @@
     //lista as solicitações de uma sala
     function listarSolicitacoes($conexao, $array) {
          try {
-        $query = $conexao->prepare("select username, usuario_id from usuarios where usuario_id IN
+        $query = $conexao->prepare("select username, usuario_id, foto from usuarios where usuario_id IN
             (select usuario_id from solicitacoes where sala_id = ?)"); 
         if($query->execute($array)){
             $solicitacoes = $query->fetchAll(PDO::FETCH_ASSOC); 
@@ -172,7 +172,7 @@
     //lista os usuários pertencentes a sala para que eles possam ser banidos ou feitos administrador (gerência de usuários)
      function listarUsuarios($conexao, $array) {
         try {
-            $query = $conexao->prepare("select username, usuario_id from usuarios where usuario_id IN
+            $query = $conexao->prepare("select username, usuario_id, foto from usuarios where usuario_id IN
                 (select usuario_id from sala_membros where sala_id = ?) and usuario_id NOT IN (select usuario_id
                 from salas where sala_id = ?) order by username asc"); 
             if($query->execute($array)){

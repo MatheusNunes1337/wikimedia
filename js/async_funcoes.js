@@ -183,13 +183,15 @@ function tornarAdmin(e) {
 	.then(response => response.json())
 	.then(data => {
 		console.log(data);
-		/*
 		if(data.status == 'falha') {
-			console.log(data.mensagem)
+			alert(data.mensagem);
 		} else {
-			console.log(data.mensagem)
+			let au = window.confirm(data.mensagem);
+			if(au) {
+				window.location.href = 'minhas_salas.php';
+			}
 		}
-		*/
+		
 	})
 	.catch(err => {
 		console.error(err);
@@ -548,8 +550,8 @@ function listarUsuarios() {
 			let linha;
 			users.forEach(user => {
 				linha = `<tr>
-				      <td align="center" class="align-middle"> <img src="includes/componentes/imagens/usuarios/matheus.jpg" alt="profile_image" class="img-fluid img-thumbnail rounded-circle mb-2 ml-lg-0 mt-4" style="width: 70px; height: 70px;"></td>
-				      <td align="center" class="align-middle">Matheus Nunes</td>
+				      <td align="center" class="align-middle"> <img src="includes/componentes/imagens/usuarios/${user.foto}" alt="profile_image" class="img-fluid img-thumbnail rounded-circle mb-2 ml-lg-0 mt-4" style="width: 70px; height: 70px;"></td>
+				      <td align="center" class="align-middle">${user.username}</td>
 				      <td align="center" class="align-middle">
 				      		<button class="btn btn-success mb-2 mb-sm-0" onclick='banirUsuario(event)' id='${user.usuario_id}'>Banir</button>
 				       		<button class="btn btn-danger" onclick='tornarAdmin(event)' id='${user.usuario_id}'>Tornar admin</button>
@@ -580,7 +582,7 @@ function listarSolicitacoes() {
 				
 				linha = 
 				`<tr>
-			      <td align="center" class="align-middle"><img src="includes/componentes/imagens/usuarios/matheus.jpg" alt="profile_image" class="img-fluid img-thumbnail rounded-circle mb-2 ml-lg-0 mt-4" style="width: 70px; height: 70px;"></td>
+			      <td align="center" class="align-middle"><img src="includes/componentes/imagens/usuarios/${solicitacao.foto}" alt="profile_image" class="img-fluid img-thumbnail rounded-circle mb-2 ml-lg-0 mt-4" style="width: 70px; height: 70px;"></td>
 			      <td align="center" class="align-middle">${solicitacao.username}</td>
 			      <td align="center" class="align-middle">
 			      		<button class="btn btn-success mb-2 mb-sm-0" id="${solicitacao.usuario_id}" onclick="aceitarSolicitacao(event);">aceitar</button>
