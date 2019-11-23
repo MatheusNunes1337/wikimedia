@@ -202,5 +202,22 @@
       }  
     }
 
+    function verificaUser($conexao, $array) {
+       try {
+            $query = $conexao->prepare("select * from salas where sala_id = ? AND usuario_id = ?");
+            if($query->execute($array)){
+                $query->fetch();
+                if($query->rowCount() == 1) {
+                    $resultado = true;
+                } else {
+                    $resultado = false;
+                }
+                return $resultado;
+            }
+         }catch(PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
+         }  
+    }
+
     
    ?>

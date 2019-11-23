@@ -109,16 +109,26 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
         $idUser = $_SESSION['id'];
         $array = array($idUser);
         $result = excluirPerfil($conexao, $array);
-        echo var_dump($result); die();
         if($result) {
             session_destroy();
             $status = array('status'=>'sucesso');
         } else {
              $status = array('status'=>'falha', 'mensagem'=>'Houve um erro ao tentar excluir a sua conta. Tente novamente mais tarde');
-        }    
+        }
+        die();     
     }
-     die(); 
     
+     if(isset($_REQUEST['verificaUser'])) {
+        $array = array($_REQUEST['id_sala'], $_SESSION['id']);
+        $user = verificaUser($conexao, $array);
+        if(!$user) {
+            $retorno = array('status'=>'okay');
+        } else {
+            $retorno = array('status'=>'é o administrador', 'mensagem'=>'Parece que você é o administrador dessa sala. Para continuar com esta operação é necessário primeiramente que você nomeie outro membro como administrador.');
+        }
+        echo json_encode($retorno);
+        die();
+    }
     /*
     #PESQUISAR USUÁRIO
     funcao assincrona

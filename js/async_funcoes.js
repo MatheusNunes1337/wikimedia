@@ -5,6 +5,17 @@ const url_sala = 'includes/logica/logica_sala.php';
 let container = document.getElementById('container');
 let solicitacoes = document.getElementById('sala_solicitacoes');
 let t_membros = document.getElementById('table_members');
+const solicitacoes_header = `
+			  <h1 class="text-sm-left text-center mb-5">Solicitações</h1>
+              <table class="table mt-4 col-xl-8 col-12 table-bordered" id="table_requests" style="display: none;">
+                <thead class="thead-dark">
+                    <tr align="center">
+                      <th scope="col" class="align-middle">Imagem</th>
+                      <th scope="col" class="align-middle">Nome de usuário</th>
+                      <th scope="col" class="align-middle">Ações</th>
+                    </tr>
+                </thead>
+              </table>`
 
 
 //verificada
@@ -68,18 +79,31 @@ function deixarSala(e) {
 	let obj = new Object();
 	obj.funcao = 'sair sala';
 	obj.sala_id = e.target.id;
-	let result = window.confirm("deseja mesmo sair dessa sala");
+	let result = window.confirm("deseja mesmo sair dessa sala?");
 	if(result === true) {
-		fetch(`includes/logica/logica_sala.php`, {
-			method: 'DELETE',
-			body: JSON.stringify(obj)
+		fetch(`includes/logica/logica_usuario.php?id_sala=${obj.sala_id}&verificaUser=true`, {
+			method: 'GET'
 		})
 		.then(response => response.json())
 		.then(data => {
-			if(data.status == 'sucesso') {
-				window.location.href = 'minhas_salas.php';
+			if(data.status === 'okay') {
+				fetch(`includes/logica/logica_sala.php`, {
+					method: 'DELETE',
+					body: JSON.stringify(obj)
+				})
+				.then(response => response.json())
+				.then(data => {
+					if(data.status == 'sucesso') {
+						window.location.href = 'minhas_salas.php';
+					} else {
+						alert(data.mensagem)
+					}
+				})
+				.catch(err => {
+					console.error(err);
+				});
 			} else {
-				alert(data.mensagem)
+				alert(data.mensagem);
 			}
 		})
 		.catch(err => {
@@ -117,7 +141,33 @@ function banirUsuario(e) {
 	obj.funcao = 'banir usuario';
 	obj.user_id = usuario_id;
 	console.log(obj);
-	doRequestDelete(url_sala, obj);
+	fetch(url_sala, {
+		method: 'DELETE',
+		body: JSON.stringify(obj)
+	})
+	.then(response => response.json())
+	.then(data => {
+		if(data.status == 'falha') {
+			console.log(data.mensagem);
+		} else {
+			console.log(data.mensagem);
+		}
+		document.getElementById('sala_membros').innerHTML = 
+		`<h1 class="text-sm-left text-center mb-5">Gerência de membros</h1>
+		<table class="table mt-4 col-xl-8 col-12 table-bordered" id="table_members" style="display: none;">
+                <thead class="thead-dark">
+                    <tr align="center">
+                      <th scope="col" class="align-middle">Imagem</th>
+                      <th scope="col" class="align-middle">Nome de usuário</th>
+                      <th scope="col" class="align-middle">Ações</th>
+                    </tr>
+                </thead>
+              </table>`;
+		listarUsuarios();
+	})
+	.catch(err => {
+		console.error(err);
+	})
 }
 //verificada
 function tornarAdmin(e) {
@@ -165,6 +215,7 @@ function aceitarSolicitacao(e) {
 		} else {
 			alert(data.mensagem);
 		}
+		document.getElementById('sala_solicitacoes').innerHTML = solicitacoes_header;
 		listarSolicitacoes();
 	})
 	.catch(err => {
@@ -189,6 +240,7 @@ function negarSolicitacao(e) {
 		} else {
 			alert('solicitacao negada com sucesso');
 		}
+		document.getElementById('sala_solicitacoes').innerHTML = solicitacoes_header;
 		listarSolicitacoes();
 		
 	})
@@ -539,7 +591,7 @@ function listarSolicitacoes() {
 			})
 			document.getElementById('table_requests').style.display = 'table';			
 		} else {
-			document.getElementById('sala_solicitacoes').innerHTML += `<h2 class="col-12 text-dark mt-4">${data.mensagem}</h2>`;
+			document.getElementById('sala_solicitacoes').innerHTML += `<h2 class="text-dark mt-4">${data.mensagem}</h2>`;
 		} 
 		
 	})
