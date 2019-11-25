@@ -127,6 +127,16 @@
 
     function alterarPerfil($conexao, $array) {
          try {
+            $query = $conexao->prepare("update usuarios set username = ?, email = ?, senha= ?, foto = ? where usuario_id = ?");
+            $usuario = $query->execute($array);   
+            return $usuario;
+        }catch(PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
+    }
+
+    function atualizarPerfil($conexao, $array) { //semelhante a acima, porém não faz o update da imagem
+         try {
             $query = $conexao->prepare("update usuarios set username = ?, email = ?, senha= ? where usuario_id = ?");
             $usuario = $query->execute($array);   
             return $usuario;
@@ -188,7 +198,7 @@
 
     function acharUser($conexao,$array){
         try {
-        $query = $conexao->prepare("select username, email, senha from usuarios
+        $query = $conexao->prepare("select username, email, senha, foto from usuarios
             where usuario_id = ?");
         if($query->execute($array)){
             $user = $query->fetch(PDO::FETCH_ASSOC); 

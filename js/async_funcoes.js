@@ -529,6 +529,9 @@ function acharUser() {
 			editarPerfil.user_username.value = data.username;
 			editarPerfil.user_email.value = data.email;
 			editarPerfil.user_senha.value = data.senha;
+			document.getElementById('nome_usuario').innerHTML = data.username;
+			document.getElementById('user_image').src = `includes/componentes/imagens/usuarios/${data.foto}`;
+			document.getElementById('imagem_perfil').src = `includes/componentes/imagens/usuarios/${data.foto}`;
 		} else {
 			console.log(data.mensagem);
 		}
@@ -665,18 +668,17 @@ function excluirConta() {
 }
 
 function editarConta() {
-	let obj = new Object();
-	obj.username = perfilEditForm.user_username.value;
-	obj.senha = perfilEditForm.user_senha.value;
-	obj.email = perfilEditForm.user_email.value;
-	obj.funcao = 'atualizar perfil'
+	let formulario = document.getElementById('profile_config');
+	const data = new FormData(formulario);
+	data.append('atualizar_perfil', true);
 	fetch('includes/logica/logica_usuario.php', {
-		method: 'PUT',
-		body: JSON.stringify(obj)
+		method: 'POST',
+		body: data
 	})
 	.then(response => response.json())
 	.then(data => {
 		alert(data.mensagem);
+		acharUser();
 	})
 	.catch(err => {
 		console.error(err);

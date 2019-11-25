@@ -37,18 +37,83 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
             header('location:../../home.php');
         }
         else{
-            /*
-            header('location:../../login.php');
-            ?>
-            <script type="text/javascript">
-                alert("Usuário ou senha incorretos");
-            </script>
-            <?php
-            */
-           header('location:../../forms/user/login.php');
+           header('location:../../login.php');
         }
+        die();
     }
-    die();
+     if(isset($_POST['atualizar_perfil'])) { //É UM METODO PUT PORÉM SERÁ FEITO COMO POST
+        $id_user = $_SESSION['id'];
+        $nomeUsuario = $_REQUEST['user_username'];
+        $senha = base64_encode($_REQUEST['user_senha']);
+        $email = $_REQUEST['user_email'];
+
+         /* Config_upload */
+        $limitar_ext="sim";
+ 
+        //extensões autorizadas
+        $extensoes_validas=array(".gif",".jpg",".jpeg",".bmp",".GIF",".JPG",".JPEG",".BMP",".PNG",".png");
+
+        // caminho absoluto onde os arquivos serão armazenados
+        $caminho="../componentes/imagens/usuarios";
+
+        // limitar o tamanho do arquivo? (sim ou não)
+        $limitar_tamanho="sim";
+
+        //tamanho limite do arquivo em bytes
+        $tamanho_bytes="30000000";
+
+        /*executa_upload*/
+
+        $nome_arquivo=$_FILES['user_foto']['name'];  
+        $tamanho_arquivo=$_FILES['user_foto']['size'];
+        $arquivo_temporario=$_FILES['user_foto']['tmp_name'];
+
+        if (!empty($nome_arquivo))
+        {
+           
+            if($limitar_tamanho=="sim" && ($tamanho_arquivo > $tamanho_bytes))  { 
+                $status = array("status"=>"falha", "mensagem"=>"Falha! Parece que você enviou uma imagem acima de 3MB. Tente novamente com uma imagem de tamanho inferior.");
+                echo json_encode($status);
+                die();
+            }
+                
+            $ext = strrchr($nome_arquivo,'.');
+            if (($limitar_ext == "sim") && !in_array($ext,$extensoes_validas)) {
+                $status = array("status"=>"falha", "mensagem"=>"Falha! Você deve selecionar apenas arquivos de imagem. Tente novamente usando o formato correto.");
+                echo json_encode($status);
+                die();
+            }    
+               
+            if (move_uploaded_file($arquivo_temporario, "$caminho/$nome_arquivo"))
+            {
+                  $array = array($nomeUsuario, $email, $senha, $nome_arquivo, $id_user);
+                  $result = alterarPerfil($conexao, $array);
+                   if($result) {
+                        $status = array('status'=>'sucesso', 'mensagem'=>'Informações da conta atualizadas com sucesso'); 
+                    } else {
+                        $status = array('status'=>'falha', 'mensagem'=>'Ocorreu um erro ao tentar atualizar o perfil. Tente novamente mais tarde');
+                    }
+                    echo json_encode($status);
+            }
+            else
+            {
+                $status = array("status"=>"falha", "mensagem"=>"Falha! O arquivo não pôde ser copiado para o servidor");
+                 echo json_encode($status);
+                 die();
+            }
+        } else {
+            $array = array($nomeUsuario, $email, $senha, $id_user);
+            $result = atualizarPerfil($conexao, $array);
+           if($result) {
+                $status = array('status'=>'sucesso', 'mensagem'=>'Informações da conta atualizadas com sucesso'); 
+            } else {
+                $status = array('status'=>'falha', 'mensagem'=>'Ocorreu um erro ao tentar atualizar o perfil. Tente novamente mais tarde');
+            }
+            echo json_encode($status);
+        }
+
+     }
+     die();   
 }    
 
 
@@ -99,7 +164,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
             $status = $userInfo; 
             $status['status'] = 'sucesso';
         } else {
-            $status = array('status'=>'falha', 'mensagem' => 'Não foi possivel selecionar esse usuário para edição');
+            $status = array('status'=>'falha', 'mensagem' => 'Não foi possivel carregar as informações do usuário.');
         }
         echo json_encode($status);
         die();
@@ -161,27 +226,6 @@ if($_SERVER['REQUEST_METHOD'] == 'DELETE') {
     }   
 }
 
-
-if($_SERVER['REQUEST_METHOD'] == 'PUT') {
-    $json = file_get_contents('php://input');
-    $obj = json_decode($json);
-    #ALTERAR PERFIL DO USUÁRIO LOGADO 
-    if($obj->funcao === 'atualizar perfil') {
-        $id_user = $_SESSION['id'];
-        $nomeUsuario = $obj->username;
-        $senha = base64_encode($obj->senha);
-        $email = $obj->email;
-        $array = array($nomeUsuario, $email, $senha, $id_user);
-        $result = alterarPerfil($conexao, $array);
-        if($result) {
-            $status = array('status'=>'sucesso', 'mensagem'=>'Informações da conta atualizadas com sucesso'); 
-         } else {
-            $status = array('status'=>'falha', 'mensagem'=>'Ocorreu um erro ao tentar atualizar o perfil. Tente novamente mais tarde');
-         }
-         echo json_encode($status);
-         die(); 
-    }           
-}
 
 #LOGOUT
     if(isset($_POST['sair'])){

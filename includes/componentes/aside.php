@@ -3,9 +3,9 @@
     <a class="navbar-brand" href="#">Wikimedia</a>
         <div class="row h-auto mt-3 container">
           
-            <img src="includes/componentes/imagens/usuarios/<?php echo $_SESSION['img_profile'];?>" alt="profile_image" class="img-fluid img-thumbnail rounded-circle mb-2 ml-lg-0 mt-4" style="width: 90px; height: 90px;">
+            <img src="" id="imagem_perfil" alt="profile_image" class="img-fluid img-thumbnail rounded-circle mb-2 ml-lg-0 mt-4" style="width: 90px; height: 90px;">
          
-          <p class="row text-white col-xl-10 col-10 mt-2"><?php echo $_SESSION['username']; ?></p>
+          <p class="row text-white col-xl-10 col-10 mt-2" id="nome_usuario"></p>
         </div>
     <form class="form-inline mt-4" action="#">
         <input class="form-control col-lg-10 col-xl-11" type="search" placeholder="Buscar usuários" aria-label="Pesquisar">
