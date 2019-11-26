@@ -97,7 +97,7 @@ function deixarSala(e) {
 					if(data.status == 'sucesso') {
 						window.location.href = 'minhas_salas.php';
 					} else {
-						alert(data.mensagem)
+						showStatus(obj.funcao, data.mensagem);
 					}
 				})
 				.catch(err => {
@@ -126,7 +126,7 @@ function enviarSolicitacao(e) {
 	})
 	.then(response => response.json())
 	.then(data => {
-		alert(data.mensagem);
+		showStatus(obj.funcao, data.mensagem);
 		window.location.href = 'buscar_salas.php';
 	})
 	.catch(err => {
@@ -148,11 +148,10 @@ function banirUsuario(e) {
 	})
 	.then(response => response.json())
 	.then(data => {
-		if(data.status == 'falha') {
-			console.log(data.mensagem);
-		} else {
-			console.log(data.mensagem);
-		}
+		if(data.status === 'falha') {
+			showStatus(obj.funcao, data.mensagem);
+		}	
+		
 		document.getElementById('sala_membros').innerHTML = 
 		`<h1 class="text-sm-left text-center mb-5">Gerência de membros</h1>
 		<table class="table mt-4 col-xl-8 col-12 table-bordered" id="table_members" style="display: none;">
@@ -172,38 +171,40 @@ function banirUsuario(e) {
 }
 //verificada
 function tornarAdmin(e) {
-	let usuario_id = e.target.id;
-	let obj = new Object();
-	obj.funcao = 'tornar admin';
-	obj.user_id = usuario_id;
-	console.log(obj);
-	fetch(url_sala, {
-		method: 'PUT',
-		body: JSON.stringify(obj)
-	})
-	.then(response => response.json())
-	.then(data => {
-		console.log(data);
-		if(data.status == 'falha') {
-			alert(data.mensagem);
-		} else {
-			let au = window.confirm(data.mensagem);
-			if(au) {
-				window.location.href = 'minhas_salas.php';
-			}
-		}
-		
-	})
-	.catch(err => {
-		console.error(err);
-	})
+	showConfirm('tornar administrador', 'Concluida esta operação, você não será mais o administrador da sala. Se você está ciente disso, clique em confirmar.');
+	let confirmado = confirmarOperacao();
+	console.log(confirmado);
+	if(confirmado) {
+		let usuario_id = e.target.id;
+		let obj = new Object();
+		obj.funcao = 'tornar admin';
+		obj.user_id = usuario_id;
+		console.log(obj);
+		fetch(url_sala, {
+			method: 'PUT',
+			body: JSON.stringify(obj)
+		})
+		.then(response => response.json())
+		.then(data => {
+			console.log(data);
+			if(data.status == 'falha') {
+				showStatus(obj.funcao, data.mensagem);
+			} else {
+				 //let au = window.confirm(data.mensagem);
+					showStatus(obj.funcao, data.mensagem);
+					window.location.href = 'minhas_salas.php';
+			}	
+		})
+		.catch(err => {
+			console.error(err);
+		})
+	}	
 
 	event.preventDefault(); 
 }
 
 //verificada
 function aceitarSolicitacao(e) {
-	console.log('batata');
 	let obj = new Object();
 	obj.funcao = 'aceitar solicitacao';
 	obj.user_id = e.target.id;
@@ -213,11 +214,9 @@ function aceitarSolicitacao(e) {
 	})
 	.then(response => response.json())
 	.then(data => {
-		if(data.status === 'sucesso') {
-			alert('solicitacao aceita com sucesso');
-		} else {
-			alert(data.mensagem);
-		}
+		if(!data.status === 'sucesso') {
+			showStatus(obj.funcao, data.mensagem);
+		} 
 		document.getElementById('sala_solicitacoes').innerHTML = solicitacoes_header;
 		listarSolicitacoes();
 	})
@@ -231,18 +230,15 @@ function negarSolicitacao(e) {
 	let obj = new Object();
 	obj.funcao = 'negar solicitacao';
 	obj.user_id = e.target.id;
-	console.log(obj);
 	fetch(url_sala, {
 		method: 'DELETE',
 		body: JSON.stringify(obj)
 	})
 	.then(response => response.text())
 	.then(data => {
-		if(data.status == 'falha') {
-			alert(data.mensagem)
-		} else {
-			alert('solicitacao negada com sucesso');
-		}
+		if(data.status === 'falha') {
+			showStatus(obj.funcao, data.mensagem);
+		} 
 		document.getElementById('sala_solicitacoes').innerHTML = solicitacoes_header;
 		listarSolicitacoes();
 		
@@ -269,7 +265,7 @@ function editaSala() {
 	})
 	.then(response => response.json())
 	.then(data => {
-		alert(data.mensagem);
+		showStatus(obj.funcao, data.mensagem);
 	})
 	.catch(err => {
 		console.error(err);
@@ -479,6 +475,7 @@ function verificaAdmPass(e) {
 //funções de apresentação de conteudo nas páginas. Onload
 
 function acharSala() {
+	let funcao = 'carregar informações da sala';
 	fetch('includes/logica/logica_sala.php?infoSala=true', {
 		method: 'GET'
 	})
@@ -494,7 +491,7 @@ function acharSala() {
 			editarSala.conteudo.value = data.conteudo;
 		
 		} else {
-			console.log(data.mensagem);
+			showStatus(funcao, data.mensagem);
 		}
 		
 	})
@@ -630,7 +627,7 @@ function listarSalas() {
 }
 
 function excluirConta() {
-	let result = window.confirm('Deseja mesmo excluir a sua conta?');
+	showConfirm('excluir conta', data.mensagem); //let result = window.confirm('Deseja mesmo excluir a sua conta?');
 	if(result) {
 		let obj = new Object();
 		obj.funcao = 'excluir conta'
@@ -684,6 +681,11 @@ function showConfirm(title, msg) {
 	document.getElementById('confirm_titulo').innerHTML = title;
 	document.getElementById('confirm_content').innerHTML = msg;
 	$('#modal_confirm').modal();
+}
+
+function confirmarOperacao() {
+	console.log('bolo');
+	return true;
 }
 
 

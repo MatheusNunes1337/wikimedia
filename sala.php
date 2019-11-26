@@ -45,9 +45,7 @@
                       <button class="btn btn-danger">Publicar</button>
                   </div>  
               </div>
-              <div id="feed" class="mt-3 col-12 col-xl-10 py-3 bg-success" style="min-height: 500px;">
-                
-              </div>  
+               
            </content>  
       </main>
     </div>
