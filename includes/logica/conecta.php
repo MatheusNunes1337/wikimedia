@@ -1,6 +1,6 @@
 <?php
    try{
-    $aux = 'mysql:host=localhost;dbname=projeto;';
+    $aux = 'mysql:host=localhost;dbname=wikimedia;';
     //abre a conexão com o Banco via PDO
     $conexao = new PDO($aux,'root','',
                 array(

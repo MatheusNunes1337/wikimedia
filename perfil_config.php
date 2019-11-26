@@ -42,6 +42,7 @@
             </content>    
       </main>
     </div>
+    <?php require_once('includes/componentes/modais.php') ?> 
     <?php require_once('includes/componentes/rodape.php') ?>
 </body>
 </html>

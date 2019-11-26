@@ -2,6 +2,7 @@
 const url_sala_user = 'includes/logica/logica_sala_user.php';
 const url_sala = 'includes/logica/logica_sala.php';
 
+
 let container = document.getElementById('container');
 let solicitacoes = document.getElementById('sala_solicitacoes');
 let t_membros = document.getElementById('table_members');
@@ -519,6 +520,7 @@ function acharSala() {
 }
 
 function acharUser() {
+	let funcao = 'carregar informações do usuário'
 	fetch('includes/logica/logica_usuario.php?infoUser=true', {
 		method: 'GET'
 	})
@@ -533,7 +535,7 @@ function acharUser() {
 			document.getElementById('user_image').src = `includes/componentes/imagens/usuarios/${data.foto}`;
 			document.getElementById('imagem_perfil').src = `includes/componentes/imagens/usuarios/${data.foto}`;
 		} else {
-			console.log(data.mensagem);
+			showStatus(funcao, data.mensagem)	
 		}
 		
 	})
@@ -667,7 +669,9 @@ function excluirConta() {
 	} 
 }
 
+
 function editarConta() {
+	let funcao = 'configurar conta';
 	let formulario = document.getElementById('profile_config');
 	const data = new FormData(formulario);
 	data.append('atualizar_perfil', true);
@@ -677,7 +681,7 @@ function editarConta() {
 	})
 	.then(response => response.json())
 	.then(data => {
-		alert(data.mensagem);
+		showStatus(funcao, data.mensagem)
 		acharUser();
 	})
 	.catch(err => {
@@ -685,4 +689,17 @@ function editarConta() {
 	})
 	event.preventDefault(); 
 }
+
+function showStatus(title, msg) {
+	document.getElementById('status_titulo').innerHTML = title;
+	document.getElementById('status_content').innerHTML = msg;
+	$('#modal_status').modal();
+}
+
+function showConfirm(title, msg) {
+	document.getElementById('confirm_titulo').innerHTML = title;
+	document.getElementById('confirm_content').innerHTML = msg;
+	$('#modal_confirm').modal();
+}
+
 

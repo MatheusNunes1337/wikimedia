@@ -3,7 +3,7 @@
     <a class="navbar-brand" href="#">Wikimedia</a>
         <div class="row h-auto mt-3 container">
           
-            <img src="" id="imagem_perfil" alt="profile_image" class="img-fluid img-thumbnail rounded-circle mb-2 ml-lg-0 mt-4" style="width: 90px; height: 90px;">
+            <img src="" id="imagem_perfil" alt="profile_image" class="img-fluid img-thumbnail rounded-circle mb-2 ml-lg-0 mt-4" style="width: 100px; height: 100px;">
          
           <p class="row text-white col-xl-10 col-10 mt-2" id="nome_usuario"></p>
         </div>
