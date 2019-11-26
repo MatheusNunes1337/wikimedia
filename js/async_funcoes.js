@@ -515,7 +515,7 @@ function acharUser() {
 			editarPerfil.user_username.value = data.username;
 			editarPerfil.user_email.value = data.email;
 			editarPerfil.user_senha.value = data.senha;
-			document.getElementById('nome_usuario').innerHTML = data.username;
+			document.getElementById('nome_usuario').innerHTML = data.usernames;
 			document.getElementById('user_image').src = `includes/componentes/imagens/usuarios/${data.foto}`;
 			document.getElementById('imagem_perfil').src = `includes/componentes/imagens/usuarios/${data.foto}`;
 		} else {

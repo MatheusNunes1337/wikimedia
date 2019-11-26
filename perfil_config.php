@@ -15,7 +15,7 @@
             <content class="container-fluid py-5 row col-11 mx-auto" style="min-height: auto;">
             <h2 class="col-12 mb-4 text-lg-left text-center">Configurações do perfil</h2>
               <form class="col-12 col-lg-4" id="profile_config" onsubmit="editarConta();" name="perfilEditForm">
-                  <img src="" id="user_image" alt="profile_image" class="img-fluid img-thumbnail rounded-circle mb-4 ml-lg-0 mt-3 mx-auto d-lg-inline d-block" style="width: 200px; height: 200px;">
+                  <img src="" id="user_image" alt="profile_image" class="img-fluid img-thumbnail rounded-circle mb-4 ml-lg-0 mt-3 mx-auto d-lg-inline d-block user_image" style="width: 200px; height: 200px;">
                   <div class="form-group">
                       <input type="file" class="form-control-file" name="user_foto">
                   </div>

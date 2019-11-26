@@ -1,7 +1,7 @@
 <?php
     require_once('conecta.php');
     require_once('funcoes_usuario.php');
-     header('Content-Type: text/html; application/json; charset=UTF-8 ');
+    header('Content-Type: text/html; application/json; charset=UTF-8 ');
     header('Access-Control-Allow-Origin: *');
     session_start();
     
