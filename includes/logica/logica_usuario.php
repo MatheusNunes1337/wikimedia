@@ -16,9 +16,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
         $array = array($username, $email, $senhaEncriptada);
         $okay = cadastrarUsuario($conexao, $array);
         if($okay) {
-            header('location:../../forms/user/login.php');
+            header('location:../../login.php');
         } else {
-            header('location:../../forms/user/cadastro.php');
+            header('location:../../cadastro.php');
         }
         
     }
@@ -122,6 +122,12 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
     $obj = json_decode($json);
 
     if(isset($_REQUEST['username'])) {
+        $tamanho = strlen($_REQUEST['username']);
+        if($tamanho < 6 || $tamanho > 12) {
+           $status = array('status'=>'invalido', 'mensagem'=>'O nome de usuário deve ter de 6 a 12 caracteres');
+           echo json_encode($status);
+           die();
+        }
         $array = array($_REQUEST['username']);
         $resultado = verificaUsername($conexao, $array);
         if($resultado) {
@@ -131,7 +137,15 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
         echo json_encode($status);
     } 
+
+    //VERIFICAÇÃO DO EMAIL
     if(isset($_REQUEST['email'])) {
+        $email = $_REQUEST['email'];
+        if(!strpos($email, '@')) {
+            $status = array('status'=>'invalido', 'mensagem'=>'O formato de email que você inseriu é inválido');
+            echo json_encode($status);
+            die(); 
+        }
         $array = array($_REQUEST['email']);
         $resultado = verificaEmail($conexao, $array);
         if($resultado) {
