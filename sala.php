@@ -25,26 +25,13 @@
                 <img src="" id="imagem_perfil" alt="profile_image" class="img-thumbnail rounded-circle" style="width: 60px; height: 60px;">
                 <span>Matheus Nunes</span>
               </div>
-              <div class="form-group mt-3 col-12 col-xl-7 mb-5 py-2">
-                  <textarea class="form-control bg-white" rows="4" maxlength="800" style="min-width: 100%">O wikimedia é mais divertido quando coisas são compartilhadas</textarea>
-                  <div class="row input-group mt-3"></div>
-                    <span class="btn btn-file" style="background: #0b1a21;">
-                        <i class="fas fa-file-word text-white" style="font-size: 22px;"></i> <input type="file">
-                    </span>
-                    <span class="btn btn-file ml-2" style="background: #0b1a21;">
-                        <i class="fas fa-file-word text-white" style="font-size: 22px;"></i> <input type="file">
-                    </span>
-                    <span class="btn btn-file  ml-2" style="background: #0b1a21;">
-                        <i class="fas fa-file-word text-white" style="font-size: 22px;"></i> <input type="file">
-                    </span>
-                    <span class="btn btn-file  ml-2" style="background: #0b1a21;">
-                        <i class="fas fa-file-word text-white" style="font-size: 22px;"></i> <input type="file">
-                    </span>
-                  </div>
-                  <div class="input-group">
-                      <button class="btn btn-danger">Publicar</button>
-                  </div>  
-              </div>
+              <form class="form-group mt-3 col-12 col-xl-7 mb-5 py-2" id="post_form" onsubmit="criarPostagem();">
+                  <textarea class="form-control bg-white" rows="4" maxlength="800" style="min-width: 100%" name="post_text">O wikimedia é mais divertido quando coisas são compartilhadas</textarea>
+                  <button type="submit" class="btn btn-danger mt-2">Publicar</button>
+                  <span class="btn btn-file mt-2" style="background: #0b1a21;">
+                      <i class="fas fa-file-word text-white" style="font-size: 22px;"></i> <input type="file" name="post_media">
+                  </span>
+              </form>
                
            </content>  
       </main>

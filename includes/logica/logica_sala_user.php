@@ -22,9 +22,12 @@
     	die();
     }
     
-    if($_SERVER['REQUEST_METHOD'] == 'POST') { //possibilidade de apostas uma midia por post
-    	if($obj->funcao == 'criar post') {
-    		$array = array($obj->titulo, $obj->conteudo);
+    if($_SERVER['REQUEST_METHOD'] == 'POST') { //possibilidade de apenas uma midia por post
+    	if(isset($_REQUEST['criar_post'])) {
+    		$post_content = $_REQUEST['post_text'];
+            $user_id =  $_SESSION['id'];
+            $sala_id = $_SESSION['sala_id'];
+            /*
     		$postagem = criarPostagem($conexao, $array);
     		if($postagem) {
     			if($obj->nomeMidia) {
@@ -41,6 +44,8 @@
 	            $status = array('status'=>'falha', "mensagem"=>"Houve um erro ao tentar criar a publicação. Tente novamente");
 	        }
 	         echo json_encode($status);
+            */
+          die();
 	    	
 	   	} else if($obj->funcao == 'comentar') {
             $user_id = $_SESSION['user_id'];
@@ -105,9 +110,7 @@
     	}
     }
 
-    if
-	
-	
+		
 
 
 

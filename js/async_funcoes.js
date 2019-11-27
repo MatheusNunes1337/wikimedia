@@ -172,8 +172,6 @@ function banirUsuario(e) {
 //verificada
 function tornarAdmin(e) {
 	showConfirm('tornar administrador', 'Concluida esta operação, você não será mais o administrador da sala. Se você está ciente disso, clique em confirmar.');
-	let confirmado = confirmarOperacao();
-	console.log(confirmado);
 	if(confirmado) {
 		let usuario_id = e.target.id;
 		let obj = new Object();
@@ -312,15 +310,23 @@ function buscarPostagem() {
 }
 
 function criarPostagem() {
-	let titulo = criarPost.titulo.value;
-	let conteudo = criarPost.conteudo.value;
-	let nomeMidia = criarPost.midia.value;
-	let obj = new Object();
-	obj.titulo = titulo;
-	obj.conteudo = conteudo;
-	obj.nomeMidia = nomeMidia;
-	obj.funcao = 'criar post';
-	doRequestPost(url_sala_user, obj);
+	let funcao = 'criar post';
+	let formulario = document.getElementById('post_form');
+	const data = new FormData(formulario);
+	data.append('criar_post', true);
+	fetch(url_sala_user, {
+		method: 'POST',
+		body: data
+	})
+	.then(response => response.text())
+	.then(data => {
+		console.log(data);
+	})
+	.catch(err => {
+		console.error(err);
+	})
+	event.preventDefault(); 
+	
 }
 
 function comentarPostagem() {
