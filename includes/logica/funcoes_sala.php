@@ -23,11 +23,11 @@
     }
 
 
-     function buscarSala($conexao,$array){
+     function buscarSala($conexao,$array, $disciplina){
         try {
         $query = $conexao->prepare("select count(sala_membros.sala_id) as membros, nome, descricao, nivel, max_membros, salas.sala_id, usuarios.username, assuntos.disciplina, assuntos.conteudo 
             from salas, usuarios, assuntos, sala_membros where salas.usuario_id = usuarios.usuario_id and assuntos.assunto_id = salas.assunto_id and salas.sala_id = sala_membros.sala_id and
-            salas.assunto_id IN (select assunto_id from assuntos where upper(disciplina) = ?) and salas.sala_id NOT IN (select sala_id from
+            salas.assunto_id IN (select assunto_id from assuntos where upper(disciplina) like '%$disciplina%') and salas.sala_id NOT IN (select sala_id from
             sala_membros where usuario_id = 8) and salas.sala_id NOT IN (select sala_id from solicitacoes where usuario_id = ?) 
             and salas.sala_id NOT IN (select sala_id from salas where usuario_id = ?) AND salas.sala_id NOT IN 
             (select sala_id from sala_membros where usuario_id = ?) AND (select count(usuario_id) from sala_membros where sala_id = salas.sala_id) < max_membros

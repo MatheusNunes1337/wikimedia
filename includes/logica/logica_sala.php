@@ -12,8 +12,8 @@
     $obj = json_decode($json);
     #BUSCAR SALA - funcao assincrona
     if(isset($_REQUEST['disciplina'])) {
-        $array = array($_REQUEST['disciplina'], $_SESSION['id'], $_SESSION['id'], $_SESSION['id']);
-        $result = buscarSala($conexao, $array);
+        $array = array($_SESSION['id'], $_SESSION['id'], $_SESSION['id']);
+        $result = buscarSala($conexao, $array, $_REQUEST['disciplina']);
         if($result) {
             $status = $result; 
         } else {
