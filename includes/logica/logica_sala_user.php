@@ -1,8 +1,9 @@
 <?php  
 	require_once('conecta.php');
-    require_once('funcoes_sala.php');
-    header('Content-Type: application/json; charset=UTF-8');
+    require_once('funcoes_sala_user.php');
+    header('Content-Type: text/html; application/json; charset=UTF-8 ');
     header('Access-Control-Allow-Origin: *');
+    session_start();
     $json = file_get_contents('php://input');
     $obj = json_decode($json);
 
@@ -27,38 +28,84 @@
     		$post_content = $_REQUEST['post_text'];
             $user_id =  $_SESSION['id'];
             $sala_id = $_SESSION['sala_id'];
-            /*
-    		$postagem = criarPostagem($conexao, $array);
-    		if($postagem) {
-    			if($obj->nomeMidia) {
-    				$array = array($obj->nomeMidia, $postagem['post_id']);
-    				$resultado = inserirMidia($conexao, $array);
-    				if(!$resultado) {
-    					$status = array('status'=>'falha', "mensagem"=>"Houve um erro inserir uma midia na publicacao. Tente novamente");
-    				} else {
-    					$status = array('status'=>'sucesso');		
-    				}
-    			}
-            	$status = array('status'=>'sucesso');
-	        } else {
-	            $status = array('status'=>'falha', "mensagem"=>"Houve um erro ao tentar criar a publicação. Tente novamente");
-	        }
-	         echo json_encode($status);
-            */
-          die();
+            //$array = array($post_content, $user_id, $sala_id);
+            //print_r($array); die();
+
+            /* Config_upload */
+            $limitar_ext="sim";
+     
+            //extensões autorizadas
+            $extensoes_validas= array(".gif",".jpg",".jpeg",".bmp",".GIF",".JPG",".JPEG",".BMP",".PNG",".png", ".docx", ".pdf", ".txt", ".xlsx", ".odt", ".ods");
+
+            // caminho absoluto onde os arquivos serão armazenados
+            $tipo_arquivo = $_FILES['post_media']['type'];
+            if(strpos($tipo_arquivo, 'image') !== false) {
+                $caminho="../componentes/medias/imagens";   
+            } else {
+                $caminho="../componentes/medias/outros";   
+            }
+           
+            // limitar o tamanho do arquivo? (sim ou não)
+            $limitar_tamanho="sim";
+
+            //tamanho limite do arquivo em bytes
+            $tamanho_bytes="60000000";
+
+            /*executa_upload*/
+
+            $nome_arquivo=$_FILES['post_media']['name'];  
+            $tamanho_arquivo=$_FILES['post_media']['size'];
+            $arquivo_temporario=$_FILES['post_media']['tmp_name'];
+
+            if (!empty($nome_arquivo)) {
+            
+           
+                if($limitar_tamanho=="sim" && ($tamanho_arquivo > $tamanho_bytes))  { 
+                    $status = array("status"=>"falha", "mensagem"=>"Falha! Parece que você enviou uma imagem acima de 3MB. Tente novamente com uma imagem de tamanho inferior.");
+                    echo json_encode($status);
+                    die();
+                }
+                
+                $ext = strrchr($nome_arquivo,'.');
+                if (($limitar_ext == "sim") && !in_array($ext,$extensoes_validas)) {
+                    $status = array("status"=>"falha", "mensagem"=>"Falha! Você deve selecionar apenas midias compatíveis. Tente novamente usando o formato correto.");
+                    echo json_encode($status);
+                    die();
+                }    
+               
+                if (!move_uploaded_file($arquivo_temporario, "$caminho/$nome_arquivo"))
+                {
+                    $status = array("status"=>"falha", "mensagem"=>"Falha! O arquivo não pôde ser copiado para o servidor");
+                    echo json_encode($status);
+                    die();    
+                }
+
+            } else {
+                $nome_arquivo = NULL;
+            }
+            $array = array($post_content, $user_id, $sala_id, $nome_arquivo);
+            $postagem = criarPostagem($conexao, $array);
+            if($postagem) {
+               $status = array('status'=>'sucesso'); 
+           } else {
+              $status = array('status'=>'falha', "mensagem"=>"Houve um erro inserir a postagem na base de dados Tente novamente");  
+           }
+           echo json_encode($status);
+           die();
+        }    
 	    	
-	   	} else if($obj->funcao == 'comentar') {
-            $user_id = $_SESSION['user_id'];
-	   		$array = array($obj->conteudo, $user_id, $obj->post_id);
-	   		$okay = criarComentario($conexao, $array);
-	   		if($okay) {
-	   			$status = array('status'=>'sucesso');		
-	   		} else {
-	   			$status = array('status'=>'falha', "mensagem"=>"Houve um erro ao tentar comentar nesta publicação. Tente novamente");
-	   		}
-	   		echo json_encode($status);
-	   	} 
-    	die();
+   	    else if($obj->funcao == 'comentar') {
+        $user_id = $_SESSION['user_id'];
+   		$array = array($obj->conteudo, $user_id, $obj->post_id);
+   		$okay = criarComentario($conexao, $array);
+   		if($okay) {
+   			$status = array('status'=>'sucesso');		
+   		} else {
+   			$status = array('status'=>'falha', "mensagem"=>"Houve um erro ao tentar comentar nesta publicação. Tente novamente");
+   		}
+   		   echo json_encode($status);
+    	   die();
+        }
     }
 
     if($_SERVER['REQUEST_METHOD'] == 'PUT') {
@@ -109,9 +156,4 @@
     		echo json_encode($status);
     	}
     }
-
-		
-
-
-
 ?>

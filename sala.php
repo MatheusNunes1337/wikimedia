@@ -22,17 +22,46 @@
                   </span>
               </div>
               <div class="d-flex align-items-center">
-                <img src="" id="imagem_perfil" alt="profile_image" class="img-thumbnail rounded-circle" style="width: 60px; height: 60px;">
-                <span>Matheus Nunes</span>
+                <img src="" id="imagem_perfil" class="img-thumbnail rounded-circle" style="width: 60px; height: 60px;">
+                <span class="ml-3">Matheus Nunes</span>
               </div>
               <form class="form-group mt-3 col-12 col-xl-7 mb-5 py-2" id="post_form" onsubmit="criarPostagem();">
-                  <textarea class="form-control bg-white" rows="4" maxlength="800" style="min-width: 100%" name="post_text">O wikimedia é mais divertido quando coisas são compartilhadas</textarea>
+                  <textarea class="form-control bg-white" rows="4" maxlength="800" style="min-width: 100%" name="post_text" placeholder="O wikimedia é mais divertido quando coisas são compartilhadas"></textarea>
                   <button type="submit" class="btn btn-danger mt-2">Publicar</button>
                   <span class="btn btn-file mt-2" style="background: #0b1a21;">
                       <i class="fas fa-file-word text-white" style="font-size: 22px;"></i> <input type="file" name="post_media">
                   </span>
               </form>
-               
+              <section class="mt-3 col-12 col-xl-8 mb-5 py-2 bg-white" style="min-height: 800px;">
+                  <article>
+                      <div class="d-flex align-items-center">
+                    <picture class="row col-3  col-xl-1">
+                        <img src=".." id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
+                    </picture>
+                    <span class="ml-3">Matheus Nunes</span>
+                  </div>
+                  <p>
+                      Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
+
+                      The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.  
+                  </p>
+                  <a href="includes/componentes/medias/outros/Inglês_1-Certificado_digital_61086.pdf">Download Text</a>
+                  <div class="d-flex mt-3">
+                    <picture class="row col-4 col-xl-1">
+                        <img src=".." id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
+                    </picture>
+                    <span class="bg-light ml-2 rounded col-8 col-xl-11">Matheus Nunes: Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable. passage, and going through the cites of the word in classical literature, discovered the undoubtable</span>
+                  </div>
+                  <form class="form-inline">
+                      <picture class="row col-4 col-xl-1 mt-5">
+                          <img src=".." id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
+                      </picture>
+                      <div class="form-group ml-lg-1 col-8 col-xl-11 mt-5">
+                          <input type="text" class="form-control input_coment col-12" placeholder="Escreva um comentário...">
+                      </div>  
+                  </form>  
+                  </article>
+              </section> 
            </content>  
       </main>
     </div>
