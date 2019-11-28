@@ -786,12 +786,15 @@ function pegarComentarios(post_id) {
 		})
 }
 
-function a() {
-	let userInfo = acharUser();
-	userInfo.then(user => {
-		return user;
-	});
-}			
+/*
+
+<div class="d-flex mt-5 px-4">
+    <picture class="row col-4 col-xl-1">
+        <img src=".." id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
+    </picture>
+   <span class="bg-light ml-2 rounded col-8 col-xl-11">Matheus Nunes: Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable. passage, and going through the cites of the word in classical literature, discovered the undoubtable</span>
+</div>
+
 
                 			
                   		
