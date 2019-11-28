@@ -1,5 +1,5 @@
 
-<nav class="navbar navbar-dark col-xl-2 col-lg-3 d-none d-lg-block" style="background: #0b1a21;">
+<nav class="navbar navbar-dark col-xl-3 col-lg-3 d-none d-lg-block" style="background: #0b1a21;" onload="userAside();">
     <a class="navbar-brand" href="#">Wikimedia</a>
         <div class="row h-auto mt-3 container">
           
@@ -80,4 +80,4 @@
               </a>
           </li>
       </ul>
-</nav>  
+</nav>

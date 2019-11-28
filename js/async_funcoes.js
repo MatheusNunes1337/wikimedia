@@ -348,70 +348,35 @@ function criarPostagem() {
 	
 }
 
-function comentarPostagem() {
-	let conteudo = comentar.conteudo.value;
-	let post_id = comentar.post.value; //provavelmente terei que mudar
-	let obj = new Object();
-	obj.funcao = 'comentar';
-	obj.conteudo = conteudo;
-	obj.post_id = post_id;
-	doRequestPost(url_sala_user, obj);
-}
 
 function editarPostagem(e) {
 	let post_id = e.target.value;
-	let titulo = editar.titulo.value;
 	let conteudo = editar.conteudo.value;
 	let obj = new Object();
 	obj.funcao = 'editar post';
-	obj.titulo = titulo;
 	obj.conteudo = conteudo;
 	obj.post_id = post_id;
 	doRequestPut(obj);
 }
 
+function deletarPostagem(e) {
+	let obj = new Object();
+	obj.funcao = 'deletar postagem';
+	obj.id_post = e.target.value;
 
-function doRequestPut(url, obj) {
-	fetch(url, {
-		method: 'PUT',
-		body: JSON.stringify(obj)
-	})
-	.then(response => response.text())
-	.then(data => {
-		console.log(data);
-		/*
-		if(data.status == 'falha') {
-			console.log(data.mensagem)
-		} else {
-			console.log(data.mensagem)
-		}
-		*/
-	})
-	.catch(err => {
-		console.error(err);
-	})
-
-	event.preventDefault(); 
-}
-
-function doRequestDelete(url, obj) {
-	fetch(url, {
+	fetch(url_sala_user, {
 		method: 'DELETE',
 		body: JSON.stringify(obj)
 	})
 	.then(response => response.json())
 	.then(data => {
-		if(data.status == 'falha') {
-			console.log(data.mensagem);
-		} else {
-			console.log(data.mensagem);
-		}
-		listarUsuarios();
+		showStatus(obj.funcao, data.mensagem);
 	})
 	.catch(err => {
 		console.error(err);
 	})
 }
+
 
 //funções para verificar os campos de cadastro do formulário
 
@@ -534,15 +499,6 @@ function acharUser() {
 	.then(data => {
 		if(data.status == 'sucesso') {
 			return data;
-			/*
-			let editarPerfil = document.getElementById('profile_config');
-			editarPerfil.user_username.value = data.username;
-			editarPerfil.user_email.value = data.email;
-			editarPerfil.user_senha.value = data.senha;
-			document.getElementById('nome_usuario').innerHTML = data.usernames;
-			document.getElementById('user_image').src = `includes/componentes/imagens/usuarios/${data.foto}`;
-			document.getElementById('imagem_perfil').src = `includes/componentes/imagens/usuarios/${data.foto}`;
-			*/
 		} else {
 			showStatus(funcao, data.mensagem)	
 		}
@@ -656,7 +612,7 @@ function listarSalas() {
 }
 
 function excluirConta() {
-	showConfirm('excluir conta', data.mensagem); //let result = window.confirm('Deseja mesmo excluir a sua conta?');
+	//showConfirm('excluir conta', data.mensagem); //let result = window.confirm('Deseja mesmo excluir a sua conta?');
 	if(result) {
 		let obj = new Object();
 		obj.funcao = 'excluir conta'
@@ -718,6 +674,7 @@ function confirmarOperacao() {
 }
 
 function listarPostagens() {
+	let user = acharUser();
 	let comentarios;
 	postagens.innerHTML = '';
 	fetch('includes/logica/logica_sala_user.php?listarPostagens=true', {
@@ -726,13 +683,14 @@ function listarPostagens() {
 	.then(response => response.json())
 	.then(data => {
 		if(data.status !== 'vazio') {
+			console.log(data);
 			let post;
 			data.forEach(postagem => {
 				post = `<article class="py-3 px-2 bg-white mb-5 shadow-sm">
                     		<div class="d-flex align-items-center px-4">
-		                      <picture class="row col-3 col-xl-1">
+		                      
 		                          <img src="includes/componentes/imagens/usuarios/${postagem.foto}" id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
-		                      </picture>
+		                      
                       			<span class="ml-3">${postagem.username}</span>
                   			</div>
                   			<p class="mt-3 text-justify px-4">
@@ -744,16 +702,13 @@ function listarPostagens() {
                   	<i class="fas fa-download text-danger" style="font-size: 1.4rem"></i></a>
                   	<span class="ml-1">${postagem.nm_midia}</span>`					
                 }
-
-					comentarios = pegarComentarios(postagem.post_id);
-					comentarios.then(coment => {
-						post += '<p class="text-warning">Me ajuda drake</p>'
-					})
+				
+				
 				 	 
     			post += `
     			<form class="form-inline px-4 pb-4">
 			                    <picture class="row col-4 col-xl-1 mt-5">
-			                        <img src=".." id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
+			                        <img src="" id="user_sala_img" class="rounded-circle img-fluid" style="height: 40px;">
 			                    </picture>
 			                    <div class="form-group ml-lg-1 col-8 col-xl-11 mt-5">
 			                        <input type="text" class="form-control input_coment col-12 bg-light" placeholder="Escreva um comentário...">
@@ -778,7 +733,11 @@ function pegarComentarios(post_id) {
 		.then(response => response.json())
 		.then(data => {
 			if(data.status !== 'vazio') {
+				//return data;
+				console.log(data);
 				return data;
+			} else {
+				return 'nao possui nenhum comentario';
 			} 
 		})
 		.catch(err => {
@@ -786,15 +745,40 @@ function pegarComentarios(post_id) {
 		})
 }
 
-/*
 
+//funcoes de carregamento de informação do usuário na tela;
+function userAside() {
+	let userInfo = acharUser();
+	userInfo.then(user => {
+		document.getElementById('imagem_perfil').src = `includes/componentes/imagens/usuarios/${user.foto}`;
+		document.getElementById('nome_usuario').innerHTML = user.username;
+	});
+}
+
+function userConfig() {
+	let userInfo = acharUser();
+	userInfo.then(user => {
+		let editarPerfil = document.getElementById('profile_config');
+			editarPerfil.user_username.value = user.username;
+			editarPerfil.user_email.value = user.email;
+			editarPerfil.user_senha.value = user.senha;
+			document.getElementById('user_image').src = `includes/componentes/imagens/usuarios/${user.foto}`;
+	});
+}
+
+function userConfig() {
+	let userInfo = acharUser();
+	userInfo.then(user => {
+		document.getElementById('user_sala_nome').innerHTML = user.username;
+		document.getElementById('user_sala_img').src = `includes/componentes/imagens/usuarios/${user.foto}`;
+	});
+}
+/*
 <div class="d-flex mt-5 px-4">
     <picture class="row col-4 col-xl-1">
         <img src=".." id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
     </picture>
    <span class="bg-light ml-2 rounded col-8 col-xl-11">Matheus Nunes: Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable. passage, and going through the cites of the word in classical literature, discovered the undoubtable</span>
 </div>
-
-
-                			
-                  		
+</div>
+*/

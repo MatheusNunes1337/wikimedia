@@ -26,6 +26,7 @@
             if(empty($posts)) {
                 $status = array('status'=>'vazio', 'mensagem'=>'Parece que está sala ainda não possui nenhuma postagem. Seja o primeiro a compartilhar algo!');
             } else {
+    
                 $status = $posts;
             }
             echo json_encode($status);
