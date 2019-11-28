@@ -14,24 +14,33 @@
 
     function listarPostagens($conexao, $array) {
          try {
-        $query = $conexao->prepare("select usuarios.username, usuarios.foto, usuarios.usuario_id, postagens.post_id, postagens.conteudo, postagens.nm_midia, comentarios.conteudo from usuarios JOIN sala_membros USING (usuario_id) JOIN postagens USING (sala_id) JOIN comentarios USING (post_id) where sala_membros.sala_id = ?"); 
-        if($query->execute($array)){
-            $posts = $query->fetchAll(PDO::FETCH_ASSOC); 
-            return $posts;
-        }
-        else{
-            return false;
-        }
+            $query = $conexao->prepare("select postagens.post_id, postagens.conteudo, postagens.nm_midia, usuarios.usuario_id, usuarios.username, usuarios.foto FROM usuarios LEFT JOIN postagens USING (usuario_id) where postagens.sala_id = ? order by postagens.post_id desc");
+            if($query->execute($array)){
+                $posts = $query->fetchAll(PDO::FETCH_ASSOC); 
+                return $posts;
+            }
          }catch(PDOException $e) {
             echo 'Error: ' . $e->getMessage();
       }
     }
 
-    function buscarPostagem($conexao, $content) {
+    function listarComentarios($conexao, $array) {
+         try {
+            $query = $conexao->prepare("select comentarios.conteudo, usuarios.username, usuarios.foto FROM postagens LEFT JOIN comentarios USING (post_id) LEFT JOIN usuarios ON (comentarios.usuario_id = usuarios.usuario_id) where comentarios.conteudo is not null and postagens.post_id = ? order by comentarios.comentario_id desc");
+            if($query->execute($array)){
+                $posts = $query->fetchAll(PDO::FETCH_ASSOC); 
+                return $posts;
+            }
+         }catch(PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
+      }
+    }
+
+    function buscarPostagem($conexao, $array, $content) {
     	try {
-    		$query = $conexao->prepare("select usuarios.username, usuarios.foto, usuarios.usuario_id, postagens.post_id, postagens.conteudo, postagens.nm_midia, comentarios.conteudo from usuarios JOIN sala_membros USING (usuario_id) JOIN postagens USING (sala_id) JOIN comentarios USING (post_id) where postagens.conteudo like '%$content%'");
-    		$query->execute();
-    		$postagens = $query->fetchAll();
+    		$query = $conexao->prepare("select postagens.post_id, postagens.conteudo, postagens.nm_midia, usuarios.usuario_id, usuarios.username, usuarios.foto FROM usuarios LEFT JOIN postagens USING (usuario_id) where postagens.sala_id = ?  and postagens.conteudo like '%$content%' order by postagens.post_id desc");
+    		$query->execute($array);
+    		$postagens = $query->fetchAll(PDO::FETCH_ASSOC);
             return $postagens;
     	} catch(PDOException $e) {
             echo 'Error: ' . $e->getMessage();

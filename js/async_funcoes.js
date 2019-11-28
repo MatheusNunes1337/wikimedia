@@ -1,6 +1,8 @@
 //funcoes referentes a logica da sala
 const url_sala_user = 'includes/logica/logica_sala_user.php';
 const url_sala = 'includes/logica/logica_sala.php';
+const postagens = document.getElementById('postagens');
+
 
 
 let container = document.getElementById('container');
@@ -280,33 +282,50 @@ function editaSala() {
 
 
 function buscarPostagem() {
-	let titulo = buscar.titulo.value;
-	fetch(`../includes/logica/logica_sala_user.php?titulo=${titulo}`, {
+
+	postagens.innerHTML = '';
+	let campo = document.getElementById('search_post');
+	let content = campo.value;
+	fetch(`includes/logica/logica_sala_user.php?conteudo=${content}`, {
 		method: 'GET',
 	})
 	.then(response => response.json())
 	.then(data => {
-		if(data.status === 'sucesso') {
-			let table = '<table border=1>'
-	            data.forEach(obj => {
-	                table += '<tr>'
-	                Object.entries(obj).map(([key, value]) => {
-	                    table += `<td>${value}</td>`
-	                });
-	                table += '</tr>';
-	                resultado.innerHTML = table;
-	            });
-	             table += '</table>'
-	           	 resultado.innerHTML = table;
-	    } else {
-    	     showModal(data.mensagem);
-	    }    		
+		if(data.status !== 'vazio') {
+			let post;
+			data.forEach(postagem => {
+				post = `<article class="py-3 px-2 bg-white mb-5 shadow-sm">
+                    		<div class="d-flex align-items-center px-4">
+		                      <picture class="row col-3 col-xl-1">
+		                          <img src="includes/componentes/imagens/usuarios/${postagem.foto}" id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
+		                      </picture>
+                      			<span class="ml-3">${postagem.username}</span>
+                  			</div>
+                  			<p class="mt-3 text-justify px-4">
+                  				${postagem.conteudo}
+                  			</p>
+                  			<a href="includes/componentes/medias/outros/Inglês_1-Certificado_digital_61086.pdf" class="mt-3 px-4">
+                  			<i class="fas fa-download text-danger" style="font-size: 1.4rem"></i>
+                  			</a>
+                  			<span class="ml-1">Inglês_1-Certificado_digital_61086.pdf</span>
+                  			<form class="form-inline px-4 pb-4">
+			                    <picture class="row col-4 col-xl-1 mt-5">
+			                        <img src=".." id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
+			                    </picture>
+			                    <div class="form-group ml-lg-1 col-8 col-xl-11 mt-5">
+			                        <input type="text" class="form-control input_coment col-12 bg-light" placeholder="Escreva um comentário...">
+			                    </div>  
+                            </form>`
+                postagens.innerHTML += post;            
+            })    
+		} else {
+			postagens.innerHTML += `<h2 class="text-dark">${data.mensagem}</h2>`;
+		}	  		
  	})
   	.catch(error => {
   		console.log(error);
     });
 	event.preventDefault(); 
-	
 }
 
 function criarPostagem() {
@@ -508,12 +527,14 @@ function acharSala() {
 
 function acharUser() {
 	let funcao = 'carregar informações do usuário'
-	fetch('includes/logica/logica_usuario.php?infoUser=true', {
+	return fetch('includes/logica/logica_usuario.php?infoUser=true', {
 		method: 'GET'
 	})
 	.then(response => response.json())
 	.then(data => {
 		if(data.status == 'sucesso') {
+			return data;
+			/*
 			let editarPerfil = document.getElementById('profile_config');
 			editarPerfil.user_username.value = data.username;
 			editarPerfil.user_email.value = data.email;
@@ -521,6 +542,7 @@ function acharUser() {
 			document.getElementById('nome_usuario').innerHTML = data.usernames;
 			document.getElementById('user_image').src = `includes/componentes/imagens/usuarios/${data.foto}`;
 			document.getElementById('imagem_perfil').src = `includes/componentes/imagens/usuarios/${data.foto}`;
+			*/
 		} else {
 			showStatus(funcao, data.mensagem)	
 		}
@@ -529,6 +551,7 @@ function acharUser() {
 	.catch(err => {
 		console.error(err);
 	})
+
 }
 
 function listarUsuarios() {
@@ -694,4 +717,81 @@ function confirmarOperacao() {
 	return true;
 }
 
+function listarPostagens() {
+	let comentarios;
+	postagens.innerHTML = '';
+	fetch('includes/logica/logica_sala_user.php?listarPostagens=true', {
+		method: 'GET'
+	})
+	.then(response => response.json())
+	.then(data => {
+		if(data.status !== 'vazio') {
+			let post;
+			data.forEach(postagem => {
+				post = `<article class="py-3 px-2 bg-white mb-5 shadow-sm">
+                    		<div class="d-flex align-items-center px-4">
+		                      <picture class="row col-3 col-xl-1">
+		                          <img src="includes/componentes/imagens/usuarios/${postagem.foto}" id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
+		                      </picture>
+                      			<span class="ml-3">${postagem.username}</span>
+                  			</div>
+                  			<p class="mt-3 text-justify px-4">
+                  				${postagem.conteudo}
+                  			</p>`
+                if(postagem.nm_midia !== null) {
+                	post += `
+                	<a href="includes/componentes/medias/outros/${postagem.nm_midia}" class="mt-3 px-4">
+                  	<i class="fas fa-download text-danger" style="font-size: 1.4rem"></i></a>
+                  	<span class="ml-1">${postagem.nm_midia}</span>`					
+                }
 
+					comentarios = pegarComentarios(postagem.post_id);
+					comentarios.then(coment => {
+						post += '<p class="text-warning">Me ajuda drake</p>'
+					})
+				 	 
+    			post += `
+    			<form class="form-inline px-4 pb-4">
+			                    <picture class="row col-4 col-xl-1 mt-5">
+			                        <img src=".." id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
+			                    </picture>
+			                    <div class="form-group ml-lg-1 col-8 col-xl-11 mt-5">
+			                        <input type="text" class="form-control input_coment col-12 bg-light" placeholder="Escreva um comentário...">
+			                    </div>  
+                            </form>`;              			
+    
+                postagens.innerHTML += post;            
+            })    
+		} else {
+			container.innerHTML += `<h2 class="text-dark">${data.mensagem}</h2>`;
+		}
+	})
+	.catch(err => {
+		console.error(err);
+	})	
+}
+
+function pegarComentarios(post_id) {
+	return fetch(`includes/logica/logica_sala_user.php?listarComentarios=true&post_id=${post_id}`, {
+			method: 'GET'
+		})
+		.then(response => response.json())
+		.then(data => {
+			if(data.status !== 'vazio') {
+				return data;
+			} 
+		})
+		.catch(err => {
+			console.error(err);
+		})
+}
+
+function a() {
+	let userInfo = acharUser();
+	userInfo.then(user => {
+		return user;
+	});
+}			
+
+                			
+                  		

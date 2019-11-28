@@ -8,19 +8,43 @@
     $obj = json_decode($json);
 
     if($_SERVER['REQUEST_METHOD'] == 'GET') {
-    	if(isset($_REQUEST['titulo'])) {
-    		$array = array($_REQUEST['titulo']);
-    		$posts = pesquisarPostagem($conexao, $array);
-    		if($posts) {
-    			echo json_encode($posts);
+    	if(isset($_REQUEST['conteudo'])) {
+    		$array = array($_SESSION['sala_id']);
+    		$posts = buscarPostagem($conexao, $array, $_REQUEST['conteudo']);
+    		if(!empty($posts)) {
+    			$status = $posts;
     		} else {
-    			$status = array('status'=>'falha', 'mensagem'=>'Hmm, parece que não há nenhuma postagem com esse titulo. Tente novamente');
-    			echo json_encode($status);
+    			$status = array('status'=>'vazio', 'mensagem'=>'Hmm, parece que não há nenhuma postagem referente a isso. Tente novamente');
     		}
+            echo json_encode($status);
+            die();
     	}
+        if(isset($_REQUEST['listarPostagens'])) {
+            $id_sala = $_SESSION['sala_id'];
+            $array = array($id_sala);
+            $posts = listarPostagens($conexao, $array);
+            if(empty($posts)) {
+                $status = array('status'=>'vazio', 'mensagem'=>'Parece que está sala ainda não possui nenhuma postagem. Seja o primeiro a compartilhar algo!');
+            } else {
+                $status = $posts;
+            }
+            echo json_encode($status);
+            die();
+        }
+        if(isset($_REQUEST['listarComentarios'])) {
+            $id_post = $_REQUEST['post_id'];
+            $array = array($id_post);
+            $coments = listarComentarios($conexao, $array);
+            if(empty($coments)) {
+                $status = array('status'=>'vazio');
+            } else {
+                $status = $coments;
+                $status['status'] = 'possui comentário';
+            }
+            echo json_encode($status);
+            die();
+        }
 
-
-    	die();
     }
     
     if($_SERVER['REQUEST_METHOD'] == 'POST') { //possibilidade de apenas uma midia por post
