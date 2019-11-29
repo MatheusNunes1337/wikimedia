@@ -82,8 +82,8 @@ function deixarSala(e) {
 	let obj = new Object();
 	obj.funcao = 'sair sala';
 	obj.sala_id = e.target.id;
-	let result = window.confirm("deseja mesmo sair dessa sala?");
-	if(result === true) {
+	result = window.confirm('Deseja realmente sair dessa sala?');
+	if(result) {
 		fetch(`includes/logica/logica_usuario.php?id_sala=${obj.sala_id}&verificaUser=true`, {
 			method: 'GET'
 		})
@@ -173,7 +173,7 @@ function banirUsuario(e) {
 }
 //verificada
 function tornarAdmin(e) {
-	showConfirm('tornar administrador', 'Concluida esta operação, você não será mais o administrador da sala. Se você está ciente disso, clique em confirmar.');
+	let confirmado = window.confirm('Concluida esta operação, você não será mais o administrador da sala. Se você está ciente disso, clique em confirmar.');
 	if(confirmado) {
 		let usuario_id = e.target.id;
 		let obj = new Object();
@@ -612,7 +612,7 @@ function listarSalas() {
 }
 
 function excluirConta() {
-	//showConfirm('excluir conta', data.mensagem); //let result = window.confirm('Deseja mesmo excluir a sua conta?');
+	let result = window.confirm('Deseja mesmo excluir a sua conta?');
 	if(result) {
 		let obj = new Object();
 		obj.funcao = 'excluir conta'
@@ -667,12 +667,7 @@ function showConfirm(title, msg) {
 	document.getElementById('confirm_content').innerHTML = msg;
 	$('#modal_confirm').modal();
 }
-
-function confirmarOperacao() {
-	console.log('bolo');
-	return true;
-}
-
+//async function ....
 function listarPostagens() {
 	let user = acharUser();
 	let comentarios;
@@ -705,7 +700,7 @@ function listarPostagens() {
                   	<span class="ml-2">${postagem.nm_midia}</span>`					
                 }
 				
-				
+				//posts += await listartMensagens();
 				 	 
     			post += `
 				<div class="input-group col-12 mt-4 d-flex pl-4">
@@ -727,6 +722,8 @@ function listarPostagens() {
 		console.error(err);
 	})	
 }
+
+//async function listartMensagens();
 
 function pegarComentarios(post_id) {
 	return fetch(`includes/logica/logica_sala_user.php?listarComentarios=true&post_id=${post_id}`, {

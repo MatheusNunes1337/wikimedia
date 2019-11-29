@@ -35,7 +35,7 @@
                         <div class="card-body">
                           <h5 class="card-title">Contato</h5>
                           <p class="card-text">Com suporte a texto embaixo, que funciona como uma introdução a um conteúdo adicional.</p>
-                          <a href="#" class="btn btn-danger">Leia mais</a>
+                          <a href="form_contato.php" class="btn btn-danger">Leia mais</a>
                         </div>
                       </div>
                     </div>

@@ -12,7 +12,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-        <button type="button" class="btn btn-success" onclick="confirmarOperacao()">Confirmar</button>
+        <button type="button" class="btn btn-success" value="oi" id="confirmar" onclick="confirmarOperacao()">Confirmar</button>
       </div>
     </div>
   </div>
