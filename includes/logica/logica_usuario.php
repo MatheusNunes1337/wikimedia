@@ -89,15 +89,15 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                   $array = array($nomeUsuario, $email, $senha, $nome_arquivo, $id_user);
                   $result = alterarPerfil($conexao, $array);
                    if($result) {
-                        $status = array('status'=>'sucesso', 'mensagem'=>'Informações da conta atualizadas com sucesso'); 
+                        $status = array('status'=>'sucesso', 'mensagem'=>'Informações da conta atualizadas com sucesso.'); 
                     } else {
-                        $status = array('status'=>'falha', 'mensagem'=>'Ocorreu um erro ao tentar atualizar o perfil. Tente novamente mais tarde');
+                        $status = array('status'=>'falha', 'mensagem'=>'Ocorreu um erro ao tentar atualizar o perfil. Tente novamente mais tarde.');
                     }
                     echo json_encode($status);
             }
             else
             {
-                $status = array("status"=>"falha", "mensagem"=>"Falha! O arquivo não pôde ser copiado para o servidor");
+                $status = array("status"=>"falha", "mensagem"=>"Falha! O arquivo não pôde ser copiado para o servidor.");
                  echo json_encode($status);
                  die();
             }
@@ -105,9 +105,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
             $array = array($nomeUsuario, $email, $senha, $id_user);
             $result = atualizarPerfil($conexao, $array);
            if($result) {
-                $status = array('status'=>'sucesso', 'mensagem'=>'Informações da conta atualizadas com sucesso'); 
+                $status = array('status'=>'sucesso', 'mensagem'=>'Informações da conta atualizadas com sucesso.'); 
             } else {
-                $status = array('status'=>'falha', 'mensagem'=>'Ocorreu um erro ao tentar atualizar o perfil. Tente novamente mais tarde');
+                $status = array('status'=>'falha', 'mensagem'=>'Ocorreu um erro ao tentar atualizar o perfil. Tente novamente mais tarde.');
             }
             echo json_encode($status);
         }
@@ -124,16 +124,16 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
     if(isset($_REQUEST['username'])) {
         $tamanho = strlen($_REQUEST['username']);
         if($tamanho < 6 || $tamanho > 12) {
-           $status = array('status'=>'invalido', 'mensagem'=>'O nome de usuário deve ter de 6 a 12 caracteres');
+           $status = array('status'=>'invalido', 'mensagem'=>'O nome de usuário deve ter de 6 a 12 caracteres.');
            echo json_encode($status);
            die();
         }
         $array = array($_REQUEST['username']);
         $resultado = verificaUsername($conexao, $array);
         if($resultado) {
-            $status = array('status'=>'okay', 'mensagem'=>'Esse nome de usuário é válido');
+            $status = array('status'=>'okay', 'mensagem'=>'Esse nome de usuário é válido.');
         } else {
-            $status = array('status'=>'falha', 'mensagem'=>'Esse nome de usuário já existe');
+            $status = array('status'=>'falha', 'mensagem'=>'Esse nome de usuário já existe.');
         }
         echo json_encode($status);
     } 
@@ -142,16 +142,16 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
     if(isset($_REQUEST['email'])) {
         $email = $_REQUEST['email'];
         if(!strpos($email, '@')) {
-            $status = array('status'=>'invalido', 'mensagem'=>'O formato de email que você inseriu é inválido');
+            $status = array('status'=>'invalido', 'mensagem'=>'O formato de email que você inseriu é inválido.');
             echo json_encode($status);
             die(); 
         }
         $array = array($_REQUEST['email']);
         $resultado = verificaEmail($conexao, $array);
         if($resultado) {
-            $status = array('status'=>'okay', 'mensagem'=>'Esse email é válido');
+            $status = array('status'=>'okay', 'mensagem'=>'Esse email é válido.');
         } else {
-            $status = array('status'=>'falha', 'mensagem'=>'Esse email já foi cadastrado');
+            $status = array('status'=>'falha', 'mensagem'=>'Esse email já foi cadastrado.');
         }
         echo json_encode($status);
     }
@@ -162,9 +162,9 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
         $array = array($senhaCriptografada, $user_id);
         $resultado = verificaSenhaAdm($conexao, $array);
         if($resultado) {
-            $status = array('status'=>'okay', 'mensagem'=>'A senha está correta');
+            $status = array('status'=>'okay', 'mensagem'=>'A senha está correta.');
         } else {
-            $status = array('status'=>'falha', 'mensagem'=>'Parece que está não é a sua senha');
+            $status = array('status'=>'falha', 'mensagem'=>'Parece que a sua senha está incorreta.');
         }
         echo json_encode($status);
     }

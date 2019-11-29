@@ -448,9 +448,11 @@ function verificaAdmPass(e) {
 	.then(response => response.json())
 	.then(data => {
 		if(data.status == 'okay') {
+			resultado.style.color = '#28a745';
 			resultado.innerHTML = data.mensagem;
 			document.getElementById('deleteRoom').className = 'btn btn-success'; //botão de deletar fica habilitado.
 		} else {
+			resultado.style.color = '#dc3545';
 			resultado.innerHTML = data.mensagem;
 			document.getElementById('deleteRoom').className = 'btn btn-success disabled';
 		}
@@ -564,7 +566,7 @@ function listarSolicitacoes() {
 			})
 			document.getElementById('table_requests').style.display = 'table';			
 		} else {
-			document.getElementById('sala_solicitacoes').innerHTML += `<h2 class="text-dark mt-4">${data.mensagem}</h2>`;
+			document.getElementById('sala_solicitacoes').innerHTML += `<h2 class="text-dark mt-4">${data.mensagem} &#128542;</h2>`;
 		} 
 		
 	})
@@ -668,8 +670,8 @@ function showConfirm(title, msg) {
 	$('#modal_confirm').modal();
 }
 //async function ....
-function listarPostagens() {
-	let user = acharUser();
+async function listarPostagens() {
+	let a;
 	let comentarios;
 	postagens.innerHTML = '';
 	fetch('includes/logica/logica_sala_user.php?listarPostagens=true', {
@@ -699,8 +701,132 @@ function listarPostagens() {
                   	<i class="fas fa-download text-danger" style="font-size: 1.4rem"></i></a>
                   	<span class="ml-2">${postagem.nm_midia}</span>`					
                 }
+
+                post += `<div class="d-flex mt-5 px-4">
+    						<picture class="row col-4 col-xl-1">
+        						<img src=".." id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
+    						</picture>
+   							<span class="bg-light ml-2 rounded col-8 col-xl-11">Matheus Nunes: Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable. passage, and going through the cites of the word in classical literature, discovered the undoubtable</span>
+						</div>`
+					 
+    			post += `
+				<div class="input-group col-12 mt-4 d-flex pl-4">
+					<img src="includes/componentes/imagens/usuarios/${postagem.foto}" id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
+					<input type="text" class="form-control input_coment bg-light col-11 ml-3" placeholder="Escreva um comentário..."> 
+					<span class="input-group-btn ml-1">
+						<button class="btn btn-default border-none" type="submit" style="background: transparent;">
+							<i class="fas fa-paper-plane"></i>
+						</button>
+  					</span> 
+                </form>`;
+              			
+                postagens.innerHTML += post; 
+
+            })    
+		} else {
+			container.innerHTML += `<h2 class="text-dark">${data.mensagem}</h2>`;
+		}
+	})
+	.catch(err => {
+		console.error(err);
+	})	
+	
+}
+	
+
+		
+
+//async function listartMensagens();
+
+async function listarComentarios(post_id) {
+	return post_id;
+	return fetch(`includes/logica/logica_sala_user.php?listarComentarios=true&post_id=${post_id}`, {
+		method: 'GET'
+	})
+	.then(response => response.json())
+	.then(data => {
+		if(data.status !== 'vazio') {
+			//return data;
+			console.log(data);
+			return data;
+		} else {
+			return 'nao possui nenhum comentario';
+		} 
+	})
+	.catch(err => {
+		console.error(err);
+	})	
+
+}
+
+
+
+
+
+//funcão de carregamento de informação do usuário na tela;
+function putUserInfo() {
+	let userInfo = acharUser();; 
+	let current_url = document.URL;
+	if(current_url === "http://localhost/wikimedia/perfil_config.php") {
+		userInfo.then(user => {
+		let editarPerfil = document.getElementById('profile_config');
+			editarPerfil.user_username.value = user.username;
+			editarPerfil.user_email.value = user.email;
+			editarPerfil.user_senha.value = user.senha;
+			document.getElementById('user_image').src = `includes/componentes/imagens/usuarios/${user.foto}`;
+			document.getElementById('imagem_perfil').src = `includes/componentes/imagens/usuarios/${user.foto}`;
+			document.getElementById('nome_usuario').innerHTML = user.username;
+		});
+	} else if(current_url === "http://localhost/wikimedia/sala.php") {
+		userInfo.then(user => {
+			document.getElementById('user_sala_nome').innerHTML = user.username;
+			document.getElementById('user_sala_img').src = `includes/componentes/imagens/usuarios/${user.foto}`;
+			document.getElementById('imagem_perfil').src = `includes/componentes/imagens/usuarios/${user.foto}`;
+			document.getElementById('nome_usuario').innerHTML = user.username;
+		});	
+	} else {
+		userInfo.then(user => {
+			document.getElementById('imagem_perfil').src = `includes/componentes/imagens/usuarios/${user.foto}`;
+			document.getElementById('nome_usuario').innerHTML = user.username;
+		});
+	}
+}
+
+/*
+<div class="d-flex mt-5 px-4">
+    <picture class="row col-4 col-xl-1">
+        <img src=".." id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
+    </picture>
+   <span class="bg-light ml-2 rounded col-8 col-xl-11">Matheus Nunes: Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable. passage, and going through the cites of the word in classical literature, discovered the undoubtable</span>
+</div>
+</div>
+*/
+
+/*
+if(data.status !== 'vazio') {
+			let post;
+			data.forEach(postagem => {
+				post = `<article class="py-3 px-2 col-xl-9 col-12 bg-white mb-5 shadow-sm">
+							<div class="d-flex justify-content-between pr-2 align-items-center">
+								<div class="d-flex align-items-center px-4">
+								
+									<img src="includes/componentes/imagens/usuarios/${postagem.foto}" id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
+							
+									<span class="ml-3">${postagem.username}</span>
+								</div>
+								<a class="py-auto pr-2"><i class="fas fa-ellipsis-h"></i></a>
+							</div>
+                  			<p class="mt-3 text-justify px-4">
+                  				${postagem.conteudo}
+                  			</p>`
+                if(postagem.nm_midia !== null) {
+                	post += `
+                	<a href="includes/componentes/medias/outros/${postagem.nm_midia}" class="mt-3 pl-4">
+                  	<i class="fas fa-download text-danger" style="font-size: 1.4rem"></i></a>
+                  	<span class="ml-2">${postagem.nm_midia}</span>`					
+                }
 				
-				//posts += await listartMensagens();
+				//posts += await listarPostagens(postagem.post_id);
 				 	 
     			post += `
 				<div class="input-group col-12 mt-4 d-flex pl-4">
@@ -717,67 +843,54 @@ function listarPostagens() {
 		} else {
 			container.innerHTML += `<h2 class="text-dark">${data.mensagem}</h2>`;
 		}
-	})
-	.catch(err => {
-		console.error(err);
-	})	
-}
-
-//async function listartMensagens();
-
-function pegarComentarios(post_id) {
-	return fetch(`includes/logica/logica_sala_user.php?listarComentarios=true&post_id=${post_id}`, {
-			method: 'GET'
-		})
-		.then(response => response.json())
-		.then(data => {
-			if(data.status !== 'vazio') {
-				//return data;
-				console.log(data);
-				return data;
-			} else {
-				return 'nao possui nenhum comentario';
-			} 
-		})
-		.catch(err => {
-			console.error(err);
-		})
-}
-
-
-//funcoes de carregamento de informação do usuário na tela;
-function userAside() {
-	let userInfo = acharUser();
-	userInfo.then(user => {
-		document.getElementById('imagem_perfil').src = `includes/componentes/imagens/usuarios/${user.foto}`;
-		document.getElementById('nome_usuario').innerHTML = user.username;
-	});
-}
-
-function userConfig() {
-	let userInfo = acharUser();
-	userInfo.then(user => {
-		let editarPerfil = document.getElementById('profile_config');
-			editarPerfil.user_username.value = user.username;
-			editarPerfil.user_email.value = user.email;
-			editarPerfil.user_senha.value = user.senha;
-			document.getElementById('user_image').src = `includes/componentes/imagens/usuarios/${user.foto}`;
-	});
-}
-
-function userConfig() {
-	let userInfo = acharUser();
-	userInfo.then(user => {
-		document.getElementById('user_sala_nome').innerHTML = user.username;
-		document.getElementById('user_sala_img').src = `includes/componentes/imagens/usuarios/${user.foto}`;
-	});
-}
-/*
-<div class="d-flex mt-5 px-4">
-    <picture class="row col-4 col-xl-1">
-        <img src=".." id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
-    </picture>
-   <span class="bg-light ml-2 rounded col-8 col-xl-11">Matheus Nunes: Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable. passage, and going through the cites of the word in classical literature, discovered the undoubtable</span>
-</div>
-</div>
 */
+
+/*
+try {
+		const resp = await fetch('includes/logica/logica_sala_user.php?listarPostagens=true');
+		const json = await (response => response.json())(resp);
+		(data => {
+			if(data.status !== 'vazio') {
+				let post;
+				for(let postagem of data) {
+					post = 
+					`<article class="py-3 px-2 col-xl-9 col-12 bg-white mb-5 shadow-sm">
+						<div class="d-flex justify-content-between pr-2 align-items-center">
+							<div class="d-flex align-items-center px-4">
+								<img src="includes/componentes/imagens/usuarios/${postagem.foto}" id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
+								<span class="ml-3">${postagem.username}</span>
+							</div>
+								<a class="py-auto pr-2"><i class="fas fa-ellipsis-h"></i></a>
+						</div>
+                  		<p class="mt-3 text-justify px-4">
+                  			${postagem.conteudo}
+                  		</p>`
+                  	if(postagem.nm_midia !== null) {
+	                	post += `
+	                	<a href="includes/componentes/medias/outros/${postagem.nm_midia}" class="mt-3 pl-4">
+	                  	<i class="fas fa-download text-danger" style="font-size: 1.4rem"></i></a>
+	                  	<span class="ml-2">${postagem.nm_midia}</span>`					
+                	}
+                	let a =  await listarComentarios(postagem.post_id);
+                	console.log(a);
+                	post += `
+					<div class="input-group col-12 mt-4 d-flex pl-4">
+						<img src="includes/componentes/imagens/usuarios/${postagem.foto}" id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
+						<input type="text" class="form-control input_coment bg-light col-11 ml-3" placeholder="Escreva um comentário..."> 
+						<span class="input-group-btn ml-1">
+							<button class="btn btn-default border-none" type="submit" style="background: transparent;">
+								<i class="fas fa-paper-plane"></i>
+							</button>
+	  					</span> 
+	                </form>`;              			
+                	postagens.innerHTML += post;	
+				}
+			} 	else {
+					container.innerHTML += `<h2 class="text-dark">${data.mensagem}</h2>`;
+				}
+
+		})(json)
+	} catch (err) {
+		console.error(err);
+	}
+*/	

@@ -1,6 +1,6 @@
 <div class="row" id="oi">
-  <div class="col-12 p-2 d-block d-lg-none bg-warning">
-      <nav class="navbar navbar-expand-lg navbar-light bg-warning">
+  <div class="col-12 p-2 d-block d-lg-none" style="background: #0b1a21;">
+      <nav class="navbar navbar-expand-lg navbar-dark" style="background: #0b1a21;">
         <a class="navbar-brand" href="#">Wikimedia</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Alterna navegação">
           <span class="navbar-toggler-icon"></span>

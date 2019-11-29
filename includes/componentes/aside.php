@@ -1,5 +1,5 @@
 
-<nav class="navbar navbar-dark d-none d-lg-block" id="lateral" style="background: #0b1a21;" onload="userAside();">
+<nav class="navbar navbar-dark d-none d-lg-block" id="lateral" style="background: #0b1a21;">
     <a class="navbar-brand" href="#">Wikimedia</a>
         <div class="row h-auto mt-3 container">
           

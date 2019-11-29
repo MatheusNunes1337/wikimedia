@@ -11,7 +11,7 @@
     <?php require_once('includes/componentes/nav.php') ?>
     <div class="row" id="tchau">
         <?php require_once('includes/componentes/aside.php') ?>
-        <main class="container-fluid col-xl-10 py-5 col-lg-9 col-12 bg-light">
+        <main class="container-fluid col-xl-10 py-5 col-lg-9 col-12 bg-light my-custom-scrollbar">
               <content class="container-fluid py-5 row col-11 mx-auto" id="container" style="min-height: auto;">
                 <h1 class="row col-12 mb-4">Busca de salas</h1>
                   <div class="input-group bg-white mt-3 col-12 col-xl-7 mb-5 py-2  shadow-sm rounded">
