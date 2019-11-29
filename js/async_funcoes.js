@@ -339,7 +339,7 @@ function criarPostagem() {
 	})
 	.then(response => response.json())
 	.then(data => {
-		console.log(data);
+		listarPostagens();
 	})
 	.catch(err => {
 		console.error(err);
@@ -683,38 +683,40 @@ function listarPostagens() {
 	.then(response => response.json())
 	.then(data => {
 		if(data.status !== 'vazio') {
-			console.log(data);
 			let post;
 			data.forEach(postagem => {
 				post = `<article class="py-3 px-2 bg-white mb-5 shadow-sm">
-                    		<div class="d-flex align-items-center px-4">
-		                      
-		                          <img src="includes/componentes/imagens/usuarios/${postagem.foto}" id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
-		                      
-                      			<span class="ml-3">${postagem.username}</span>
-                  			</div>
+							<div class="d-flex justify-content-between pr-2 align-items-center">
+								<div class="d-flex align-items-center px-4">
+								
+									<img src="includes/componentes/imagens/usuarios/${postagem.foto}" id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
+							
+									<span class="ml-3">${postagem.username}</span>
+								</div>
+								<a class="py-auto pr-2"><i class="fas fa-ellipsis-h"></i></a>
+							</div>
                   			<p class="mt-3 text-justify px-4">
                   				${postagem.conteudo}
                   			</p>`
                 if(postagem.nm_midia !== null) {
                 	post += `
-                	<a href="includes/componentes/medias/outros/${postagem.nm_midia}" class="mt-3 px-4">
+                	<a href="includes/componentes/medias/outros/${postagem.nm_midia}" class="mt-3 pl-4">
                   	<i class="fas fa-download text-danger" style="font-size: 1.4rem"></i></a>
-                  	<span class="ml-1">${postagem.nm_midia}</span>`					
+                  	<span class="ml-2">${postagem.nm_midia}</span>`					
                 }
 				
 				
 				 	 
     			post += `
-    			<form class="form-inline px-4 pb-4">
-			                    <picture class="row col-4 col-xl-1 mt-5">
-			                        <img src="" id="user_sala_img" class="rounded-circle img-fluid" style="height: 40px;">
-			                    </picture>
-			                    <div class="form-group ml-lg-1 col-8 col-xl-11 mt-5">
-			                        <input type="text" class="form-control input_coment col-12 bg-light" placeholder="Escreva um comentário...">
-			                    </div>  
-                            </form>`;              			
-    
+				<div class="input-group col-12 mt-4 d-flex pl-4">
+					<img src="includes/componentes/imagens/usuarios/${postagem.foto}" id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
+					<input type="text" class="form-control input_coment bg-light col-11 ml-3" placeholder="Escreva um comentário..."> 
+					<span class="input-group-btn ml-1">
+						<button class="btn btn-default border-none" type="submit" style="background: transparent;">
+							<i class="fas fa-paper-plane"></i>
+						</button>
+  					</span> 
+                </form>`;              			
                 postagens.innerHTML += post;            
             })    
 		} else {

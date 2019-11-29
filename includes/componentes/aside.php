@@ -7,27 +7,13 @@
          
           <p class="row text-white col-xl-10 col-10 mt-2" id="nome_usuario"></p>
         </div>
-    <form class="form-inline mt-4" action="#">
-        <input class="form-control col-lg-10 col-xl-11" type="search" placeholder="Buscar usuários" aria-label="Pesquisar">
-      </form>
+
       <ul class="navbar-nav py-2 mt-4">
           <li class="nav-header text-white">Geral</li>
           <li class="nav-item">
             <a class="nav-link text-white" href="home.php">
               <span><i class="fas fa-home text-white mr-2"></i></span>
               <span>Página inicial</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-white" href="#">
-              <span><i class="fas fa-user-friends text-white mr-2"></i></span>
-              <span>Contatos</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-white" href="#">
-              <span><i class="fas fa-bell text-white mr-2"></i></span>
-              <span>Notificações</span>
             </a>
           </li>
           <li class="nav-item">
@@ -71,12 +57,6 @@
               <a class="nav-link text-white" href="solicitacoes.php">
                   <span><i class="fas fa-cog mr-2 text-white"></i></span>
                   <span>Solicitações</span>
-              </a>
-          </li>
-          <li class="nav-item">
-              <a class="nav-link text-white" href="#">
-                  <span><i class="fas fa-flag mr-2 text-white"></i></span>
-                  <span>Denuncias</span>
               </a>
           </li>
       </ul>
