@@ -1,4 +1,3 @@
-
 <nav class="navbar navbar-dark d-none d-lg-block" id="lateral" style="background: #0b1a21;">
     <a class="navbar-brand" href="#">Wikimedia</a>
         <div class="row h-auto mt-3 container">
@@ -7,7 +6,6 @@
          
           <p class="row text-white col-xl-10 col-10 mt-2" id="nome_usuario"></p>
         </div>
-
       <ul class="navbar-nav py-2 mt-4">
           <li class="nav-header text-white">Geral</li>
           <li class="nav-item">

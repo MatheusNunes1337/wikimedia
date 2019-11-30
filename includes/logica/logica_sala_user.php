@@ -40,7 +40,6 @@
                 $status = array('status'=>'vazio');
             } else {
                 $status = $coments;
-                $status['status'] = 'possui comentário';
             }
             echo json_encode($status);
             die();
@@ -53,9 +52,7 @@
     		$post_content = $_REQUEST['post_text'];
             $user_id =  $_SESSION['id'];
             $sala_id = $_SESSION['sala_id'];
-            //$array = array($post_content, $user_id, $sala_id);
-            //print_r($array); die();
-
+            
             /* Config_upload */
             $limitar_ext="sim";
      

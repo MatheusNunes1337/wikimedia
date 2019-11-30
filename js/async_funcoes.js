@@ -669,7 +669,9 @@ function showConfirm(title, msg) {
 	document.getElementById('confirm_content').innerHTML = msg;
 	$('#modal_confirm').modal();
 }
-//async function ....
+
+
+
 async function listarPostagens() {
 	let a;
 	let comentarios;
@@ -678,51 +680,38 @@ async function listarPostagens() {
 		method: 'GET'
 	})
 	.then(response => response.json())
-	.then(data => {
+	.then(async data => {
 		if(data.status !== 'vazio') {
 			let post;
-			data.forEach(postagem => {
-				post = `<article class="py-3 px-2 bg-white mb-5 shadow-sm">
-							<div class="d-flex justify-content-between pr-2 align-items-center">
-								<div class="d-flex align-items-center px-4">
-								
-									<img src="includes/componentes/imagens/usuarios/${postagem.foto}" id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
-							
-									<span class="ml-3">${postagem.username}</span>
-								</div>
-								<a class="py-auto pr-2"><i class="fas fa-ellipsis-h"></i></a>
-							</div>
-                  			<p class="mt-3 text-justify px-4">
-                  				${postagem.conteudo}
+			for(let postagem of data) {
+				post = `<article class="py-4 px-4 bg-white mb-5 shadow-sm col-xl-9" style="min-height: 155px;">
+                  			<img src="includes/componentes/imagens/usuarios/${postagem.foto}" id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">  
+                  			<span class="ml-lg-3">${postagem.username}</span>
+                  			<a class="py-auto pr-2 float-right"><i class="fas fa-ellipsis-h"></i></a>
+                  			<p class="post_content text-justify mt-3">
+                      			${postagem.conteudo}
                   			</p>`
                 if(postagem.nm_midia !== null) {
-                	post += `
-                	<a href="includes/componentes/medias/outros/${postagem.nm_midia}" class="mt-3 pl-4">
-                  	<i class="fas fa-download text-danger" style="font-size: 1.4rem"></i></a>
-                  	<span class="ml-2">${postagem.nm_midia}</span>`					
+                	post += `<div class="midia mb-3">
+                    			<a href="includes/componentes/medias/outros/${postagem.nm_midia}" class="mt-3">
+                    			<i class="fas fa-download text-danger" style="font-size: 1.4rem"></i></a>
+                    			<span class="ml-2">${postagem.nm_midia}</span>
+                  			</div>`
+                									
                 }
 
-                post += `<div class="d-flex mt-5 px-4">
-    						<picture class="row col-4 col-xl-1">
-        						<img src=".." id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
-    						</picture>
-   							<span class="bg-light ml-2 rounded col-8 col-xl-11">Matheus Nunes: Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable. passage, and going through the cites of the word in classical literature, discovered the undoubtable</span>
-						</div>`
+                comentarios = await listarComentarios(postagem.post_id);
+                post += comentarios;
 					 
     			post += `
-				<div class="input-group col-12 mt-4 d-flex pl-4">
-					<img src="includes/componentes/imagens/usuarios/${postagem.foto}" id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
-					<input type="text" class="form-control input_coment bg-light col-11 ml-3" placeholder="Escreva um comentário..."> 
-					<span class="input-group-btn ml-1">
-						<button class="btn btn-default border-none" type="submit" style="background: transparent;">
-							<i class="fas fa-paper-plane"></i>
-						</button>
-  					</span> 
-                </form>`;
-              			
-                postagens.innerHTML += post; 
+    			  <img src="includes/componentes/imagens/usuarios/matheus.jpg" id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
+                  <input type="text" class="form-control input_coment bg-light col-lg-10 col-9 d-inline ml-lg-2" placeholder="Escreva um comentário...">
+                  <button class="btn btn-default border-none float-right" type="button" style="background: transparent;">
+                      <i class="fas fa-paper-plane"></i>
+                  </button>`;
+                postagens.innerHTML += post;
 
-            })    
+            }    
 		} else {
 			container.innerHTML += `<h2 class="text-dark">${data.mensagem}</h2>`;
 		}
@@ -733,24 +722,33 @@ async function listarPostagens() {
 	
 }
 	
-
 		
 
 //async function listartMensagens();
 
 async function listarComentarios(post_id) {
-	return post_id;
+
 	return fetch(`includes/logica/logica_sala_user.php?listarComentarios=true&post_id=${post_id}`, {
 		method: 'GET'
 	})
 	.then(response => response.json())
 	.then(data => {
 		if(data.status !== 'vazio') {
-			//return data;
-			console.log(data);
-			return data;
+			let comentario;
+			let comentarios;
+			comentarios = '<div class="comentarios mt-5">'
+			data.forEach(comentario => {
+			coment = `<div class="comentario bg-light mb-4">
+                        <img src="includes/componentes/imagens/usuarios/${comentario.foto}" class="rounded-circle img-fluid p_image" style="height: 40px;">  
+                        <span class="ml-lg-2 text-danger">${comentario.username}:</span>
+                        <span class="coment_content">${comentario.conteudo}</span>    
+                      </div>`
+			comentarios += coment;	
+			})
+			comentarios += '</div>'
+			return comentarios;
 		} else {
-			return 'nao possui nenhum comentario';
+			return '';
 		} 
 	})
 	.catch(err => {
@@ -765,7 +763,7 @@ async function listarComentarios(post_id) {
 
 //funcão de carregamento de informação do usuário na tela;
 function putUserInfo() {
-	let userInfo = acharUser();; 
+	let userInfo = acharUser(); 
 	let current_url = document.URL;
 	if(current_url === "http://localhost/wikimedia/perfil_config.php") {
 		userInfo.then(user => {
@@ -775,19 +773,23 @@ function putUserInfo() {
 			editarPerfil.user_senha.value = user.senha;
 			document.getElementById('user_image').src = `includes/componentes/imagens/usuarios/${user.foto}`;
 			document.getElementById('imagem_perfil').src = `includes/componentes/imagens/usuarios/${user.foto}`;
+			document.getElementById('img_user').src = `includes/componentes/imagens/usuarios/${user.foto}`;
 			document.getElementById('nome_usuario').innerHTML = user.username;
 		});
 	} else if(current_url === "http://localhost/wikimedia/sala.php") {
+		console.log('oi')
 		userInfo.then(user => {
 			document.getElementById('user_sala_nome').innerHTML = user.username;
 			document.getElementById('user_sala_img').src = `includes/componentes/imagens/usuarios/${user.foto}`;
 			document.getElementById('imagem_perfil').src = `includes/componentes/imagens/usuarios/${user.foto}`;
 			document.getElementById('nome_usuario').innerHTML = user.username;
+			document.getElementById('img_user').src = `includes/componentes/imagens/usuarios/${user.foto}`;
 		});	
 	} else {
 		userInfo.then(user => {
-			document.getElementById('imagem_perfil').src = `includes/componentes/imagens/usuarios/${user.foto}`;
 			document.getElementById('nome_usuario').innerHTML = user.username;
+			document.getElementById('imagem_perfil').src = `includes/componentes/imagens/usuarios/${user.foto}`;
+			document.getElementById('img_user').src = `includes/componentes/imagens/usuarios/${user.foto}`;
 		});
 	}
 }

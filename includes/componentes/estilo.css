@@ -68,7 +68,12 @@ body {
     }
 
     #lateral {
-      width: 14vw;
+      width: 15vw;
+    }
+
+    .my-custom-scrollbar {
+      height: 100vh;
+      overflow: auto;
     }
 
 }

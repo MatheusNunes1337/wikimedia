@@ -208,15 +208,6 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
         echo json_encode($retorno);
         die();
     }
-    /*
-    #PESQUISAR USUÁRIO
-    funcao assincrona
-    if($obj->funcao == 'buscar usuario') {
-        $nome = $_REQUEST['nome'];
-        $usuario = pesquisarUsuario($conexao, $nome);
-        include "../../pesquisarUsuario.php";
-    }
-    */
 }
 
 
@@ -242,10 +233,10 @@ if($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 
 
 #LOGOUT
-    if(isset($_POST['sair'])){
-            session_start();
-            session_destroy();
-            header('location:../../login.php');
-    }
+if(isset($_POST['sair'])){
+        session_start();
+        session_destroy();
+        header('location:../../login.php');
+}
 
 ?>
