@@ -11,7 +11,7 @@
   	<?php require_once('includes/componentes/nav.php') ?>
     <div class="row" id="tchau">
       <?php require_once('includes/componentes/aside.php') ?>
-      <main class="container-fluid col-xl-10 py-5 col-lg-9 col-12 bg-light">
+      <main class="principal bg-light">
             <content class="container-fluid py-5 row col-11 mx-auto" style="min-height: auto;">
             <h2 class="col-12 mb-4 text-lg-left text-center">Contato</h2>
               <form class="col-12 col-lg-4" id="contact_form">

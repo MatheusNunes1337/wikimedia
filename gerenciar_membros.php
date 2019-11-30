@@ -11,7 +11,7 @@
     <?php require_once('includes/componentes/nav.php') ?>
     <div class="row" id="tchau">
       <?php require_once('includes/componentes/aside.php') ?>
-      <main class="py-5 bg-light my-custom-scrollbar" id="principal">
+      <main class="principal py-5 bg-light my-custom-scrollbar">
            <content class="d-flex flex-column container-fluid py-5 row col-11 mx-auto" id="sala_membros" style="min-height: auto;">
            		<h1 class="text-sm-left text-center mb-5">Gerência de membros</h1> 
               <table class="table mt-4 col-xl-8 col-12 table-bordered" id="table_members" style="display: none;">

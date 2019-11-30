@@ -584,7 +584,7 @@ function listarSalas() {
 		if(data.status !== 'vazio') {
 			let room;
 			data.forEach(sala => {
-				room = `<div class="col-12 col-xl-10 mb-5 bg-white shadow-sm rounded>
+				room = `<div class="col-12 col-xl-12 mb-5 bg-white shadow-sm rounded>
 	                  	 <header class="mt-2">
 	                      <h3 class="text-dark mt-3">${sala.nome}</h3>
 	                    </header>
@@ -650,7 +650,7 @@ function editarConta() {
 	.then(response => response.json())
 	.then(data => {
 		showStatus(funcao, data.mensagem)
-		acharUser();
+		putUserInfo();
 	})
 	.catch(err => {
 		console.error(err);

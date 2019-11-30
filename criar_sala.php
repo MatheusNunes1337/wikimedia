@@ -11,7 +11,7 @@
   	<?php require_once('includes/componentes/nav.php') ?>
     <div class="row" id="tchau">
       <?php require_once('includes/componentes/aside.php') ?>
-      <main class="container-fluid col-xl-10 py-5 col-lg-9 col-12 bg-light">
+      <main class="principal bg-light">
             <content class="container-fluid py-5 row col-11 mx-auto" style="min-height: auto">
                 <form class="col-md-6 col-12" method="POST" action="includes/logica/logica_sala.php">
                     <h2 class="text-dark mb-5">Criar uma sala</h2>

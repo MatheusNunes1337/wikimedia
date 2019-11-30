@@ -60,48 +60,57 @@ body {
 } 
 
 
+
 @media screen and (min-width: 1366px) {
-    #principal {
-      width: 83vw;
+    .principal {
+      width: 84vw;
+      background-color: blueviolet;
     }
 
     #lateral {
-      width: 16vw;
+      width: 14vw;
     }
 
 }
 
-@media screen and (min-width: 1366px) {
-    #principal {
-      width: 83vw;
+@media screen and (min-width: 1200px) and (max-width: 1366px) {
+    .principal {
+      width: 78vw;
     }
 
     #lateral {
-      width: 16vw;
+      width: 20vw;
     }
 
-}
-
-@media screen and (min-width: 960px) and (max-width: 1366px) {
-    #principal {
-      width: 73vw;
-    }
-
-    #lateral {
-      width: 26vw;
+    .my-custom-scrollbar {
+      height: 100vh;
+      overflow: auto;
     }
 
 }
 
 @media screen and (max-width: 960px) {
-    #principal {
+    .principal {
       width: 100vw;
+      background-color: greenyellow;
     }
+}
+
+@media screen and (min-width: 992px) and (max-width: 1200px) {
+  .principal {
+    width: 74vw;
+  }
+
+  #lateral {
+    width: 24vw;
+  }
+
+  .my-custom-scrollbar {
+    height: 100vh;
+    overflow: auto;
+  }
+
 }
 
 /*@media screen and (min-width: 960px)*/  
 
-.my-custom-scrollbar {
-  height: 100vh;
-  overflow: auto;
-}
