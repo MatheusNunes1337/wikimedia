@@ -13,7 +13,7 @@
       <?php require_once('includes/componentes/aside.php') ?>
       <main class="principal bg-light my-custom-scrollbar">
            <content class="d-flex flex-column container-fluid py-5 row col-11 mx-auto" id="container" style="min-height: auto;">
-           		<h1 class="text-sm-left text-center mb-5">Minhas salas</h1>
+           		<h2 class="text-sm-left text-center mb-5 mt-5">Minhas salas</h2>
 
            </content>  
       </main>

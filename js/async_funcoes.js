@@ -30,7 +30,7 @@ function buscarSala() {
 	.then(response => response.json())
 	.then(salas => {
 		container.innerHTML = `
-					   <h1 class="row col-12 mb-4">Busca de salas</h1>
+					   <h2 class="row col-12 mb-4 mt-5">Busca de salas</h2>
 					   <div class="input-group bg-white mt-3 col-12 col-xl-7 mb-5 py-2  shadow-sm rounded">
 	                      <input type="text" class="form-control" name="disciplina" id="search_room" placeholder="Digite a disciplina" style="height: 55px;">
 	                      <span class="my-auto ml-3 input-group-btn">
@@ -43,7 +43,7 @@ function buscarSala() {
 		if(salas.status !== 'falha') {
 			var room;
 			salas.forEach(sala => {
-				room =	`<div class="col-12 col-xl-10 mb-5 bg-white shadow-sm rounded>
+				room =	`<div class="col-12 col-xl-12 mb-5 bg-white shadow-sm rounded>
 	                  	 <header class="mt-2">
 	                      <h3 class="text-dark mt-3">${sala.nome}</h3>
 	                    </header>
@@ -129,7 +129,9 @@ function enviarSolicitacao(e) {
 	.then(response => response.json())
 	.then(data => {
 		showStatus(obj.funcao, data.mensagem);
-		window.location.href = 'buscar_salas.php';
+		window.setTimeout(function() {
+			window.location.href = 'buscar_salas.php';
+		}, 3000);
 	})
 	.catch(err => {
 		console.error(err);
@@ -190,9 +192,10 @@ function tornarAdmin(e) {
 			if(data.status == 'falha') {
 				showStatus(obj.funcao, data.mensagem);
 			} else {
-				 //let au = window.confirm(data.mensagem);
 					showStatus(obj.funcao, data.mensagem);
-					window.location.href = 'minhas_salas.php';
+					window.setTimeout(function() {
+						window.location.href = 'minhas_salas.php';
+					}, 5000);		
 			}	
 		})
 		.catch(err => {
@@ -281,7 +284,7 @@ function editaSala() {
 
 
 
-function buscarPostagem() {
+async function buscarPostagem() {
 
 	postagens.innerHTML = '';
 	let campo = document.getElementById('search_post');
@@ -290,34 +293,43 @@ function buscarPostagem() {
 		method: 'GET',
 	})
 	.then(response => response.json())
-	.then(data => {
+	.then(async data => {
 		if(data.status !== 'vazio') {
 			let post;
-			data.forEach(postagem => {
-				post = `<article class="py-3 px-2 bg-white mb-5 shadow-sm">
-                    		<div class="d-flex align-items-center px-4">
-		                      <picture class="row col-3 col-xl-1">
-		                          <img src="includes/componentes/imagens/usuarios/${postagem.foto}" id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
-		                      </picture>
-                      			<span class="ml-3">${postagem.username}</span>
-                  			</div>
-                  			<p class="mt-3 text-justify px-4">
-                  				${postagem.conteudo}
-                  			</p>
-                  			<a href="includes/componentes/medias/outros/Inglês_1-Certificado_digital_61086.pdf" class="mt-3 px-4">
-                  			<i class="fas fa-download text-danger" style="font-size: 1.4rem"></i>
-                  			</a>
-                  			<span class="ml-1">Inglês_1-Certificado_digital_61086.pdf</span>
-                  			<form class="form-inline px-4 pb-4">
-			                    <picture class="row col-4 col-xl-1 mt-5">
-			                        <img src=".." id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
-			                    </picture>
-			                    <div class="form-group ml-lg-1 col-8 col-xl-11 mt-5">
-			                        <input type="text" class="form-control input_coment col-12 bg-light" placeholder="Escreva um comentário...">
-			                    </div>  
-                            </form>`
-                postagens.innerHTML += post;            
-            })    
+			for(let postagem of data) {
+				post = `<article class="py-4 px-4 bg-white mb-5 shadow-sm col-xl-11" style="min-height: 155px;">
+                  			<img src="includes/componentes/imagens/usuarios/${postagem.foto}" id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">  
+                  			<span class="ml-lg-3">${postagem.username}</span>
+							  <a class="py-auto pr-2 float-right dropdown-toggle btn btn-default" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							  <i class="fas fa-ellipsis-h"></i></a>
+							  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+									<a class="dropdown-item btn btn-default" href="#" onclick="oi();">Editar post</a>
+									<a class="dropdown-item" btn btn-default href="#">Excluir post</a>
+  							  </div>
+                  			<p class="post_content text-justify mt-3">
+                      			${postagem.conteudo}
+                  			</p>`
+                if(postagem.nm_midia !== null) {
+                	post += `<div class="midia mb-3">
+                    			<a href="includes/componentes/medias/outros/${postagem.nm_midia}" class="mt-3">
+                    			<i class="fas fa-download text-danger" style="font-size: 1.4rem"></i></a>
+                    			<span class="ml-2">${postagem.nm_midia}</span>
+                  			</div>`
+                									
+                }
+
+                comentarios = await listarComentarios(postagem.post_id);
+                post += comentarios;
+					 
+    			post += `
+    			  <img src="includes/componentes/imagens/usuarios/default.png" class="rounded-circle img-fluid user_img_room" style="height: 40px;">
+                  <input type="text" class="form-control input_coment bg-light col-sm-9 col-md-10 col-8 d-inline ml-2" placeholder="Escreva um comentário...">
+                  <button class="btn btn-default border-none float-right" onclick="comentar(event)" type="button" value="${postagem.post_id}" style="background: transparent;">
+                      <i class="fas fa-paper-plane"></i>
+                  </button>`;
+				postagens.innerHTML += post;
+			}	
+			 
 		} else {
 			postagens.innerHTML += `<h2 class="text-dark">${data.mensagem}</h2>`;
 		}	  		
@@ -339,6 +351,9 @@ function criarPostagem() {
 	})
 	.then(response => response.json())
 	.then(data => {
+		if(data.status == 'falha') {
+			showStatus(funcao, data.mensagem);
+		}
 		listarPostagens();
 	})
 	.catch(err => {
@@ -526,8 +541,8 @@ function listarUsuarios() {
 				      <td align="center" class="align-middle"> <img src="includes/componentes/imagens/usuarios/${user.foto}" alt="profile_image" class="img-fluid img-thumbnail rounded-circle mb-2 ml-lg-0 mt-4" style="width: 70px; height: 70px;"></td>
 				      <td align="center" class="align-middle">${user.username}</td>
 				      <td align="center" class="align-middle">
-				      		<button class="btn btn-success mb-2 mb-sm-0" onclick='banirUsuario(event)' id='${user.usuario_id}'>Banir</button>
-				       		<button class="btn btn-danger" onclick='tornarAdmin(event)' id='${user.usuario_id}'>Tornar admin</button>
+							   <button class="btn btn-success" onclick='tornarAdmin(event)' id='${user.usuario_id}'>Tornar admin</button>
+							   <button class="btn btn-danger mb-2 mb-sm-0" onclick='banirUsuario(event)' id='${user.usuario_id}'>Banir</button>
 				      </td>
 				    </tr>`
 				document.getElementById('t_corpoo').innerHTML += linha;	    	  
@@ -566,7 +581,7 @@ function listarSolicitacoes() {
 			})
 			document.getElementById('table_requests').style.display = 'table';			
 		} else {
-			document.getElementById('sala_solicitacoes').innerHTML += `<h2 class="text-dark mt-4">${data.mensagem} &#128542;</h2>`;
+			document.getElementById('sala_solicitacoes').innerHTML += `<h3 class="text-dark mt-4">${data.mensagem} &#128542;</h3>`;
 		} 
 		
 	})
@@ -586,7 +601,7 @@ function listarSalas() {
 			data.forEach(sala => {
 				room = `<div class="col-12 col-xl-12 mb-5 bg-white shadow-sm rounded>
 	                  	 <header class="mt-2">
-	                      <h3 class="text-dark mt-3">${sala.nome}</h3>
+	                      <h4 class="text-dark mt-3">${sala.nome}</h4>
 	                    </header>
 	                    <hr>
 	                    <div class="room_container mb-2 sala d-flex flex-xl-row flex-column">
@@ -605,7 +620,7 @@ function listarSalas() {
 				container.innerHTML += room;		  
 			})					
 		} else {
-			container.innerHTML += `<h2 class="text-dark">${data.mensagem}</h2>`;
+			container.innerHTML += `<h3 class="text-dark">${data.mensagem}</h3>`;
 		} 
 	})
 	.catch(err => {
@@ -684,10 +699,15 @@ async function listarPostagens() {
 		if(data.status !== 'vazio') {
 			let post;
 			for(let postagem of data) {
-				post = `<article class="py-4 px-4 bg-white mb-5 shadow-sm col-xl-9" style="min-height: 155px;">
+				post = `<article class="py-4 px-4 bg-white mb-5 shadow-sm col-xl-11" style="min-height: 155px;">
                   			<img src="includes/componentes/imagens/usuarios/${postagem.foto}" id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">  
                   			<span class="ml-lg-3">${postagem.username}</span>
-                  			<a class="py-auto pr-2 float-right"><i class="fas fa-ellipsis-h"></i></a>
+							  <a class="py-auto pr-2 float-right dropdown-toggle btn btn-default" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							  <i class="fas fa-ellipsis-h"></i></a>
+							  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+									<a class="dropdown-item btn btn-default" href="#" onclick="oi();">Editar post</a>
+									<a class="dropdown-item" btn btn-default href="#">Excluir post</a>
+  							  </div>
                   			<p class="post_content text-justify mt-3">
                       			${postagem.conteudo}
                   			</p>`
@@ -704,16 +724,16 @@ async function listarPostagens() {
                 post += comentarios;
 					 
     			post += `
-    			  <img src="includes/componentes/imagens/usuarios/matheus.jpg" id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
-                  <input type="text" class="form-control input_coment bg-light col-lg-10 col-9 d-inline ml-lg-2" placeholder="Escreva um comentário...">
-                  <button class="btn btn-default border-none float-right" type="button" style="background: transparent;">
+    			  <img src="includes/componentes/imagens/usuarios/default.png" class="rounded-circle img-fluid user_img_room" style="height: 40px;">
+                  <input type="text" class="form-control input_coment bg-light col-sm-9 col-md-10 col-8 d-inline ml-2" placeholder="Escreva um comentário...">
+                  <button class="btn btn-default border-none float-right" value="${postagem.post_id}" onclick="comentar(event)" type="button" style="background: transparent;">
                       <i class="fas fa-paper-plane"></i>
                   </button>`;
                 postagens.innerHTML += post;
 
             }    
 		} else {
-			container.innerHTML += `<h2 class="text-dark">${data.mensagem}</h2>`;
+			container.innerHTML += `<h3 class="text-dark">${data.mensagem}</h3>`;
 		}
 	})
 	.catch(err => {
@@ -738,10 +758,10 @@ async function listarComentarios(post_id) {
 			let comentarios;
 			comentarios = '<div class="comentarios mt-5">'
 			data.forEach(comentario => {
-			coment = `<div class="comentario bg-light mb-4">
+			coment = `<div class="comentario mb-4">
                         <img src="includes/componentes/imagens/usuarios/${comentario.foto}" class="rounded-circle img-fluid p_image" style="height: 40px;">  
                         <span class="ml-lg-2 text-danger">${comentario.username}:</span>
-                        <span class="coment_content">${comentario.conteudo}</span>    
+                        <span class="coment_content bg-light px-3 rounded">${comentario.conteudo}</span>    
                       </div>`
 			comentarios += coment;	
 			})
@@ -775,124 +795,26 @@ function putUserInfo() {
 			document.getElementById('imagem_perfil').src = `includes/componentes/imagens/usuarios/${user.foto}`;
 			document.getElementById('img_user').src = `includes/componentes/imagens/usuarios/${user.foto}`;
 			document.getElementById('nome_usuario').innerHTML = user.username;
+			document.getElementById('nome_user').innerHTML = user.username;
 		});
 	} else if(current_url === "http://localhost/wikimedia/sala.php") {
-		console.log('oi')
 		userInfo.then(user => {
 			document.getElementById('user_sala_nome').innerHTML = user.username;
 			document.getElementById('user_sala_img').src = `includes/componentes/imagens/usuarios/${user.foto}`;
 			document.getElementById('imagem_perfil').src = `includes/componentes/imagens/usuarios/${user.foto}`;
 			document.getElementById('nome_usuario').innerHTML = user.username;
+			document.getElementById('nome_user').innerHTML = user.username;
 			document.getElementById('img_user').src = `includes/componentes/imagens/usuarios/${user.foto}`;
+			//document.querySelectorAll('.user_img_room').src = `includes/componentes/imagens/usuarios/${user.foto}`;
 		});	
 	} else {
 		userInfo.then(user => {
 			document.getElementById('nome_usuario').innerHTML = user.username;
+			document.getElementById('nome_user').innerHTML = user.username;
 			document.getElementById('imagem_perfil').src = `includes/componentes/imagens/usuarios/${user.foto}`;
 			document.getElementById('img_user').src = `includes/componentes/imagens/usuarios/${user.foto}`;
 		});
 	}
 }
 
-/*
-<div class="d-flex mt-5 px-4">
-    <picture class="row col-4 col-xl-1">
-        <img src=".." id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
-    </picture>
-   <span class="bg-light ml-2 rounded col-8 col-xl-11">Matheus Nunes: Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable. passage, and going through the cites of the word in classical literature, discovered the undoubtable</span>
-</div>
-</div>
-*/
-
-/*
-if(data.status !== 'vazio') {
-			let post;
-			data.forEach(postagem => {
-				post = `<article class="py-3 px-2 col-xl-9 col-12 bg-white mb-5 shadow-sm">
-							<div class="d-flex justify-content-between pr-2 align-items-center">
-								<div class="d-flex align-items-center px-4">
-								
-									<img src="includes/componentes/imagens/usuarios/${postagem.foto}" id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
-							
-									<span class="ml-3">${postagem.username}</span>
-								</div>
-								<a class="py-auto pr-2"><i class="fas fa-ellipsis-h"></i></a>
-							</div>
-                  			<p class="mt-3 text-justify px-4">
-                  				${postagem.conteudo}
-                  			</p>`
-                if(postagem.nm_midia !== null) {
-                	post += `
-                	<a href="includes/componentes/medias/outros/${postagem.nm_midia}" class="mt-3 pl-4">
-                  	<i class="fas fa-download text-danger" style="font-size: 1.4rem"></i></a>
-                  	<span class="ml-2">${postagem.nm_midia}</span>`					
-                }
-				
-				//posts += await listarPostagens(postagem.post_id);
-				 	 
-    			post += `
-				<div class="input-group col-12 mt-4 d-flex pl-4">
-					<img src="includes/componentes/imagens/usuarios/${postagem.foto}" id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
-					<input type="text" class="form-control input_coment bg-light col-11 ml-3" placeholder="Escreva um comentário..."> 
-					<span class="input-group-btn ml-1">
-						<button class="btn btn-default border-none" type="submit" style="background: transparent;">
-							<i class="fas fa-paper-plane"></i>
-						</button>
-  					</span> 
-                </form>`;              			
-                postagens.innerHTML += post;            
-            })    
-		} else {
-			container.innerHTML += `<h2 class="text-dark">${data.mensagem}</h2>`;
-		}
-*/
-
-/*
-try {
-		const resp = await fetch('includes/logica/logica_sala_user.php?listarPostagens=true');
-		const json = await (response => response.json())(resp);
-		(data => {
-			if(data.status !== 'vazio') {
-				let post;
-				for(let postagem of data) {
-					post = 
-					`<article class="py-3 px-2 col-xl-9 col-12 bg-white mb-5 shadow-sm">
-						<div class="d-flex justify-content-between pr-2 align-items-center">
-							<div class="d-flex align-items-center px-4">
-								<img src="includes/componentes/imagens/usuarios/${postagem.foto}" id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
-								<span class="ml-3">${postagem.username}</span>
-							</div>
-								<a class="py-auto pr-2"><i class="fas fa-ellipsis-h"></i></a>
-						</div>
-                  		<p class="mt-3 text-justify px-4">
-                  			${postagem.conteudo}
-                  		</p>`
-                  	if(postagem.nm_midia !== null) {
-	                	post += `
-	                	<a href="includes/componentes/medias/outros/${postagem.nm_midia}" class="mt-3 pl-4">
-	                  	<i class="fas fa-download text-danger" style="font-size: 1.4rem"></i></a>
-	                  	<span class="ml-2">${postagem.nm_midia}</span>`					
-                	}
-                	let a =  await listarComentarios(postagem.post_id);
-                	console.log(a);
-                	post += `
-					<div class="input-group col-12 mt-4 d-flex pl-4">
-						<img src="includes/componentes/imagens/usuarios/${postagem.foto}" id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">
-						<input type="text" class="form-control input_coment bg-light col-11 ml-3" placeholder="Escreva um comentário..."> 
-						<span class="input-group-btn ml-1">
-							<button class="btn btn-default border-none" type="submit" style="background: transparent;">
-								<i class="fas fa-paper-plane"></i>
-							</button>
-	  					</span> 
-	                </form>`;              			
-                	postagens.innerHTML += post;	
-				}
-			} 	else {
-					container.innerHTML += `<h2 class="text-dark">${data.mensagem}</h2>`;
-				}
-
-		})(json)
-	} catch (err) {
-		console.error(err);
-	}
-*/	
+	

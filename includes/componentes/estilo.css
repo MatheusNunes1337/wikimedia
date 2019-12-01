@@ -64,7 +64,6 @@ body {
 @media screen and (min-width: 1366px) {
     .principal {
       width: 84vw;
-      background-color: blueviolet;
     }
 
     #lateral {
@@ -92,12 +91,15 @@ body {
       overflow: auto;
     }
 
+    #cadastro, #login {
+        width: 28vw !important;
+    }
+
 }
 
 @media screen and (max-width: 960px) {
     .principal {
       width: 100vw;
-      background-color: greenyellow;
     }
 }
 

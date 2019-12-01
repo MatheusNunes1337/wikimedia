@@ -8,7 +8,7 @@
   <title>Entrar</title>
 </head>
 <body class="container-fluid d-flex align-items-center justify-content-center bg-light">
-<div class="col-12 col-sm-9 col-lg-3 col-md-7">  	
+<div id="login">  	
     <form class="col-12 py-3 bg-white shadow-sm rounded" action="includes/logica/logica_usuario.php" method="POST">
         <h1 class="mb-5 mt-4 text-center">Entrar</h1>
         <div class="form-group col-11 mx-auto">

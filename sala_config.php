@@ -13,7 +13,7 @@
       <?php require_once('includes/componentes/aside.php') ?>
       <main class="principal bg-light my-custom-scrollbar">
            <content class="d-flex flex-column container-fluid py-5 row col-11 mx-auto" style="min-height: auto;">
-                 <h1 class="col-12 mb-5">Configurações da sala</h1>
+                 <h2 class="col-12 mb-5 mt-5">Configurações da sala</h2>
                 <form class="col-xl-6 col-md-10 col-12 mb-5" action="includes/logica/logica_sala.php" id="editRoom" onsubmit="editaSala();" name="formEditSala">
                     <h3 class="text-dark mb-5 mt-3">Alterar informações</h3>
                     <div class="form-group">
@@ -52,7 +52,7 @@
                     <button type="submit" name="atualizar_sala" class="mt-3 btn btn-success">Atualizar</button>
                     <button type="reset" class="mt-3 ml-2 btn btn-danger" value="Reset">Cancelar</button>
                 </form>
-                <form class="col-12 col-xl-3 col-md-10 col-lg-6 mb-5" method="POST" action="includes/logica/logica_sala.php">
+                <form class="col-12 col-xl-5 col-md-7 col-lg-6 mb-5" method="POST" action="includes/logica/logica_sala.php">
                     <h3 class="text-dark mb-2 mt-3">Deletar sala</h3>
                     <p>Atenção: Uma vez que você realize a operação abaixo, <strong>não há como voltar atrás</strong>. Dito isso, digite sua senha abaixo para confirmar sua autenticação, caso contrário, clique em cancelar.</p>
                     <div class="form-group">

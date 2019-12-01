@@ -13,17 +13,15 @@
       <?php require_once('includes/componentes/aside.php') ?>
       <main class="principal bg-light">
             <content class="container-fluid py-5 row col-11 mx-auto" style="min-height: auto;">
-            <h2 class="col-12 mb-4 text-lg-left text-center">Contato</h2>
-              <form class="col-12 col-lg-4" id="contact_form">
+            <h2 class="col-12 mb-4 mt-5 text-lg-left text-center">Contato</h2>
+              <form class="col-12 col-md-6" id="contact_form">
                   <div class="form-group">
                     <label for="username_att">Nome completo</label>
-                    <input type="text" class="form-control" id="username_att" aria-describedby="usernameHelp" placeholder="Seu nome de usuário"
-                    name="user_username">
+                    <input type="text" class="form-control" id="username_att" placeholder="Seu nome completo">
                   </div>
                   <div class="form-group">
                     <label for="email_att">Endereço de email</label>
-                    <input type="email" class="form-control" id="email_att" aria-describedby="emailHelp" placeholder="Seu email"
-                    name="user_email">
+                    <input type="email" class="form-control" id="email_att" placeholder="Seu email">
                   </div>
                   <div class="form-group">
                     <label for="senha_att">Mensagem</label>

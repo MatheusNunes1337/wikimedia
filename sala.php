@@ -11,7 +11,7 @@
     <?php require_once('includes/componentes/nav.php') ?>
     <div class="row" id="tchau">
       <?php require_once('includes/componentes/aside.php') ?>
-      <main class="py-5 bg-light my-custom-scrollbar principal">
+      <main class="py-5 light my-custom-scrollbar principal">
            <content class="d-flex flex-column container-fluid py-5 row col-11 mx-auto" id="container" style="min-height: auto;">
            		<div class="input-group bg-white mt-3 col-12 col-xl-8 mb-5 py-2  shadow-sm rounded">
                   <input type="text" class="form-control" name="postagem" id="search_post" placeholder="Buscar postagem" style="height: 55px;">
@@ -32,7 +32,7 @@
                       <i class="fas fa-file-word text-white" style="font-size: 22px;"></i> <input type="file" name="post_media">
                   </span>
               </form>
-              <section class="mt-3 col-12 col-xl-10 mb-5 py-2" id="postagens" style="min-height: 800px;">
+              <section class="mt-3 col-12 col-xl-10 mb-5 py-2" id="postagens">
                   
               </section> 
            </content>  
