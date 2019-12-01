@@ -301,17 +301,17 @@ async function buscarPostagem() {
                   			<img src="includes/componentes/imagens/usuarios/${postagem.foto}" id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">  
                   			<span class="ml-lg-3">${postagem.username}</span>
 							  <a class="py-auto pr-2 float-right dropdown-toggle btn btn-default" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							  <i class="fas fa-ellipsis-h"></i></a>
+							  <i class="fas fa-ellipsis-h text-dark"></i></a>
 							  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-									<a class="dropdown-item btn btn-default" href="#" onclick="oi();">Editar post</a>
-									<a class="dropdown-item" btn btn-default href="#">Excluir post</a>
+									<a class="dropdown-item btn btn-default">Editar post</a>
+									<a class="dropdown-item" btn btn-default value="${postagem.post_id}" onclick="excluirPostagem(event)">Excluir post</a>
   							  </div>
                   			<p class="post_content text-justify mt-3">
                       			${postagem.conteudo}
                   			</p>`
                 if(postagem.nm_midia !== null) {
                 	post += `<div class="midia mb-3">
-                    			<a href="includes/componentes/medias/outros/${postagem.nm_midia}" class="mt-3">
+                    			<a href="includes/componentes/medias/${postagem.nm_midia}" class="mt-3">
                     			<i class="fas fa-download text-danger" style="font-size: 1.4rem"></i></a>
                     			<span class="ml-2">${postagem.nm_midia}</span>
                   			</div>`
@@ -322,17 +322,18 @@ async function buscarPostagem() {
                 post += comentarios;
 					 
     			post += `
-				<img src="" class="rounded-circle img-fluid user_img_room" style="height: 40px;">
-				<input type="text" class="form-control input_coment bg-light col-sm-9 col-md-10 col-8 d-inline ml-2 coment_input" maxlength="200" placeholder="Escreva um comentário...">
-				<button class="btn btn-default border-none float-right" value="${postagem.post_id}" onclick="comentar(event)" type="button" style="background: transparent;">
-					<i class="fas fa-paper-plane"></i>
-				</button>`;
+				<img src="" class="rounded-circle img-fluid user_img_room" style="height: 45px; width: 45px;">
+                  <input type="text" class="form-control input_coment bg-light col-sm-9 col-md-10 col-8 d-inline ml-2 coment_input" maxlength="200" placeholder="Escreva um comentário...">
+                  <button class="btn btn-default border-none float-right" value="${postagem.post_id}" onclick="comentar(event)" type="button" style="background: transparent;">
+                      <i class="fas fa-paper-plane"></i>
+                  </button>`;
 				postagens.innerHTML += post;
 			}	
 			 
 		} else {
 			postagens.innerHTML += `<h2 class="text-dark">${data.mensagem}</h2>`;
-		}	  		
+		}
+		putUserInfo();	  		
  	})
   	.catch(error => {
   		console.log(error);
@@ -629,7 +630,7 @@ function listarSalas() {
 }
 
 function excluirConta() {
-	let result = window.confirm('Deseja mesmo excluir a sua conta?');
+	let result = window.confirm('Uma vez que você exclua o seu perfil, todas as salas em que você é o administrador também serão excluidas. Deseja realmente continuar?');
 	if(result) {
 		let obj = new Object();
 		obj.funcao = 'excluir conta'
@@ -700,7 +701,7 @@ async function listarPostagens() {
 			let post;
 			for(let postagem of data) {
 				post = `<article class="py-4 px-4 bg-white mb-5 shadow-sm col-xl-11" style="min-height: 155px;">
-                  			<img src="includes/componentes/imagens/usuarios/${postagem.foto}" id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">  
+                  			<img src="includes/componentes/imagens/usuarios/${postagem.foto}" id="imagem_perfil" class="rounded-circle img-fluid" style="height: 45px; width: 45px;">  
                   			<span class="ml-lg-3">${postagem.username}</span>
 							  <a class="py-auto pr-2 float-right dropdown-toggle btn btn-default" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							  <i class="fas fa-ellipsis-h text-dark"></i></a>
@@ -713,7 +714,7 @@ async function listarPostagens() {
                   			</p>`
                 if(postagem.nm_midia !== null) {
                 	post += `<div class="midia mb-3">
-                    			<a href="includes/componentes/medias/outros/${postagem.nm_midia}" class="mt-3">
+                    			<a href="includes/componentes/medias/${postagem.nm_midia}" class="mt-3">
                     			<i class="fas fa-download text-danger" style="font-size: 1.4rem"></i></a>
                     			<span class="ml-2">${postagem.nm_midia}</span>
                   			</div>`
@@ -724,7 +725,7 @@ async function listarPostagens() {
                 post += comentarios;
 					 
     			post += `
-    			  <img src="" class="rounded-circle img-fluid user_img_room" style="height: 40px;">
+    			  <img src="" class="rounded-circle img-fluid user_img_room" style="height: 45px; width: 45px;">
                   <input type="text" class="form-control input_coment bg-light col-sm-9 col-md-10 col-8 d-inline ml-2 coment_input" maxlength="200" placeholder="Escreva um comentário...">
                   <button class="btn btn-default border-none float-right" value="${postagem.post_id}" onclick="comentar(event)" type="button" style="background: transparent;">
                       <i class="fas fa-paper-plane"></i>
@@ -768,7 +769,7 @@ async function listarComentarios(post_id) {
 			comentarios = '<div class="comentarios mt-5">'
 			data.forEach(comentario => {
 			coment = `<div class="comentario mb-4">
-                        <img src="includes/componentes/imagens/usuarios/${comentario.foto}" class="rounded-circle img-fluid p_image" style="height: 40px;">  
+                        <img src="includes/componentes/imagens/usuarios/${comentario.foto}" class="rounded-circle img-fluid p_image" style="height: 45px; width: 45px;">  
                         <span class="ml-lg-2 text-danger">${comentario.username}:</span>
                         <span class="coment_content bg-light px-3 rounded text-justify col-12">${comentario.conteudo}</span>    
                       </div>`

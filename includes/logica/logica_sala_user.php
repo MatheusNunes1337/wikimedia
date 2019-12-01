@@ -62,13 +62,15 @@
             $extensoes_validas= array(".gif",".jpg",".jpeg",".bmp",".GIF",".JPG",".JPEG",".BMP",".PNG",".png", ".docx", ".pdf", ".txt", ".xlsx", ".odt", ".ods");
 
             // caminho absoluto onde os arquivos serão armazenados
+            /*
             $tipo_arquivo = $_FILES['post_media']['type'];
             if(strpos($tipo_arquivo, 'image') !== false) {
                 $caminho="../componentes/medias/imagens";   
             } else {
                 $caminho="../componentes/medias/outros";   
             }
-           
+            */
+            $caminho="../componentes/medias";
             // limitar o tamanho do arquivo? (sim ou não)
             $limitar_tamanho="sim";
 

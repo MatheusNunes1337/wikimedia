@@ -15,11 +15,11 @@
             <content class="container-fluid py-5 row col-11 mx-auto" style="min-height: auto;">
             <h2 class="col-12 mb-5 mt-5 text-lg-left text-center">Configurações do perfil</h2>
               <form class="col-12 col-lg-4" id="profile_config" onsubmit="editarConta();" name="perfilEditForm">
-                  <img src="" id="user_image" alt="profile_image" class="img-fluid img-thumbnail rounded-circle mb-4 ml-lg-0 mt-3 mx-auto d-lg-inline d-block user_image" style="width: 130px; height: 130px;">
+                  <img src="" id="user_image" alt="profile_image" class="img-fluid img-thumbnail rounded-circle mb-2 ml-lg-0 mt-3 mx-auto d-lg-inline d-block user_image" style="width: 150px; height: 150px;">
                   
-                  <div class="form-group">
-                      <input type="file" class="form-control-file" name="user_foto">
-                  </div>
+                  <span class="btn btn-file mt-lg-2 mt-3 mb-4 d-block col-xl-6 col-9 text-white ml-lg-0 mx-auto" style="background: #0b1a21;">
+                      Mudar imagem<input type="file" name="user_foto">
+                  </span>
                   <div class="form-group">
                     <label for="username_att">Nome de usuário</label>
                     <input type="text" class="form-control" id="username_att" aria-describedby="usernameHelp" placeholder="Seu nome de usuário"
