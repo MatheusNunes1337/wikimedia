@@ -322,11 +322,11 @@ async function buscarPostagem() {
                 post += comentarios;
 					 
     			post += `
-    			  <img src="includes/componentes/imagens/usuarios/default.png" class="rounded-circle img-fluid user_img_room" style="height: 40px;">
-                  <input type="text" class="form-control input_coment bg-light col-sm-9 col-md-10 col-8 d-inline ml-2" placeholder="Escreva um comentário...">
-                  <button class="btn btn-default border-none float-right" onclick="comentar(event)" type="button" value="${postagem.post_id}" style="background: transparent;">
-                      <i class="fas fa-paper-plane"></i>
-                  </button>`;
+				<img src="" class="rounded-circle img-fluid user_img_room" style="height: 40px;">
+				<input type="text" class="form-control input_coment bg-light col-sm-9 col-md-10 col-8 d-inline ml-2 coment_input" maxlength="200" placeholder="Escreva um comentário...">
+				<button class="btn btn-default border-none float-right" value="${postagem.post_id}" onclick="comentar(event)" type="button" style="background: transparent;">
+					<i class="fas fa-paper-plane"></i>
+				</button>`;
 				postagens.innerHTML += post;
 			}	
 			 
@@ -703,10 +703,10 @@ async function listarPostagens() {
                   			<img src="includes/componentes/imagens/usuarios/${postagem.foto}" id="imagem_perfil" class="rounded-circle img-fluid" style="height: 40px;">  
                   			<span class="ml-lg-3">${postagem.username}</span>
 							  <a class="py-auto pr-2 float-right dropdown-toggle btn btn-default" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							  <i class="fas fa-ellipsis-h"></i></a>
+							  <i class="fas fa-ellipsis-h text-dark"></i></a>
 							  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-									<a class="dropdown-item btn btn-default" href="#" onclick="oi();">Editar post</a>
-									<a class="dropdown-item" btn btn-default href="#">Excluir post</a>
+									<a class="dropdown-item btn btn-default">Editar post</a>
+									<a class="dropdown-item" btn btn-default value="${postagem.post_id}" onclick="excluirPostagem(event)">Excluir post</a>
   							  </div>
                   			<p class="post_content text-justify mt-3">
                       			${postagem.conteudo}
@@ -724,8 +724,8 @@ async function listarPostagens() {
                 post += comentarios;
 					 
     			post += `
-    			  <img src="includes/componentes/imagens/usuarios/default.png" class="rounded-circle img-fluid user_img_room" style="height: 40px;">
-                  <input type="text" class="form-control input_coment bg-light col-sm-9 col-md-10 col-8 d-inline ml-2" placeholder="Escreva um comentário...">
+    			  <img src="" class="rounded-circle img-fluid user_img_room" style="height: 40px;">
+                  <input type="text" class="form-control input_coment bg-light col-sm-9 col-md-10 col-8 d-inline ml-2 coment_input" maxlength="200" placeholder="Escreva um comentário...">
                   <button class="btn btn-default border-none float-right" value="${postagem.post_id}" onclick="comentar(event)" type="button" style="background: transparent;">
                       <i class="fas fa-paper-plane"></i>
                   </button>`;
@@ -735,6 +735,15 @@ async function listarPostagens() {
 		} else {
 			container.innerHTML += `<h3 class="text-dark">${data.mensagem}</h3>`;
 		}
+		var userInfo = acharUser();
+		fotos = document.getElementsByClassName('user_img_room');
+		userInfo.then(user => {
+			setTimeout(function() {
+				for(let i = 0; i < fotos.length; i++) {
+					document.getElementsByClassName('user_img_room')[i].src = `includes/componentes/imagens/usuarios/${user.foto}`;
+				}
+			},2000)
+		})
 	})
 	.catch(err => {
 		console.error(err);
@@ -761,7 +770,7 @@ async function listarComentarios(post_id) {
 			coment = `<div class="comentario mb-4">
                         <img src="includes/componentes/imagens/usuarios/${comentario.foto}" class="rounded-circle img-fluid p_image" style="height: 40px;">  
                         <span class="ml-lg-2 text-danger">${comentario.username}:</span>
-                        <span class="coment_content bg-light px-3 rounded">${comentario.conteudo}</span>    
+                        <span class="coment_content bg-light px-3 rounded text-justify col-12">${comentario.conteudo}</span>    
                       </div>`
 			comentarios += coment;	
 			})
@@ -783,7 +792,7 @@ async function listarComentarios(post_id) {
 
 //funcão de carregamento de informação do usuário na tela;
 function putUserInfo() {
-	let userInfo = acharUser(); 
+	var userInfo = acharUser(); 
 	let current_url = document.URL;
 	if(current_url === "http://localhost/wikimedia/perfil_config.php") {
 		userInfo.then(user => {
@@ -805,7 +814,12 @@ function putUserInfo() {
 			document.getElementById('nome_usuario').innerHTML = user.username;
 			document.getElementById('nome_user').innerHTML = user.username;
 			document.getElementById('img_user').src = `includes/componentes/imagens/usuarios/${user.foto}`;
-			//document.querySelectorAll('.user_img_room').src = `includes/componentes/imagens/usuarios/${user.foto}`;
+			var fotos = document.getElementsByClassName('user_img_room');
+			setTimeout(function() {
+				for(let i = 0; i < fotos.length; i++) {
+					document.getElementsByClassName('user_img_room')[i].src = `includes/componentes/imagens/usuarios/${user.foto}`;
+				}
+			},2000)
 		});	
 	} else {
 		userInfo.then(user => {
@@ -816,5 +830,56 @@ function putUserInfo() {
 		});
 	}
 }
+
+function comentar(e) {
+	let id_post = e.currentTarget.value;
+	let form_coment = document.getElementsByClassName('coment_input');
+	for(let i = 0; i < form_coment.length; i++) {
+		if(form_coment[i].value.length > 0) {
+			var content = form_coment[i].value;
+		}
+	}
+	let obj = new Object();
+	obj.funcao = 'criar comentario';
+	obj.post_id = id_post;
+	obj.conteudo = content;
+	fetch(url_sala_user, {
+		method: 'POST',
+		body: JSON.stringify(obj)
+	})
+	.then(response => response.json())
+	.then(data => {
+		if(data.status == 'falha') {
+			showStatus(obj.funcao, data.mensagem);	
+		} else {
+			listarPostagens();
+		}
+	})
+	.catch(err => {
+		console.error(err);
+	});
+	
+}
+
+function excluirPostagem(e) {
+	let id_post = e.currentTarget.value;
+	let obj = new Object();
+	obj.funcao = 'excluir postagem';
+	obj.postagem_id = id_post;
+	fetch(url_sala_user, {
+		method: 'DELETE',
+		body: JSON.stringify(obj)
+	})
+	.then(response => response.json())
+	.then(data => {
+		showStatus(obj.funcao, data.mensagem);	
+		listarPostagens();
+	})
+	.catch(err => {
+		console.error(err);
+	});
+	
+}
+
 
 	

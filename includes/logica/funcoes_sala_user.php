@@ -47,6 +47,26 @@
       } 
     }
 
+    function criarComentario($conexao, $array) {
+        try {
+            $query = $conexao->prepare("insert into comentarios (conteudo, usuario_id, post_id) values (?, ?, ?)");
+            $resultado = $query->execute($array);
+            return $resultado;
+        }catch(PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
+    }
+
+    function deletarPostagem($conexao, $array) {
+        try {
+            $query = $conexao->prepare("delete from postagens where post_id = ?");
+            $result = $query->execute($array);
+            return $result;
+        }catch(PDOException $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
+    }
+
 
 
 

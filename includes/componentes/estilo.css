@@ -119,5 +119,9 @@ body {
 
 }
 
+.dropdown-toggle::after {
+  display: none;
+}
+
 /*@media screen and (min-width: 960px)*/  
 

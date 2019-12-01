@@ -4,10 +4,10 @@
     header('Content-Type: text/html; application/json; charset=UTF-8 ');
     header('Access-Control-Allow-Origin: *');
     session_start();
-    $json = file_get_contents('php://input');
-    $obj = json_decode($json);
 
     if($_SERVER['REQUEST_METHOD'] == 'GET') {
+        $json = file_get_contents('php://input');
+        $obj = json_decode($json);
     	if(isset($_REQUEST['conteudo'])) {
     		$array = array($_SESSION['sala_id']);
     		$posts = buscarPostagem($conexao, $array, $_REQUEST['conteudo']);
@@ -48,6 +48,8 @@
     }
     
     if($_SERVER['REQUEST_METHOD'] == 'POST') { //possibilidade de apenas uma midia por post
+        $json = file_get_contents('php://input');
+        $obj = json_decode($json);
     	if(isset($_REQUEST['criar_post'])) {
     		$post_content = $_REQUEST['post_text'];
             $user_id =  $_SESSION['id'];
@@ -116,8 +118,8 @@
            die();
         }    
 	    	
-   	    else if($obj->funcao == 'comentar') {
-        $user_id = $_SESSION['user_id'];
+   	    else if($obj->funcao == 'criar comentario') {
+        $user_id = $_SESSION['id'];
    		$array = array($obj->conteudo, $user_id, $obj->post_id);
    		$okay = criarComentario($conexao, $array);
    		if($okay) {
@@ -131,6 +133,8 @@
     }
 
     if($_SERVER['REQUEST_METHOD'] == 'PUT') {
+        $json = file_get_contents('php://input');
+        $obj = json_decode($json);
     	if($obj->funcao == 'editar post') {
     		$array = array($obj->post_id, $obj->titulo, $obj->conteudo);
     		$okay = editarPostagem($conexao, $array);
@@ -165,10 +169,13 @@
     	die();
     }
 
-    if($_SERVER['REQUEST_METHOD'] == 'delete') {
-    	if(isset($_REQUEST['deletar_post'])) {
-    		$post_id = $_REQUEST['post_id'];
-    		$array = array($post_id);
+    if($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+        $json = file_get_contents('php://input');
+        $obj = json_decode($json);
+    	if($obj->funcao == 'excluir postagem') {
+            var_dump($obj); die();
+    		$id_post = $obj->postagem_id;
+    		$array = array($id_post);
     		$deletado = deletarPostagem($conexao, $array);
     		if($deletado) {
     			$status = array('status'=>'sucesso', 'mensagem'=>'Essa postagem foi deletada com sucesso');
