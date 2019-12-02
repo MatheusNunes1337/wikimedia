@@ -75,10 +75,10 @@ body {
       overflow: auto;
     }
     #login {
-      width: 20vw;
+      width: 21vw;
     }
-    #registro {
-      width: 35vw;
+    #cadastro {
+      width: 22vw;
     }
 
 }

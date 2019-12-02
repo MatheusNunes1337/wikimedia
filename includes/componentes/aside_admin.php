@@ -1,7 +1,11 @@
 <nav class="navbar navbar-dark d-none d-lg-block" id="lateral" style="background: #0b1a21;">
-    <a class="navbar-brand" href="#">Wikimedia</a>
+    
         <div class="row h-auto mt-3 container">
-          
+            
+            <picture class="col-9 mx-auto mb-5 mt-3">
+                <img src="logo.png" class="img-fluid" height="45">
+            </picture>
+
             <img src="" id="imagem_perfil" alt="profile_image" class="img-fluid img-thumbnail rounded-circle mb-2 ml-lg-0 mt-4" style="width: 100px; height: 100px;">
          
           <p class="row text-white col-xl-10 col-10 mt-2" id="nome_user"></p>

@@ -8,7 +8,13 @@
   <title>Feed</title>
 </head>
 <body class="container-fluid bg-light" onload="listarPostagens();">
-    <?php require_once('includes/componentes/nav.php') ?>
+    <?php 
+          if(isset($_SESSION['admin'])) {
+            require_once('includes/componentes/nav_admin.php');
+          } else {
+              require_once('includes/componentes/nav.php');
+          }  
+      ?>
     <div class="row" id="tchau">
       <?php 
           if(isset($_SESSION['admin'])) {
