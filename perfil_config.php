@@ -23,19 +23,19 @@
                   <div class="form-group">
                     <label for="username_att">Nome de usuário</label>
                     <input type="text" class="form-control" id="username_att" aria-describedby="usernameHelp" placeholder="Seu nome de usuário"
-                    name="user_username">
-                    <small id="usernameHelp" class="form-text text-muted d-none">Nunca vamos compartilhar seu email, com ninguém.</small>
+                    name="user_username" onfocusout="verificaUsuario(event)" required="true" pattern=".{6,12}">
+                    <small id="username_msg" class="form-text text-muted d-none">Nunca vamos compartilhar seu email, com ninguém.</small>
                   </div>
                   <div class="form-group">
                     <label for="email_att">Endereço de email</label>
                     <input type="email" class="form-control" id="email_att" aria-describedby="emailHelp" placeholder="Seu email"
-                    name="user_email">
-                    <small id="emailHelp" class="form-text text-muted d-none">Nunca vamos compartilhar seu email, com ninguém.</small>
+                    name="user_email" onfocusout="verificaEmail(event)" required="true">
+                    <small id="email_msg" class="form-text text-muted d-none">Nunca vamos compartilhar seu email, com ninguém.</small>
                   </div>
                   <div class="form-group">
                     <label for="senha_att">Senha</label>
-                    <input type="password" class="form-control" id="senha_att" placeholder="Senha" name="user_senha" aria-describedby="senhaHelp">
-                    <small id="senhaHelp" class="form-text text-muted d-none">Nunca vamos compartilhar seu email, com ninguém.</small>
+                    <input type="password" class="form-control" id="senha_att" placeholder="Senha" name="user_senha" aria-describedby="senhaHelp" onfocusout="verificaSenha(event)" required="true" pattern=".{6,12}">
+                    <small id="senha_msg" class="form-text text-muted d-none">Nunca vamos compartilhar seu email, com ninguém.</small>
                   </div>
                   <button type="submit" class="btn btn-success">Atualizar</button>
                   <button type="button" class="btn btn-danger" onclick="excluirConta();">Excluir conta</button>

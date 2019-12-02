@@ -5,6 +5,7 @@
     require_once('conecta.php');
     require_once('funcoes_sala.php');
     require_once('funcoes_admin.php');
+    require_once('funcoes_usuario.php');
 
 
  if($_SERVER['REQUEST_METHOD'] == 'GET') { //verificada
@@ -38,6 +39,11 @@
     }
     if(isset($_REQUEST['entrar_sala'])) { //verficada
         $_SESSION['sala_id'] = $_REQUEST['entrar_sala'];
+        $array = array($_REQUEST['entrar_sala'], $_SESSION['id']);
+        $result = verificaUser($conexao, $array);
+        if($result) {
+            $_SESSION['admin'] = 'admin';
+        }
         header('location:../../sala.php');
         die();
     }

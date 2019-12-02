@@ -10,7 +10,13 @@
 <body class="container-fluid bg-light" onload="listarPostagens();">
     <?php require_once('includes/componentes/nav.php') ?>
     <div class="row" id="tchau">
-      <?php require_once('includes/componentes/aside.php') ?>
+      <?php 
+          if(isset($_SESSION['admin'])) {
+            require_once('includes/componentes/aside_admin.php');
+          } else {
+              require_once('includes/componentes/aside.php');
+          }  
+      ?>
       <main class="py-5 light my-custom-scrollbar principal">
            <content class="d-flex flex-column container-fluid py-5 row col-11 mx-auto" id="container" style="min-height: auto;">
            		<div class="input-group bg-white mt-3 col-12 col-xl-8 mb-5 py-2  shadow-sm rounded">

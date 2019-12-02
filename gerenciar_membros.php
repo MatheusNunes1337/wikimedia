@@ -10,7 +10,13 @@
 <body class="container-fluid bg-light" onload="listarUsuarios()">
     <?php require_once('includes/componentes/nav.php') ?>
     <div class="row" id="tchau">
-      <?php require_once('includes/componentes/aside.php') ?>
+      <?php 
+          if(isset($_SESSION['admin'])) {
+            require_once('includes/componentes/aside_admin.php');
+          } else {
+              require_once('includes/componentes/aside.php');
+          }  
+      ?>
       <main class="principal py-5 bg-light my-custom-scrollbar">
            <content class="d-flex flex-column container-fluid py-5 row col-11 mx-auto" id="sala_membros" style="min-height: auto;">
            		<h2 class="text-sm-left text-center mb-5 mt-5">Gerência de membros</h2> 

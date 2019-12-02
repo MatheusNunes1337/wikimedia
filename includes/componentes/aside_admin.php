@@ -41,6 +41,26 @@
               </a>
           </li>
           <hr>
+          <li class="nav-header text-white">Ações</li>
+          <li class="nav-item">
+              <a class="nav-link text-white" href="gerenciar_membros.php">
+                  <span><i class="fas fa-users-cog mr-2 text-white"></i></i></span>
+                  <span>Gerenciar membros</span>
+              </a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link text-white" href="sala_config.php">
+                  <span><i class="fas fa-cog mr-2 text-white"></i></span>
+                  <span>Configurações da sala</span>
+              </a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link text-white" href="solicitacoes.php">
+                  <span><i class="fas fa-bell mr-2 text-white"></i></i></span>
+                  <span>Solicitações</span>
+              </a>
+          </li>
+          <hr>
           <li class="nav-item">
               <a class="nav-link text-white" href="logout.php">
                   <span><i class="fas fa-sign-out-alt mr-2 text-white"></i></span>

@@ -89,7 +89,7 @@ function deixarSala(e) {
 		})
 		.then(response => response.json())
 		.then(data => {
-			if(data.status === 'okay') {
+			if(data.status == 'okay') {
 				fetch(`includes/logica/logica_sala.php`, {
 					method: 'DELETE',
 					body: JSON.stringify(obj)
@@ -106,7 +106,7 @@ function deixarSala(e) {
 					console.error(err);
 				});
 			} else {
-				alert(data.mensagem);
+				showStatus(obj.funcao, data.mensagem);
 			}
 		})
 		.catch(err => {
@@ -397,7 +397,11 @@ function deletarPostagem(e) {
 //funções para verificar os campos de cadastro do formulário
 
 function verificaUsuario(e) {
-	let campo = cadastro.username;
+	if(document.URL == 'http://localhost/wikimedia/perfil_config.php') {
+		let campo = perfilEditForm.user_username;	
+	} else {
+		let campo = cadastro.username;
+	}
 	let resultado = document.getElementById('username_msg');
 	let username = e.target.value;
 	fetch(`includes/logica/logica_usuario.php?username=${username}`, {
@@ -419,7 +423,11 @@ function verificaUsuario(e) {
 }
 
 function verificaEmail(e) {
-	let campo = cadastro.email;
+	if(document.URL == 'http://localhost/wikimedia/perfil_config.php') {
+		let campo = perfilEditForm.user_email;	
+	} else {
+		let campo = cadastro.email;
+	}
 	let resultado = document.getElementById('email_msg');
 	let email = e.target.value;
 	fetch(`includes/logica/logica_usuario.php?email=${email}`, {
@@ -610,7 +618,7 @@ function listarSalas() {
 	                        <div class="ml-xl-4">Conteudo: ${sala.conteudo}</div>
 	                        <div class="ml-xl-4">Membros: ${sala.membros}/${sala.max_membros}</div>
 	                        <div class="ml-xl-4">Nível: ${sala.nivel}</div>
-	                        <div class="ml-xl-4">Dono: ${sala.username}</div>
+	                        <div class="ml-xl-4">Administrador: ${sala.username}</div>
 	                    </div>
 	                    <form  method="GET" action="includes/logica/logica_sala.php">
 	                    	<button type="submit" class="btn btn-danger my-3" name="entrar_sala" value="${sala.sala_id}">Entrar</button>

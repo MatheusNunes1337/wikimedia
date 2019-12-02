@@ -74,6 +74,12 @@ body {
       height: 100vh;
       overflow: auto;
     }
+    #login {
+      width: 20vw;
+    }
+    #registro {
+      width: 35vw;
+    }
 
 }
 
