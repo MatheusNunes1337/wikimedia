@@ -37,6 +37,7 @@
         echo json_encode($status);
         die();
     }
+
     if(isset($_REQUEST['entrar_sala'])) { //verficada
         $_SESSION['sala_id'] = $_REQUEST['entrar_sala'];
         $array = array($_REQUEST['entrar_sala'], $_SESSION['id']);
@@ -113,9 +114,7 @@
                     $array = array($user_id, $nome);
                     $resultado = inserirAdministrador($conexao, $array);
                     header('location:../../minhas_salas.php');   
-                } else {
-                    echo var_dump($array);
-                }
+                } 
             } catch(PDOException $err) {
                 echo 'Error: ' . $err->getMessage();
             }

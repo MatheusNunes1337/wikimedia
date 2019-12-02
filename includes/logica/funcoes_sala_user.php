@@ -26,7 +26,7 @@
 
     function listarComentarios($conexao, $array) {
          try {
-            $query = $conexao->prepare("select comentarios.conteudo, usuarios.username, usuarios.foto FROM postagens LEFT JOIN comentarios USING (post_id) LEFT JOIN usuarios ON (comentarios.usuario_id = usuarios.usuario_id) where comentarios.conteudo is not null and postagens.post_id = ? order by comentarios.comentario_id desc");
+            $query = $conexao->prepare("select comentarios.conteudo, usuarios.username, usuarios.foto FROM postagens LEFT JOIN comentarios USING (post_id) LEFT JOIN usuarios ON (comentarios.usuario_id = usuarios.usuario_id) where comentarios.conteudo is not null and postagens.post_id = ? order by comentarios.comentario_id asc");
             if($query->execute($array)){
                 $posts = $query->fetchAll(PDO::FETCH_ASSOC); 
                 return $posts;

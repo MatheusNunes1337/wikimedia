@@ -8,6 +8,7 @@
     if($_SERVER['REQUEST_METHOD'] == 'GET') {
         $json = file_get_contents('php://input');
         $obj = json_decode($json);
+
     	if(isset($_REQUEST['conteudo'])) {
     		$array = array($_SESSION['sala_id']);
     		$posts = buscarPostagem($conexao, $array, $_REQUEST['conteudo']);
@@ -134,48 +135,11 @@
         }
     }
 
-    if($_SERVER['REQUEST_METHOD'] == 'PUT') {
-        $json = file_get_contents('php://input');
-        $obj = json_decode($json);
-    	if($obj->funcao == 'editar post') {
-    		$array = array($obj->post_id, $obj->titulo, $obj->conteudo);
-    		$okay = editarPostagem($conexao, $array);
-    		if($okay) {
-    			if($obj->nomeMidia) {
-    				$array = array($obj->nomeMidia, $obj->post_id);
-    				$editada = editarMidia($conexao, $array); //caso o post não tivesse midia antes disso. Agora passará a ter.
-    				if($editada) {
-    					$status = array('status'=>'sucesso');
-    				} else {
-    					$status = array('status'=>'erro ao tentar editar uma midia existente');
-    				}
-    			} else {
-    				$array = array($obj->post_id);
-    				$existe = verificaPostagem($conexao, $array); //verifica se a postagem possui alguma midia vinculada a ela.
-    				if($existe) {
-    					$deletada = deletarMidia($conexao, $array); //deleta a midia da postagem
-    					if($deletada) {
-    						$status = array('status'=>'sucesso');
-	    				} else {
-	    					$status = array('status'=>'falha', 'mensagem'=>'Falha ao tentar excluir a midia da postagem');
-	    				}
-    				}
-    			}
-    		} else {
-    			$status = array('status'=>'falha', "mensagem"=>"Houve um erro ao tentar editar esta publicação. Tente novamente");	
-    		}
-    		echo json_encode($status);
-    	}
-
-
-    	die();
-    }
 
     if($_SERVER['REQUEST_METHOD'] == 'DELETE') {
         $json = file_get_contents('php://input');
         $obj = json_decode($json);
     	if($obj->funcao == 'excluir postagem') {
-            var_dump($obj); die();
     		$id_post = $obj->postagem_id;
     		$array = array($id_post);
     		$deletado = deletarPostagem($conexao, $array);
@@ -186,5 +150,44 @@
     		}
     		echo json_encode($status);
     	}
+    }
+
+
+
+    if($_SERVER['REQUEST_METHOD'] == 'PUT') {
+        $json = file_get_contents('php://input');
+        $obj = json_decode($json);
+        if($obj->funcao == 'editar post') {
+            $array = array($obj->post_id, $obj->titulo, $obj->conteudo);
+            $okay = editarPostagem($conexao, $array);
+            if($okay) {
+                if($obj->nomeMidia) {
+                    $array = array($obj->nomeMidia, $obj->post_id);
+                    $editada = editarMidia($conexao, $array); //caso o post não tivesse midia antes disso. Agora passará a ter.
+                    if($editada) {
+                        $status = array('status'=>'sucesso');
+                    } else {
+                        $status = array('status'=>'erro ao tentar editar uma midia existente');
+                    }
+                } else {
+                    $array = array($obj->post_id);
+                    $existe = verificaPostagem($conexao, $array); //verifica se a postagem possui alguma midia vinculada a ela.
+                    if($existe) {
+                        $deletada = deletarMidia($conexao, $array); //deleta a midia da postagem
+                        if($deletada) {
+                            $status = array('status'=>'sucesso');
+                        } else {
+                            $status = array('status'=>'falha', 'mensagem'=>'Falha ao tentar excluir a midia da postagem');
+                        }
+                    }
+                }
+            } else {
+                $status = array('status'=>'falha', "mensagem"=>"Houve um erro ao tentar editar esta publicação. Tente novamente");  
+            }
+            echo json_encode($status);
+        }
+
+
+        die();
     }
 ?>
