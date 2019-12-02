@@ -8,7 +8,7 @@
 
             <img src="" id="imagem_perfil" alt="profile_image" class="img-fluid img-thumbnail rounded-circle mb-2 ml-lg-0 mt-4" style="width: 100px; height: 100px;">
          
-          <p class="row text-white col-xl-10 col-10 mt-2" id="nome_user"></p>
+          <p class="row text-white col-xl-10 col-10 mt-2" style="font-size: 1.2rem;" id="nome_user"></p>
         </div>
       <ul class="navbar-nav py-2 mt-4">
           <li class="nav-header text-white">Geral</li>
