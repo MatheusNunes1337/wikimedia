@@ -133,5 +133,14 @@ body {
     font-size: 1.2rem;
 }
 
+.botao_transition {
+  transition: 2s;
+}
+
+.botao_transition:hover {
+  background-color: #0b1a21;
+  border: #0b1a21;
+}
+
 /*@media screen and (min-width: 960px)*/  
 

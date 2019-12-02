@@ -199,6 +199,7 @@
                 $resultado = tornarAdministrador($conexao, $array);
                 if($resultado) {
                     $status = array('status'=>'sucesso', 'mensagem'=>'Operação realizada com sucesso. Agora você não é mais o administrador da sala');
+                        unset($_SESSION['admin']);
                 } else {
                     $status = array('status'=>'falha', 'mensagem'=>'Houve um erro ao tentar realizar esta operação. Tente novamente');
                 }

@@ -2,7 +2,7 @@
   <div class="col-12 p-2 d-block d-lg-none tu" style="background: #0b1a21;">
       <nav class="navbar navbar-expand-lg navbar-dark menu_topo" style="background: #0b1a21;">
         <picture class="col-4 mr-3 mb-5 my-auto">
-            <img src="logo.png" class="img-fluid" style="height: 15%;">
+            <img src="includes/componentes/imagens/sistema/logo.png" class="img-fluid" style="height: 15%;">
         </picture>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Alterna navegação">
           <span class="navbar-toggler-icon"></span>
@@ -38,7 +38,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white" href="minhas_salas.php">
-                        <span><i class="fas fa-search mr-2 text-white"></i></span>
+                        <span><i class="fas fa-door-open text-white mr-2"></i></span>
                         <span>Minhas salas</span>
                     </a>
                 </li>

@@ -29,7 +29,7 @@
               <h3 class="row col-12 mb-4 mt-5 text-lg-left">Compartilhamento de mídias</h3>
               <p class="text-justify" style="font-size: 1.2rem;">
                Você pode compartilhar mídias com os seus colegas para auxiliar com os estudos. Mas cuidado, nem todos os tipos de arquivos ainda são permitidos na nossa plataforma. É possivel compartilhar apenas mídias com as seguintes extensões:
-               <strong>.gif, .jpg , .jpeg , .bmp, .GIF, .png, .docx, .pdf, .txt, .xlsx, .odt, .ods</strong> 
+               <strong>.gif, .jpg , .jpeg , .bmp, .GIF, .png, .docx, .pdf, .txt, .xlsx, .odt, .ods.</strong> 
               </p
             </content>    
       </main>

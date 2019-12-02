@@ -108,7 +108,7 @@ function buscarSala() {
 	                        <div class="ml-xl-4">Conteúdo: ${sala.conteudo}</div>
 	                        <div class="ml-xl-4">Membros: ${sala.membros}/${sala.max_membros}</div>
 	                        <div class="ml-xl-4">Nível: ${sala.nivel}</div>
-	                        <div class="ml-xl-4">Dono: ${sala.username}</div>
+	                        <div class="ml-xl-4">Administrador: ${sala.username}</div>
 	                    </footer>
 	                    <button type="button" class="btn btn-danger my-3" id="${sala.sala_id}" onclick="enviarSolicitacao(event)">enviar solicitação</button>
 	                </div>`
@@ -244,7 +244,7 @@ function tornarAdmin(e) {
 					showStatus(obj.funcao, data.mensagem);
 					window.setTimeout(function() {
 						window.location.href = 'minhas_salas.php';
-					}, 5000);		
+					}, 3000);		
 			}	
 		})
 		.catch(err => {
@@ -353,7 +353,7 @@ async function buscarPostagem() {
 							  <i class="fas fa-ellipsis-h text-dark"></i></a>
 							  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 									<a class="dropdown-item btn btn-default">Editar post</a>
-									<a class="dropdown-item" btn btn-default value="${postagem.post_id}" onclick="excluirPostagem(event)">Excluir post</a>
+									<a class="dropdown-item ${postagem.post_id}" btn btn-default onclick="excluirPostagem(event)">Excluir post</a>
   							  </div>
                   			<p class="post_content text-justify mt-3">
                       			${postagem.conteudo}
@@ -445,7 +445,9 @@ function comentar(e) {
 }
 
 function excluirPostagem(e) {
-	let id_post = e.currentTarget.id;
+	let classe = e.currentTarget.className;
+	id_post = classe.slice(-2);
+	
 	let obj = new Object();
 	obj.funcao = 'excluir postagem';
 	obj.postagem_id = id_post;
@@ -461,6 +463,7 @@ function excluirPostagem(e) {
 	.catch(err => {
 		console.error(err);
 	});
+
 	
 }
 
@@ -660,7 +663,7 @@ async function listarPostagens() {
 							  <i class="fas fa-ellipsis-h text-dark"></i></a>
 							  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 									<a class="dropdown-item btn btn-default">Editar post</a>
-									<a class="dropdown-item" btn btn-default id="${postagem.post_id}" onclick="excluirPostagem(event)">Excluir post</a>
+									<a class="dropdown-item ${postagem.post_id}" btn btn-default onclick="excluirPostagem(event)">Excluir post</a>
   							  </div>
                   			<p class="post_content text-justify mt-3">
                       			${postagem.conteudo}
@@ -723,7 +726,7 @@ async function listarComentarios(post_id) {
 			data.forEach(comentario => {
 			coment = `<div class="comentario mb-4">
                         <img src="includes/componentes/imagens/usuarios/${comentario.foto}" class="rounded-circle img-fluid p_image" style="height: 45px; width: 45px;">  
-                        <span class="ml-lg-2 text-danger">${comentario.username}:</span>
+                        <span class="ml-lg-2 text-dark">${comentario.username}:</span>
                         <span class="coment_content bg-light px-3 rounded text-justify col-12">${comentario.conteudo}</span>    
                       </div>`
 			comentarios += coment;	

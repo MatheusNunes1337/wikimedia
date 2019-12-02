@@ -2,7 +2,7 @@
         <div class="row h-auto mt-3 container">
           
             <picture class="col-9 mx-auto mb-5">
-                <img src="logo.png" class="img-fluid" height="45">
+                <img src="includes/componentes/imagens/sistema/logo.png" class="img-fluid" height="45">
             </picture>
 
             <img src="" id="imagem_perfil" alt="profile_image" class="img-fluid img-thumbnail rounded-circle mb-2 ml-lg-0 mt-4" style="width: 100px; height: 100px;">
@@ -33,7 +33,7 @@
           </li>
           <li class="nav-item">
               <a class="nav-link text-white" href="minhas_salas.php">
-                  <span><i class="fas fa-search mr-2 text-white"></i></span>
+                  <span><i class="fas fa-door-open text-white mr-2"></i></span>
                   <span>Minhas salas</span>
               </a>
           </li>
