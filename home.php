@@ -25,7 +25,7 @@
                       <div class="card border-white shadow-sm">
                         <div class="card-body">
                           <h5 class="card-title">Sobre</h5>
-                          <p class="card-text">Quer saber o porquê do wikimedia ter sido criado? Nessa sessão são dadas todas as informações referentes a isso.</p>
+                          <p class="card-text">Quer saber sobre o wikimedia? Nessa sessão são dadas todas as informações referentes a ele.</p>
                           <a href="sobre.php" class="btn btn-danger botao_transition">Leia mais</a>
                         </div>
                       </div>
